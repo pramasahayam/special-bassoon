@@ -8,6 +8,7 @@ pygame.init()
 # Constants
 WIDTH, HEIGHT = 1600, 1200
 BACKGROUND_COLOR = (0, 0, 0)
+TIME_SCALE = 1/365.25  # Adjust this for real-time simulation
 
 # Create screen and clock for controlling frame rate
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -29,46 +30,56 @@ class SpaceApp:
         self.pluto = Pluto(1340, 400)
         self.lua = Lua(self.earth.x + 30, self.earth.y)
         
-        self.bodies = [self.sun, self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune, self.pluto, self.lua]
-        self.angle = 0
+        self.bodies = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune, self.pluto, self.lua]
+
+        # Dictionary to store individual angles for each space body
+        self.angles = {
+            body: 0 for body in self.bodies
+        }
+
+        # Calculate and store initial orbit radii
+        self.orbit_radii = {
+            body: ((self.sun.x - body.x) ** 2 + (self.sun.y - body.y) ** 2) ** 0.5 for body in self.bodies if body != self.lua
+        }
+        self.orbit_radii[self.lua] = ((self.earth.x - self.lua.x) ** 2 + (self.earth.y - self.lua.y) ** 2) ** 0.5
 
     def draw_space_body(self, body):
         pygame.draw.circle(screen, body.color, (int(body.x), int(body.y)), body.radius)
+
+    def rotate_space_body(self, body, center_body):
+        orbit_radius = self.orbit_radii[body]  # Fetch the orbit radius from the precomputed values
+        
+        # Angle increments based on the orbital period of each space body
+        angle_increment = (360 / body.rotation_period) * TIME_SCALE
+
+        # Update angle for the current space body
+        self.angles[body] += angle_increment
+
+        body.x = center_body.x + orbit_radius * cos(radians(self.angles[body]))
+        body.y = center_body.y + orbit_radius * sin(radians(self.angles[body]))
 
     def run(self):
         running = True
         while running:
             screen.fill(BACKGROUND_COLOR)
+            
+            # Draw the sun first
+            self.draw_space_body(self.sun)
+
+            # Rotate and draw planets
             for body in self.bodies:
+                if body != self.lua:  # Lua will rotate around Earth
+                    self.rotate_space_body(body, self.sun)
+                else:
+                    self.rotate_space_body(body, self.earth)  # Lua rotates around Earth
                 self.draw_space_body(body)
-            
-            # Rotate planets
-            self.rotate_space_body(self.mercury, self.sun)
-            self.rotate_space_body(self.venus, self.sun)
-            self.rotate_space_body(self.earth, self.sun)
-            self.rotate_space_body(self.mars, self.sun)
-            self.rotate_space_body(self.jupiter, self.sun)
-            self.rotate_space_body(self.saturn, self.sun)
-            self.rotate_space_body(self.uranus, self.sun)
-            self.rotate_space_body(self.neptune, self.sun)
-            self.rotate_space_body(self.pluto, self.sun)
-            
-            # Rotate Lua around Earth
-            self.rotate_space_body(self.lua, self.earth)
-            
-            self.angle += 0.5
-            
+
             pygame.display.flip()
             clock.tick(60)
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
-    def rotate_space_body(self, body, center_body):
-        orbit_radius = ((center_body.x - body.x) ** 2 + (center_body.y - body.y) ** 2) ** 0.5
-        body.x = center_body.x + orbit_radius * cos(radians(self.angle))
-        body.y = center_body.y + orbit_radius * sin(radians(self.angle))
 
 if __name__ == "__main__":
     app = SpaceApp()
