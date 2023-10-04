@@ -89,7 +89,7 @@ class SpaceApp:
 
             angle_increment = 360 / (body.rotation_period * 27.3)
             angle += angle_increment
-            root.after(50, update_position)
+            root.after(30, update_position)
 
         update_position()
 
