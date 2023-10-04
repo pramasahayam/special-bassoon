@@ -4,3 +4,4 @@ astropy>=5.3.3
 sympy>=1.12
 tk>=0.0.0
 pygame-ce>=0.0.0
+skyfield>=0.0.0
