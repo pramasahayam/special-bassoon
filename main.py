@@ -9,12 +9,13 @@ from space_bodies import Sun
 WIDTH, HEIGHT = 800, 600
 
 # Zooming and panning
-LINEAR_ZOOM_AMOUNT = 200.0
+LINEAR_ZOOM_AMOUNT = 100.0
 dragging = False
 last_mouse_x, last_mouse_y = 0, 0
 INITIAL_CAMERA_DISTANCE = -1000
 CAMERA_DISTANCE = INITIAL_CAMERA_DISTANCE
-MIN_ZOOM_IN = -160
+MIN_ZOOM_IN = -200
+MAX_ZOOM_OUT = -5000
 
 def screen_to_world(x, y):
     """Convert screen coordinates to world coordinates."""
@@ -55,16 +56,15 @@ def main():
                     last_mouse_x, last_mouse_y = event.pos
                 elif event.button == 4:  # Zooming in
                     new_distance = CAMERA_DISTANCE + LINEAR_ZOOM_AMOUNT
-                    if new_distance <= -200:  # Make sure we don't zoom in past -200
+                    if new_distance <= MIN_ZOOM_IN:  # Make sure we don't zoom into the sun
                         CAMERA_DISTANCE = new_distance
                         glTranslatef(0, 0, LINEAR_ZOOM_AMOUNT)
 
                 elif event.button == 5:  # Zooming out
                     new_distance = CAMERA_DISTANCE - LINEAR_ZOOM_AMOUNT
-                    if new_distance >= -5000:  # Make sure we don't zoom out past -5000
+                    if new_distance >= MAX_ZOOM_OUT:  # Make sure we don't zoom beyond the perspective pane
                         CAMERA_DISTANCE = new_distance
                         glTranslatef(0, 0, -LINEAR_ZOOM_AMOUNT)
-
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
