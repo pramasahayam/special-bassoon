@@ -3,7 +3,7 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-from space_bodies import Sun
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto 
 
 # Constants for screen dimensions
 WIDTH, HEIGHT = 800, 600
@@ -17,18 +17,14 @@ CAMERA_DISTANCE = INITIAL_CAMERA_DISTANCE
 MIN_ZOOM_IN = -200
 MAX_ZOOM_OUT = -5000
 
-def screen_to_world(x, y):
-    """Convert screen coordinates to world coordinates."""
-    y = HEIGHT - y  # flip the y-coordinate
-    z = glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT)
-    return gluUnProject(x, y, z)
-
-def draw_sun(sun):
-    glColor3fv(sun.color)
+def draw_body(body, t):
+    glColor3fv(body.color)
     quad = gluNewQuadric()
     slices, stacks = 100, 100
     glPushMatrix()
-    gluSphere(quad, sun.radius, slices, stacks)
+    x, y, z = body.compute_position(t)
+    glTranslatef(x * 500, y * 500, z * 500)  # Adjusted scaling factor for visualization
+    gluSphere(quad, body.radius, slices, stacks)
     glPopMatrix()
 
 def main():
@@ -37,12 +33,24 @@ def main():
     pygame.init()
     display = (WIDTH, HEIGHT)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
+    glEnable(GL_DEPTH_TEST)  # Enable depth testing
 
     gluPerspective(45, (display[0] / display[1]), 0.1, 5000.0)
     glTranslatef(0, 0, CAMERA_DISTANCE)
 
     sun = Sun()
-    sun.radius = 100
+    earth = Earth()
+    mercury = Mercury()
+    venus = Venus()
+    mars = Mars()
+    jupiter = Jupiter()
+    saturn = Saturn()
+    uranus = Uranus()
+    neptune = Neptune()
+    pluto = Pluto()
+    space_bodies = [sun, earth, mercury, venus, mars, jupiter, saturn, uranus, neptune, pluto]
+    
+    t = sun.ts.now()  # Initial time
 
     while True:
         for event in pygame.event.get():
@@ -79,10 +87,15 @@ def main():
                         glTranslatef(dx * 0.5, -dy * 0.5, 0)
                         last_mouse_x, last_mouse_y = mouse_x, mouse_y
 
+        t = sun.ts.tt(jd=t.tt + 0.1)  # Adjusting the time progression
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        draw_sun(sun)
+        for body in space_bodies:
+            draw_body(body, t)
         pygame.display.flip()
         pygame.time.wait(10)
+
+
 
 if __name__ == "__main__":
     main()

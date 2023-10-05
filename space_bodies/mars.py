@@ -1,5 +1,10 @@
 from core.space_body import SpaceBody
 
 class Mars(SpaceBody):
-    def __init__(self, x, y):
-        super().__init__(name="Mars", x=x, y=y, radius=14, color="red", rotation_period=1.88)  # 1.88 Earth years
+    def __init__(self):
+        super().__init__(
+            radius=0.49, 
+            color=(0.8, 0.49, 0.19),
+            skyfield_name='mars barycenter', 
+            data_url='de421.bsp',
+        )

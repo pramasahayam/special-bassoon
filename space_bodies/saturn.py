@@ -1,5 +1,10 @@
 from core.space_body import SpaceBody
 
 class Saturn(SpaceBody):
-    def __init__(self, x, y):
-        super().__init__(name="Saturn", x=x, y=y, radius=30, color="gold", rotation_period=29.46)  # 29.46 Earth years
+    def __init__(self):
+        super().__init__(
+            radius=8.36, 
+            color=(0.93, 0.89, 0.67),
+            skyfield_name='saturn barycenter', 
+            data_url='de421.bsp',
+        )

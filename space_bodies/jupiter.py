@@ -1,5 +1,10 @@
 from core.space_body import SpaceBody
 
 class Jupiter(SpaceBody):
-    def __init__(self, x, y):
-        super().__init__(name="Jupiter", x=x, y=y, radius=35, color="orange", rotation_period=11.86)  # 11.86 Earth years
+    def __init__(self):
+        super().__init__(
+            radius=10.04, 
+            color=(0.93, 0.57, 0.13),
+            skyfield_name='jupiter barycenter', 
+            data_url='de421.bsp',
+        )

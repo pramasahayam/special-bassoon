@@ -1,5 +1,10 @@
 from core.space_body import SpaceBody
 
 class Pluto(SpaceBody):
-    def __init__(self, x, y):
-        super().__init__(name="Pluto", x=x, y=y, radius=8, color="chocolate", rotation_period=248.6)  # 248.6 Earth years
+    def __init__(self):
+        super().__init__(
+            radius=0.74, 
+            color=(0.66, 0.44, 0.09),
+            skyfield_name='pluto barycenter', 
+            data_url='de421.bsp',
+        )
