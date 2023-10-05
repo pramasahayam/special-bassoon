@@ -9,10 +9,12 @@ from space_bodies import Sun
 WIDTH, HEIGHT = 800, 600
 
 # Zooming and panning
-LINEAR_ZOOM_AMOUNT = 100.0
+LINEAR_ZOOM_AMOUNT = 200.0
 dragging = False
 last_mouse_x, last_mouse_y = 0, 0
-CAMERA_DISTANCE = -1000
+INITIAL_CAMERA_DISTANCE = -1000
+CAMERA_DISTANCE = INITIAL_CAMERA_DISTANCE
+MIN_ZOOM_IN = -160
 
 def screen_to_world(x, y):
     """Convert screen coordinates to world coordinates."""
@@ -51,19 +53,18 @@ def main():
                 if event.button == 1:
                     dragging = True
                     last_mouse_x, last_mouse_y = event.pos
-                elif event.button in [4, 5]:  # Scroll up or down
-                    wx, wy, wz = screen_to_world(*event.pos)
-                    glTranslatef(wx, wy, 0)
-                    if event.button == 4:  # Zooming in
-                        if CAMERA_DISTANCE + LINEAR_ZOOM_AMOUNT > -sun.radius - 10:
-                            CAMERA_DISTANCE = -sun.radius - 10
-                        else:
-                            CAMERA_DISTANCE += LINEAR_ZOOM_AMOUNT
+                elif event.button == 4:  # Zooming in
+                    new_distance = CAMERA_DISTANCE + LINEAR_ZOOM_AMOUNT
+                    if new_distance <= -200:  # Make sure we don't zoom in past -200
+                        CAMERA_DISTANCE = new_distance
                         glTranslatef(0, 0, LINEAR_ZOOM_AMOUNT)
-                    elif event.button == 5:  # Zooming out
-                        CAMERA_DISTANCE -= LINEAR_ZOOM_AMOUNT
+
+                elif event.button == 5:  # Zooming out
+                    new_distance = CAMERA_DISTANCE - LINEAR_ZOOM_AMOUNT
+                    if new_distance >= -5000:  # Make sure we don't zoom out past -5000
+                        CAMERA_DISTANCE = new_distance
                         glTranslatef(0, 0, -LINEAR_ZOOM_AMOUNT)
-                    glTranslatef(-wx, -wy, 0)
+
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -73,7 +74,7 @@ def main():
                 mouse_x, mouse_y = event.pos
                 dx = mouse_x - last_mouse_x
                 dy = mouse_y - last_mouse_y
-                glTranslatef(dx * 1.0, -dy * 1.0, 0)
+                glTranslatef(dx * 0.5, -dy * 0.5, 0)
                 last_mouse_x, last_mouse_y = mouse_x, mouse_y
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
