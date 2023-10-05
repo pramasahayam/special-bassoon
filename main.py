@@ -46,36 +46,38 @@ def main():
 
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return
+            match event.type:
+                case pygame.QUIT:
+                    pygame.quit()
+                    return
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    dragging = True
-                    last_mouse_x, last_mouse_y = event.pos
-                elif event.button == 4:  # Zooming in
-                    new_distance = CAMERA_DISTANCE + LINEAR_ZOOM_AMOUNT
-                    if new_distance <= MIN_ZOOM_IN:  # Make sure we don't zoom into the sun
-                        CAMERA_DISTANCE = new_distance
-                        glTranslatef(0, 0, LINEAR_ZOOM_AMOUNT)
+                case pygame.MOUSEBUTTONDOWN:
+                    match event.button:
+                        case 1:
+                            dragging = True
+                            last_mouse_x, last_mouse_y = event.pos
+                        case 4:  # Zooming in
+                            new_distance = CAMERA_DISTANCE + LINEAR_ZOOM_AMOUNT
+                            if new_distance <= MIN_ZOOM_IN:
+                                CAMERA_DISTANCE = new_distance
+                                glTranslatef(0, 0, LINEAR_ZOOM_AMOUNT)
+                        case 5:  # Zooming out
+                            new_distance = CAMERA_DISTANCE - LINEAR_ZOOM_AMOUNT
+                            if new_distance >= MAX_ZOOM_OUT:
+                                CAMERA_DISTANCE = new_distance
+                                glTranslatef(0, 0, -LINEAR_ZOOM_AMOUNT)
 
-                elif event.button == 5:  # Zooming out
-                    new_distance = CAMERA_DISTANCE - LINEAR_ZOOM_AMOUNT
-                    if new_distance >= MAX_ZOOM_OUT:  # Make sure we don't zoom beyond the perspective pane
-                        CAMERA_DISTANCE = new_distance
-                        glTranslatef(0, 0, -LINEAR_ZOOM_AMOUNT)
+                case pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        dragging = False
 
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    dragging = False
-
-            elif event.type == pygame.MOUSEMOTION and dragging:
-                mouse_x, mouse_y = event.pos
-                dx = mouse_x - last_mouse_x
-                dy = mouse_y - last_mouse_y
-                glTranslatef(dx * 0.5, -dy * 0.5, 0)
-                last_mouse_x, last_mouse_y = mouse_x, mouse_y
+                case pygame.MOUSEMOTION:
+                    if dragging:
+                        mouse_x, mouse_y = event.pos
+                        dx = mouse_x - last_mouse_x
+                        dy = mouse_y - last_mouse_y
+                        glTranslatef(dx * 0.5, -dy * 0.5, 0)
+                        last_mouse_x, last_mouse_y = mouse_x, mouse_y
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         draw_sun(sun)
