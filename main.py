@@ -1,87 +1,85 @@
 import pygame
-from math import cos, sin, radians
-from space_bodies import Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Lua
+from pygame.locals import *
+from OpenGL.GL import *
+from OpenGL.GLU import *
 
-# Initialize pygame
-pygame.init()
+from space_bodies import Sun
 
-# Constants
-WIDTH, HEIGHT = 1600, 1200
-BACKGROUND_COLOR = (0, 0, 0)
-TIME_SCALE = 1/365.25  # Adjust this for real-time simulation
+# Constants for screen dimensions
+WIDTH, HEIGHT = 800, 600
 
-# Create screen and clock for controlling frame rate
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Solar System Simulation")
-clock = pygame.time.Clock()
+# Zooming and panning
+LINEAR_ZOOM_AMOUNT = 100.0
+dragging = False
+last_mouse_x, last_mouse_y = 0, 0
+CAMERA_DISTANCE = -1000
 
-class SpaceApp:
-    def __init__(self):
-        # Initialize celestial bodies
-        self.sun = Sun(800, 400)
-        self.mercury = Mercury(860, 400)
-        self.venus = Venus(920, 400)
-        self.earth = Earth(980, 400)
-        self.mars = Mars(1040, 400)
-        self.jupiter = Jupiter(1100, 400)
-        self.saturn = Saturn(1160, 400)
-        self.uranus = Uranus(1220, 400)
-        self.neptune = Neptune(1280, 400)
-        self.pluto = Pluto(1340, 400)
-        self.lua = Lua(self.earth.x + 30, self.earth.y)
-        
-        self.bodies = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune, self.pluto, self.lua]
+def screen_to_world(x, y):
+    """Convert screen coordinates to world coordinates."""
+    y = HEIGHT - y  # flip the y-coordinate
+    z = glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT)
+    return gluUnProject(x, y, z)
 
-        # Dictionary to store individual angles for each space body
-        self.angles = {
-            body: 0 for body in self.bodies
-        }
+def draw_sun(sun):
+    glColor3fv(sun.color)
+    quad = gluNewQuadric()
+    slices, stacks = 100, 100
+    glPushMatrix()
+    gluSphere(quad, sun.radius, slices, stacks)
+    glPopMatrix()
 
-        # Calculate and store initial orbit radii
-        self.orbit_radii = {
-            body: ((self.sun.x - body.x) ** 2 + (self.sun.y - body.y) ** 2) ** 0.5 for body in self.bodies if body != self.lua
-        }
-        self.orbit_radii[self.lua] = ((self.earth.x - self.lua.x) ** 2 + (self.earth.y - self.lua.y) ** 2) ** 0.5
+def main():
+    global dragging, last_mouse_x, last_mouse_y, CAMERA_DISTANCE
 
-    def draw_space_body(self, body):
-        pygame.draw.circle(screen, body.color, (int(body.x), int(body.y)), body.radius)
+    pygame.init()
+    display = (WIDTH, HEIGHT)
+    pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
-    def rotate_space_body(self, body, center_body):
-        orbit_radius = self.orbit_radii[body]  # Fetch the orbit radius from the precomputed values
-        
-        # Angle increments based on the orbital period of each space body
-        angle_increment = (360 / body.rotation_period) * TIME_SCALE
+    gluPerspective(45, (display[0] / display[1]), 0.1, 5000.0)
+    glTranslatef(0, 0, CAMERA_DISTANCE)
 
-        # Update angle for the current space body
-        self.angles[body] += angle_increment
+    sun = Sun()
+    sun.radius = 100
 
-        body.x = center_body.x + orbit_radius * cos(radians(self.angles[body]))
-        body.y = center_body.y + orbit_radius * sin(radians(self.angles[body]))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
 
-    def run(self):
-        running = True
-        while running:
-            screen.fill(BACKGROUND_COLOR)
-            
-            # Draw the sun first
-            self.draw_space_body(self.sun)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    dragging = True
+                    last_mouse_x, last_mouse_y = event.pos
+                elif event.button in [4, 5]:  # Scroll up or down
+                    wx, wy, wz = screen_to_world(*event.pos)
+                    glTranslatef(wx, wy, 0)
+                    if event.button == 4:  # Zooming in
+                        if CAMERA_DISTANCE + LINEAR_ZOOM_AMOUNT > -sun.radius - 10:
+                            CAMERA_DISTANCE = -sun.radius - 10
+                        else:
+                            CAMERA_DISTANCE += LINEAR_ZOOM_AMOUNT
+                        glTranslatef(0, 0, LINEAR_ZOOM_AMOUNT)
+                    elif event.button == 5:  # Zooming out
+                        CAMERA_DISTANCE -= LINEAR_ZOOM_AMOUNT
+                        glTranslatef(0, 0, -LINEAR_ZOOM_AMOUNT)
+                    glTranslatef(-wx, -wy, 0)
 
-            # Rotate and draw planets
-            for body in self.bodies:
-                if body != self.lua:  # Lua will rotate around Earth
-                    self.rotate_space_body(body, self.sun)
-                else:
-                    self.rotate_space_body(body, self.earth)  # Lua rotates around Earth
-                self.draw_space_body(body)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    dragging = False
 
-            pygame.display.flip()
-            clock.tick(60)
-            
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
+            elif event.type == pygame.MOUSEMOTION and dragging:
+                mouse_x, mouse_y = event.pos
+                dx = mouse_x - last_mouse_x
+                dy = mouse_y - last_mouse_y
+                glTranslatef(dx * 1.0, -dy * 1.0, 0)
+                last_mouse_x, last_mouse_y = mouse_x, mouse_y
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        draw_sun(sun)
+        pygame.display.flip()
+        pygame.time.wait(10)
 
 if __name__ == "__main__":
-    app = SpaceApp()
-    app.run()
-    pygame.quit()
+    main()
