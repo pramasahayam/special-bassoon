@@ -27,4 +27,4 @@ class SpaceBody:
         y = dist.au * np.cos(dec.radians) * np.sin(ra.radians)
         z = dist.au * np.sin(dec.radians)
         
-        return x/20, y/20, z/20
+        return x, y, z
