@@ -18,7 +18,7 @@ def resize(WIDTH, HEIGHT):
     glViewport(0, 0, WIDTH, HEIGHT)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45, (WIDTH / HEIGHT), 0.1, 5000.0)
+    gluPerspective(45, (WIDTH / HEIGHT), 0.1, 10000.0)
     glMatrixMode(GL_MODELVIEW)
 
 def draw_body(body, t):
