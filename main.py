@@ -19,6 +19,7 @@ def draw_body(body, t):
 def main():
     window = WindowManager()
     interactions = UserInteractions()
+    glTranslate(0, 0, interactions.CAMERA_DISTANCE)
 
     sun = Sun()
     earth = Earth()

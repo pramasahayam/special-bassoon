@@ -7,10 +7,10 @@ class UserInteractions:
         self.LINEAR_ZOOM_AMOUNT = 100.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
-        self.INITIAL_CAMERA_DISTANCE = -1000
+        self.INITIAL_CAMERA_DISTANCE = -5000
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
-        self.MIN_ZOOM_IN = -1000
-        self.MAX_ZOOM_OUT = -5000
+        self.MIN_ZOOM_IN = -500
+        self.MAX_ZOOM_OUT = -10000
 
     def handle_event(self, event, resize):
         match event.type:
