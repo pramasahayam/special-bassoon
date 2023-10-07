@@ -44,7 +44,7 @@ def main():
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         for body in space_bodies:
-            draw_body(body, t)
+            draw_body(body, t) 
         pygame.display.flip()
         pygame.time.wait(10)
 
