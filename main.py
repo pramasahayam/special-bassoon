@@ -46,7 +46,7 @@ def main():
         for body in space_bodies:
             draw_body(body, t) 
         pygame.display.flip()
-        pygame.time.wait(10)
+        pygame.time.wait(10) 
 
 if __name__ == "__main__":
     main()
