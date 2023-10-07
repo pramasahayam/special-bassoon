@@ -2,9 +2,11 @@ from skyfield.api import load
 import numpy as np
 
 class SpaceBody:
-    def __init__(self, radius, color, skyfield_name, data_url, speed_multiplier=1.0, orbital_center=None):
+    def __init__(self, radius, color, skyfield_name, data_url, speed_multiplier=1.0, orbital_center=None, name="", description=""):
         self.radius = radius
-        self.color = color
+        self.color = color,
+        self.name = name,
+        self.description = description,
         self.skyfield_name = skyfield_name
         self.data_url = data_url
         self.speed_multiplier = speed_multiplier

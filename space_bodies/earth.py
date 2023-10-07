@@ -8,5 +8,7 @@ class Earth(SpaceBody):
             skyfield_name='earth barycenter',
             data_url='de421.bsp',
             speed_multiplier=1.0,
-            orbital_center=None
+            orbital_center=None,
+            name="Earth",
+            description="Third planet from the Sun and the only known planet to harbor life.",
         )
