@@ -11,13 +11,12 @@ class UserInteractions:
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
         self.MIN_ZOOM_IN = -500
         self.MAX_ZOOM_OUT = -10000
-        self.info_boxes = {}
-        self.displayed_info_box = None
+        self.displayed_info_box = None  # To keep track of displayed info box
 
-    def handle_event(self, event, resize, space_bodies, screen):
+    def handle_event(self, event, resize):
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
-                self._handle_mouse_button_down(event, space_bodies, screen)
+                self._handle_mouse_button_down(event)
             case pygame.MOUSEBUTTONUP:
                 self._handle_mouse_button_up(event)
             case pygame.MOUSEMOTION:
@@ -26,18 +25,13 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
 
-    def _handle_mouse_button_down(self, event, space_bodies, screen):
+    def _handle_mouse_button_down(self, event):
         match event.button:
             case 1:
                 self.dragging = True
                 self.last_mouse_x, self.last_mouse_y = event.pos
-                if self.displayed_info_box and not self.info_boxes[self.displayed_info_box].collidepoint(event.pos):
-                    self.hide_info_box()
-                else:
-                    # Placeholder for planet picking
-                    clicked_planet = None
-                    if clicked_planet:
-                        self.show_info_box(clicked_planet, screen)
+                # Clear any displayed info box
+                self.displayed_info_box = None
             case 4:  # Zooming in
                 new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
                 if new_distance <= self.MIN_ZOOM_IN:
@@ -60,33 +54,3 @@ class UserInteractions:
             dy = mouse_y - self.last_mouse_y
             glTranslatef(dx * 0.5, -dy * 0.5, 0)
             self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
-
-    def show_info_box(self, planet, screen):
-        # If there's already an info box displayed, hide it
-        if self.displayed_info_box:
-            self.hide_info_box()
-        
-        # Define the size and position of the info box
-        box_width, box_height = 200, 100
-        x, y = pygame.mouse.get_pos()
-        rect = pygame.Rect(x, y, box_width, box_height)
-        
-        # Store this rectangle in the info_boxes dictionary
-        self.info_boxes[planet.name] = rect
-        self.displayed_info_box = planet.name
-        
-        # Draw the box using Pygame
-        pygame.draw.rect(screen, (255, 255, 255), rect)
-        
-        # Use Pygame's font system to render text
-        font = pygame.font.SysFont(None, 25)
-        label = font.render(planet.name, True, (0, 0, 0))
-        screen.blit(label, (x + 10, y + 10))
-        label = font.render(planet.description, True, (0, 0, 0))
-        screen.blit(label, (x + 10, y + 40))
-
-    def hide_info_box(self):
-        # Remove the info box rectangle from the dictionary
-        if self.displayed_info_box:
-            del self.info_boxes[self.displayed_info_box]
-            self.displayed_info_box = None
