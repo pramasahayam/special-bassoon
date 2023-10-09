@@ -2,40 +2,33 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto 
-from core.window_management import WindowManager
 from core.solar_system import SolarSystem
 
 def main():
-    window = WindowManager()
-    glTranslate(0, 0, -5000)  # Initialize camera distance; this can be moved to a constant for clarity.
+    pygame.init()
+    solar_system = SolarSystem()
 
-    # Instantiate the space bodies
-    sun = Sun()
-    earth = Earth()
-    mercury = Mercury()
-    venus = Venus()
-    mars = Mars()
-    jupiter = Jupiter()
-    saturn = Saturn()
-    uranus = Uranus()
-    neptune = Neptune()
-    pluto = Pluto()
-    space_bodies = [sun, earth, mercury, venus, mars, jupiter, saturn, uranus, neptune, pluto]
-
-    solar_system = SolarSystem(space_bodies, window.screen)
-
-    t = sun.ts.now()  # Current time
+    glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
 
     while True:
+        t = solar_system.space_bodies[0].ts.now()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-            solar_system.handle_event(event, window.resize, t)
+
+            # Handle zooming, panning, and other user interactions
+            solar_system.interactions.handle_event(event, solar_system.window.resize)
+            
+            # Handle picking a planet and displaying its info box
+            solar_system.handle_event(event, t)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        solar_system.render(t)
+        
+        # Drawing each space body
+        for body in solar_system.space_bodies:
+            solar_system.draw_body(body, t)
 
         pygame.display.flip()
         pygame.time.wait(10)
