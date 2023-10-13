@@ -20,10 +20,10 @@ class SolarSystem:
 
     def handle_event(self, event, t):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self.selected_planet = self.pick_planet(event.pos, t)
-            if self.selected_planet:
-                print(f"Clicked on: {self.selected_planet.name}") # Debugging
-
+            clicked_planet = self.pick_planet(event.pos, t)
+            if clicked_planet:
+                self.selected_planet = clicked_planet
+                print(f"Clicked on: {self.selected_planet.name}")  # Debugging
 
     def pick_planet(self, mouse_pos, t):
         # Render each body with a unique color for picking
@@ -44,14 +44,8 @@ class SolarSystem:
         print(f"Calculated planet index: {planet_idx}")  # Debugging
 
         if 0 <= planet_idx < len(self.space_bodies):
-            print(f"Planet index detected: {planet_idx}")  # Debugging
             return self.space_bodies[planet_idx]
-        print("No planet detected for the given color.")  # Debugging
         return None
-
-    def render_ui(self):
-        if self.selected_planet:
-            self.interactions.show_info_box(self.selected_planet)
 
     def draw_body(self, body, t, color=None):
         if color is None:
@@ -65,3 +59,8 @@ class SolarSystem:
         glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
         gluSphere(quad, body.radius, 100, 100)
         glPopMatrix()
+
+    def render_ui(self):
+        if self.selected_planet:
+            self.interactions.show_info_box(self.selected_planet)
+            self.selected_planet = None
