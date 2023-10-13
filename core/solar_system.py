@@ -23,7 +23,7 @@ class SolarSystem:
             self.selected_planet = self.pick_planet(event.pos, t)
             if self.selected_planet:
                 print(f"Clicked on: {self.selected_planet.name}") # Debugging
-                self.interactions.show_info_box(self.selected_planet)
+
 
     def pick_planet(self, mouse_pos, t):
         # Render each body with a unique color for picking
@@ -48,6 +48,10 @@ class SolarSystem:
             return self.space_bodies[planet_idx]
         print("No planet detected for the given color.")  # Debugging
         return None
+
+    def render_ui(self):
+        if self.selected_planet:
+            self.interactions.show_info_box(self.selected_planet)
 
     def draw_body(self, body, t, color=None):
         if color is None:

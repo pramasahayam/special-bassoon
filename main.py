@@ -29,6 +29,9 @@ def main():
         # Drawing each space body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
+        
+        # Render the Pygame UI
+        solar_system.render_ui()
 
         pygame.display.flip()
         pygame.time.wait(10)

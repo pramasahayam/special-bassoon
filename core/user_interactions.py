@@ -46,6 +46,7 @@ class UserInteractions:
                 resize(width, height)
 
     def show_info_box(self, body):
+        print("Attempting to show info box for:", body.name)
         # Dimensions for the info box
         width, height = 300, 200
         x, y = 50, 50  # top-left position of the box
@@ -67,3 +68,4 @@ class UserInteractions:
         info_surface.blit(orbital_text, (10, 100))
 
         self.screen.blit(info_surface, (x, y))
+        pygame.display.flip()
