@@ -4,7 +4,7 @@ from OpenGL.GLU import *
 import imgui
 from core.user_interactions import UserInteractions
 from core.window_management import WindowManager
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon
 
 class SolarSystem:
     def __init__(self):
@@ -15,7 +15,7 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto()
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon()
         ]
 
         self.selected_planet = None
@@ -23,25 +23,39 @@ class SolarSystem:
 
 
     def handle_event(self, event, t):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            clicked_planet = self.pick_planet(event.pos, t)
-            
-            # If the user clicked on a planet
-            if clicked_planet:
-                # If the user clicked on the same planet as before, do nothing
-                if clicked_planet == self.selected_planet:
-                    return
-                
-                # If the user clicked on a different planet, update the selected planet
-                self.selected_planet = clicked_planet
-                self.infobox_visible = True
-                self.clicked_mouse_position = event.pos  # Store the mouse position
-                print(f"Clicked on: {self.selected_planet.name}")  # Debugging
-            else:
-                # If the user clicked into space, hide the infobox
-                self.infobox_visible = False
-                self.selected_planet = None
-                self.clicked_mouse_position = None  # Reset the stored mouse position
+        match event.type:
+            case pygame.MOUSEBUTTONDOWN:
+                match event.button:
+                    case 1:
+                        # If the infobox is visible, hide it
+                        if self.infobox_visible:
+                            self.infobox_visible = False
+                            self.selected_planet = None
+                            self.clicked_mouse_position = None  # Reset the stored mouse position
+
+            case pygame.MOUSEBUTTONUP:
+                match event.button:
+                    case 1:
+                        # If the user was dragging, just reset the dragging flag and return
+                        if self.interactions.dragging:
+                            self.interactions.dragging = False
+                            return
+
+                        clicked_planet = self.pick_planet(event.pos, t)
+
+                        # If the user clicked on a planet
+                        if clicked_planet:
+                            # If the user clicked on the same planet as before, do nothing
+                            if clicked_planet == self.selected_planet:
+                                return
+
+                            # If the user clicked on a different planet, update the selected planet
+                            self.selected_planet = clicked_planet
+                            self.infobox_visible = True
+                            self.clicked_mouse_position = event.pos  # Store the mouse position
+                            print(f"Clicked on: {self.selected_planet.name}")  # Debugging
+
+
 
 
 
@@ -99,34 +113,65 @@ class SolarSystem:
             infobox_x = mouse_x + offset_x
             infobox_y = mouse_y + offset_y
             
-            # Set the position of the ImGui window using the offset position
+            # Calculate the required height for the content
+            text_height = imgui.get_text_line_height()
+            separator_height = imgui.get_frame_height_with_spacing()
+            
+            # List of attributes to display with their labels
+            attributes = [
+                ("Name", self.selected_planet.name),
+                ("Description", self.selected_planet.description),
+                ("Diameter", self.selected_planet.diameter),
+                ("Mass", self.selected_planet.mass),
+                ("Gravitational Acceleration", self.selected_planet.gravity),
+                ("Average Temperature", self.selected_planet.avg_temperature),
+                ("Age", self.selected_planet.age),
+                ("Orbit Distance", self.selected_planet.orbit_distance)
+            ]
+
+            # Calculate the total height based on the attributes that exist
+            total_height = sum(text_height for _, value in attributes if value)
+
+            # Add separator height for all attributes except the last one
+            total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
+
+            # Add height for the description with wrapping
+            if self.selected_planet.description:
+                description_width = 280  # Assuming a width of 280 for the description text
+                total_height += imgui.calc_text_size(f"Description: {self.selected_planet.description}", wrap_width=description_width)[1] - text_height
+                        
+            # Set the position and size of the ImGui window
             imgui.set_next_window_position(infobox_x, infobox_y)
+            imgui.set_next_window_size(300, total_height)
             
             # Define the window flags
-            flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE
-            
-            # Use ImGui to render the info box for the selected planet with the flags
+            flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
+        
             imgui.begin("Info Box", self.infobox_visible, flags)
-            
-            # Bold and center the name
-            text_width = imgui.calc_text_size(self.selected_planet.name)[0]
-            centered_x = (imgui.get_window_width() - text_width) / 2
-            imgui.set_cursor_pos((centered_x, imgui.get_cursor_pos()[1]))
-            imgui.push_style_color(imgui.COLOR_TEXT, 1, 1, 0, 1)  # Change color to yellow for example
-            imgui.text(self.selected_planet.name)
-            imgui.pop_style_color()  # Reset to default color
-            
-            imgui.separator()  # Draw a separator line
-            
-            imgui.text(f"Description: {self.selected_planet.description}")
-            imgui.separator()  # Draw a separator line
-            
-            imgui.text(f"Radius: {self.selected_planet.radius}")
-            imgui.separator()  # Draw a separator line
-            
-            imgui.text(f"Orbital Period: {self.selected_planet.orbital_period}")
-            
+        
+            for label, value in attributes:
+                if value: 
+                    if label == "Name":
+                        # Bold and center the name
+                        text_width = imgui.calc_text_size(value)[0]
+                        centered_x = (imgui.get_window_width() - text_width) / 2
+                        imgui.set_cursor_pos((centered_x, imgui.get_cursor_pos()[1]))
+                        imgui.push_style_color(imgui.COLOR_TEXT, 1, 1, 0, 1)  
+                        imgui.text(value)
+                        imgui.pop_style_color()  # Reset to default color
+                    elif label == "Description":
+                        imgui.text_wrapped(f"{label}: {value}")  
+                    else:
+                        imgui.text(f"{label}: {value}")
+                    
+                    imgui.separator()
+
             imgui.end()
+
+
+
+
+
 
 
 

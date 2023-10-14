@@ -8,4 +8,4 @@ from .saturn import Saturn
 from .uranus import Uranus
 from .neptune import Neptune
 from .pluto import Pluto
-from .lua import Lua
+from .moon import Moon
