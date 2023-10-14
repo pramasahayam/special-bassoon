@@ -9,5 +9,5 @@ class Sun(SpaceBody):
             data_url='de421.bsp',  # The specific URL or file path for the sun's data
             speed_multiplier=1.0,
             name="Sun",
-            description="This is the Sun"
+            description="PRAISE THE SUN"
         )
