@@ -6,8 +6,6 @@ from core.solar_system import SolarSystem
 from core.imgui_manager import ImGuiManager
 
 def main():
-    pygame.init()
-
     solar_system = SolarSystem()
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
     imgui_manager = ImGuiManager()    
