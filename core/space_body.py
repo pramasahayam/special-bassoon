@@ -4,9 +4,9 @@ import numpy as np
 class SpaceBody:
     def __init__(self, radius, color, skyfield_name, data_url, speed_multiplier=1.0, orbital_center=None, name="", description="", orbital_period=0.0, distance_from_sun=0.0):
         self.radius = radius
-        self.color = color,
-        self.name = name,
-        self.description = description,
+        self.color = color
+        self.name = name
+        self.description = description
         self.skyfield_name = skyfield_name
         self.data_url = data_url
         self.speed_multiplier = speed_multiplier
