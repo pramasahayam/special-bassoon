@@ -55,17 +55,12 @@ class SolarSystem:
                             self.clicked_mouse_position = event.pos  # Store the mouse position
                             print(f"Clicked on: {self.selected_planet.name}")  # Debugging
 
-
-
-
-
     def world_to_screen(self, x, y, z):
         modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
         projection = glGetDoublev(GL_PROJECTION_MATRIX)
         viewport = glGetIntegerv(GL_VIEWPORT)
         screen_x, screen_y, screen_z = gluProject(x, y, z, modelview, projection, viewport)
         return screen_x, self.window.HEIGHT - screen_y  # Flip the y-coordinate because of different coordinate systems
-
 
     def pick_planet(self, mouse_pos, t):
         # Render each body with a unique color for picking
@@ -107,13 +102,11 @@ class SolarSystem:
             # Use the stored mouse position
             mouse_x, mouse_y = self.clicked_mouse_position
             
-            # Offset the position diagonally to the left (and a bit up)
             offset_x = -300  
             offset_y = -150   
             infobox_x = mouse_x + offset_x
             infobox_y = mouse_y + offset_y
             
-            # Calculate the required height for the content
             text_height = imgui.get_text_line_height()
             separator_height = imgui.get_frame_height_with_spacing()
             
@@ -129,22 +122,18 @@ class SolarSystem:
                 ("Orbit Distance", self.selected_planet.orbit_distance)
             ]
 
-            # Calculate the total height based on the attributes that exist
             total_height = sum(text_height for _, value in attributes if value)
 
-            # Add separator height for all attributes except the last one
             total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
 
-            # Add height for the description with wrapping
             if self.selected_planet.description:
-                description_width = 280  # Assuming a width of 280 for the description text
+                description_width = 280
                 total_height += imgui.calc_text_size(f"Description: {self.selected_planet.description}", wrap_width=description_width)[1] - text_height
                         
             # Set the position and size of the ImGui window
             imgui.set_next_window_position(infobox_x, infobox_y)
             imgui.set_next_window_size(300, total_height)
             
-            # Define the window flags
             flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
         
             imgui.begin("Info Box", self.infobox_visible, flags)
