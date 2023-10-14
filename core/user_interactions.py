@@ -44,28 +44,3 @@ class UserInteractions:
             case pygame.VIDEORESIZE:
                 width, height = event.size
                 resize(width, height)
-
-    def show_info_box(self, body):
-        print("Attempting to show info box for:", body.name)
-        # Dimensions for the info box
-        width, height = 300, 200
-        x, y = 50, 50  # top-left position of the box
-
-        # Create a semi-transparent surface for the info box
-        info_surface = pygame.Surface((width, height), pygame.SRCALPHA)
-        info_surface.fill((50, 50, 50, 180))  # RGBA
-
-        font = pygame.font.SysFont('Arial', 18)
-        
-        name_text = font.render(str(body.name), True, (255, 255, 255))
-        description_text = font.render(str(body.description), True, (255, 255, 255))
-        radius_text = font.render(f"Radius: {body.radius}", True, (255, 255, 255))
-        orbital_text = font.render(f"Orbital Period: {body.orbital_period}", True, (255, 255, 255))
-
-        info_surface.blit(name_text, (10, 10))
-        info_surface.blit(description_text, (10, 40))
-        info_surface.blit(radius_text, (10, 70))
-        info_surface.blit(orbital_text, (10, 100))
-
-        self.screen.blit(info_surface, (x, y))
-        pygame.display.flip()

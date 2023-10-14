@@ -1,4 +1,5 @@
 __pycache__/
-documentation/
-tempCodeRunnerFile.py
-.bsp
+/documentation/
+/tempCodeRunnerFile.py
+de421.bsp
+imgui.ini
