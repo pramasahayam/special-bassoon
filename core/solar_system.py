@@ -9,7 +9,7 @@ from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uran
 class SolarSystem:
     def __init__(self):
         self.window = WindowManager()
-        self.interactions = UserInteractions(self.window.screen)
+        self.interactions = UserInteractions(self.window)
         self.clicked_mouse_position = None
         
         # List of space bodies in our solar system
@@ -71,8 +71,8 @@ class SolarSystem:
         
         x, y = mouse_pos
         print(f"Original Mouse Position: X={x}, Y={y}") # DEBUG
-        print(f"window height: {self.window.screen.get_height()}")
-        y = self.window.screen.get_height() - y
+        _, current_height = self.window.get_current_dimensions()
+        y = current_height - y
         print(f"Adjusted Mouse Position: X={x}, Y={y}") # Debug
         color_under_mouse = glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE)
         print(f"Color under mouse: {color_under_mouse}")  # Debug
@@ -104,10 +104,18 @@ class SolarSystem:
             # Use the stored mouse position
             mouse_x, mouse_y = self.clicked_mouse_position
             
+            # Adjust the mouse position based on the window dimensions
+            _, current_height = self.window.get_current_dimensions()
+            mouse_y = current_height - mouse_y
+            
             offset_x = -300  
             offset_y = -150   
             infobox_x = mouse_x + offset_x
             infobox_y = mouse_y + offset_y
+
+            # Debugging statements
+            print(f"Current Window Dimensions: {self.window.get_current_dimensions()}")
+            print(f"Infobox Position: X={infobox_x}, Y={infobox_y}")
             
             text_height = imgui.get_text_line_height()
             separator_height = imgui.get_frame_height_with_spacing()

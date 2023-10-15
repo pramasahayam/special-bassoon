@@ -3,9 +3,10 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 class UserInteractions:
-    def __init__(self, screen):
+    def __init__(self, window_manager):
         # Zooming and panning parameters
-        self.screen = screen
+        self.window_manager = window_manager
+        self.screen = self.window_manager.screen
         self.LINEAR_ZOOM_AMOUNT = 100.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
