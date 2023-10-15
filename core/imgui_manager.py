@@ -36,3 +36,7 @@ class ImGuiManager:
         """Cleanup resources when the application exits."""
         imgui.end_frame()
         imgui.shutdown()
+
+    def handle_resize(self, width, height):
+        """Update the display size for ImGui."""
+        imgui.get_io().display_size = width, height

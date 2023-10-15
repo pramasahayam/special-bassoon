@@ -8,8 +8,9 @@ from core.imgui_manager import ImGuiManager
 def main():
     solar_system = SolarSystem()
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
-    imgui_manager = ImGuiManager()    
-
+    imgui_manager = ImGuiManager()
+    solar_system.set_imgui_manager(imgui_manager)
+        
     while True:
         t = solar_system.space_bodies[0].ts.now()
 
@@ -29,14 +30,13 @@ def main():
         # Start ImGui frame
         imgui_manager.start_frame(solar_system.window.screen)
         
-        # Drawing each space body
+        # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
         
         # Render the ImGui UI
         solar_system.render_ui()
 
-        # End ImGui frame
         imgui_manager.end_frame()
 
         pygame.display.flip()

@@ -3,8 +3,9 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 class UserInteractions:
-    def __init__(self, window_manager):
+    def __init__(self, window_manager, imgui_manager):
         # Zooming and panning parameters
+        self.imgui_manager = imgui_manager
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
         self.LINEAR_ZOOM_AMOUNT = 100.0
@@ -45,3 +46,5 @@ class UserInteractions:
             case pygame.VIDEORESIZE:
                 width, height = event.size
                 resize(width, height)
+                self.imgui_manager.handle_resize(width, height)
+                
