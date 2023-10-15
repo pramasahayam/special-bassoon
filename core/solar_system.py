@@ -70,15 +70,17 @@ class SolarSystem:
             self.draw_body(body, t, unique_color)
         
         x, y = mouse_pos
+        print(f"Original Mouse Position: X={x}, Y={y}") # DEBUG
+        print(f"window height: {self.window.screen.get_height()}")
         y = self.window.screen.get_height() - y
+        print(f"Adjusted Mouse Position: X={x}, Y={y}") # Debug
         color_under_mouse = glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE)
-
-        print(f"Color under mouse: {color_under_mouse}")  # Debugging
+        print(f"Color under mouse: {color_under_mouse}")  # Debug
 
         # Convert the color back to an index
         planet_idx = int(color_under_mouse[0]) - 1
 
-        print(f"Calculated planet index: {planet_idx}")  # Debugging
+        print(f"Calculated planet index: {planet_idx}")  # Debug
 
         if 0 <= planet_idx < len(self.space_bodies):
             return self.space_bodies[planet_idx]

@@ -6,7 +6,7 @@ from OpenGL.GLU import *
 class WindowManager:
     def __init__(self):
         pygame.init()
-        self.WIDTH, self.HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
+        self.WIDTH, self.HEIGHT = 800, 600
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), DOUBLEBUF | OPENGL | pygame.RESIZABLE)
         pygame.display.set_caption('Solar System Simulation')
         self.resize(self.WIDTH, self.HEIGHT)
