@@ -51,7 +51,7 @@ class SolarSystem:
                             self.selected_planet = clicked_planet
                             self.infobox_visible = True
                             self.clicked_mouse_position = event.pos  # Store the mouse position
-                            print(f"Clicked on: {self.selected_planet.name}")  # Debugging
+                            print(f"Clicked on: {self.selected_planet.name}")  # Debug
 
     def world_to_screen(self, x, y, z):
         modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
@@ -91,18 +91,21 @@ class SolarSystem:
         quad = gluNewQuadric()
         glPushMatrix()
         x, y, z = body.compute_position(t)
+        # print(f"{body}: ({x}. {y}, {z})") # Debug
         glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
         gluSphere(quad, body.radius, 100, 100)
         glPopMatrix()
 
     def render_ui(self):
+        t = self.space_bodies[0].ts.now()
+
         if self.infobox_visible and self.selected_planet and self.clicked_mouse_position:
             mouse_x, mouse_y = self.clicked_mouse_position
             
             # Adjust the mouse position based on the window dimensions
-            _, current_height = self.window.get_current_dimensions()
+            # _, current_height = self.window.get_current_dimensions()
             
-            offset_x = -300  
+            offset_x = -350 
             offset_y = -150   
             infobox_x = mouse_x + offset_x
             infobox_y = mouse_y + offset_y
@@ -119,7 +122,8 @@ class SolarSystem:
                 ("Gravitational Acceleration", self.selected_planet.gravity),
                 ("Average Temperature", self.selected_planet.avg_temperature),
                 ("Age", self.selected_planet.age),
-                ("Orbit Distance", self.selected_planet.orbit_distance)
+                ("Orbit Distance", self.selected_planet.orbit_distance),
+                ("Coordinates", self.selected_planet.compute_position(t))
             ]
 
             total_height = sum(text_height for _, value in attributes if value)
@@ -129,7 +133,15 @@ class SolarSystem:
             if self.selected_planet.description:
                 description_width = 280
                 total_height += imgui.calc_text_size(f"Description: {self.selected_planet.description}", wrap_width=description_width)[1] - text_height
-                        
+
+            # Add padding to the total height
+            padding = 10  # Adjust as needed
+            total_height += 2 * padding
+            
+            # Calculate the maximum width based on the longest attribute
+            max_width = max(imgui.calc_text_size(f"{label}: {value}")[0] for label, value in attributes if value)
+            infobox_width = max(300, max_width + 20)  # 20 is for some padding on the sides
+
             # Set the position and size of the ImGui window
             imgui.set_next_window_position(infobox_x, infobox_y)
             imgui.set_next_window_size(300, total_height)
@@ -137,8 +149,10 @@ class SolarSystem:
             flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
         
             imgui.begin("Info Box", self.infobox_visible, flags)
+
+            imgui.set_cursor_pos((imgui.get_cursor_pos()[0], imgui.get_cursor_pos()[1] + padding))  # Add top padding
         
-            for label, value in attributes:
+            for i, (label, value) in enumerate(attributes):
                 if value: 
                     if label == "Name":
                         # Bold and center the name
@@ -150,10 +164,13 @@ class SolarSystem:
                         imgui.pop_style_color()  # Reset to default color
                     elif label == "Description":
                         imgui.text_wrapped(f"{label}: {value}")  
+                    elif label == "Coordinates":
+                        imgui.text_wrapped(f"{label}: {value}")
                     else:
                         imgui.text(f"{label}: {value}")
                     
-                    imgui.separator()
+                    if i < len(attributes) - 1:
+                        imgui.separator()
 
             imgui.end()
 
