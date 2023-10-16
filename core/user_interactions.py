@@ -8,7 +8,7 @@ class UserInteractions:
         self.imgui_manager = imgui_manager
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
-        self.LINEAR_ZOOM_AMOUNT = 100.0
+        self.LINEAR_ZOOM_AMOUNT = 400.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -5000
@@ -41,7 +41,7 @@ class UserInteractions:
                     mouse_x, mouse_y = event.pos
                     dx = mouse_x - self.last_mouse_x
                     dy = mouse_y - self.last_mouse_y
-                    glTranslatef(dx * 0.5, -dy * 0.5, 0)
+                    glTranslatef(dx * 3, -dy * 3, 0)
                     self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
             case pygame.VIDEORESIZE:
                 width, height = event.size
