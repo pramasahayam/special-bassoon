@@ -9,5 +9,11 @@ class Earth(SpaceBody):
             data_url='de421.bsp',
             orbital_center=None,
             name="Earth",
-            description="Third planet from the Sun and the only known planet to harbor life."
+            description="Third planet from the Sun and the only known planet to harbor life.",
+            mass="5.97E+24 kg",
+            diameter="12,756 km",
+            gravity="9.8 m/s^2",
+            avg_temperature="15 °C",
+            day="1 Earth Day",
+            year="1 Earth Year",
         )
