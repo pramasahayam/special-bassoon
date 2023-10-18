@@ -1,6 +1,6 @@
 from core.space_body import SpaceBody
 
-class hygiea(SpaceBody):
+class Hygiea(SpaceBody):
     def __init__(self):
         super().__init__(
             radius= 5, # Multiplied by 20 for testing
