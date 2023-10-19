@@ -8,11 +8,11 @@ class Vesta(SpaceBody):
             skyfield_name='vesta', 
             data_url='de421.bsp',
             name="Vesta",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            description="Vesta is the second largest body in the asteroid belt, only surpassed by Ceres. It is the brightest asteroid in the sky and is occasionally visible from Earth with the naked eye. It is the first of the four asteroid belt objects to be visited by a spacecraft, NASA's Dawn.",
+            mass="2.67E+20 kg",
+            diameter="530 km",
+            AU="1.14 AU",
+            avg_temperature="-110.5 °C",
+            day="0.223 Earth days",
+            year="3.63 Earth years"
         )

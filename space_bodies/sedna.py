@@ -8,11 +8,11 @@ class Sedna(SpaceBody):
             skyfield_name='sedna', 
             data_url='de421.bsp',
             name="Sedna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            description="Sedna is a dwarf planet in the outmost reaches of the solar system. It was discovered in 2003 and its surface is composed of a mix of water, methane, and nitrogen ice. It is one of the reddest solar system objects.",
+            mass="1.70E+22 kg",
+            diameter="995 km",
+            gravity="0.33 m/s²",
+            avg_temperature="-261.15 °C",
+            day="0.417 Earth days",
+            year="11,408 Earth years"
         )

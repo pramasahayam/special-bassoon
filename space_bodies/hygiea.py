@@ -8,11 +8,11 @@ class Hygiea(SpaceBody):
             skyfield_name='Hygiea', 
             data_url='de421.bsp',
             name="Hygiea",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            description="Hygiea is a major asteroid located in the asteroid belt. It is the fourth-largest asteroid in the solar system. It is the largest of the dark C-type asteroids with a carbonaceous surface. It was revealed in 2019 that Hygiea's shape is nearly spherical, which is why it can possibly become a new dwarf planet.",
+            mass="8.67E+19 kg",
+            diameter="430 km",
+            AU="2.41 AU",
+            avg_temperature="-115.15 °C",
+            day="0.575 Earth days",
+            year="5.56 Earth years"
         )

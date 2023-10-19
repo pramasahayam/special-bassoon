@@ -8,11 +8,11 @@ class Pallas(SpaceBody):
             skyfield_name='pallas', 
             data_url='de421.bsp',
             name="Pallas",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            description="Pallas is the second asteroid to be discovered after Ceres. It is believed to have a mineral composition similar to carbonaceous chondrite meteorites. It is the third-largest asteroid in the solar system and it is most likely a remnant protoplanet.",
+            mass="2.11E+20 kg",
+            diameter="545 km",
+            AU="3.392 AU",
+            avg_temperature="-109.15 °C",
+            day="0.325 Earth days",
+            year="4.6 Earth years"
         )
