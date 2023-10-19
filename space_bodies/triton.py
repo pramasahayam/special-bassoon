@@ -7,12 +7,10 @@ class Triton(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='triton', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Triton",
+            description="Triton is the largest of Neptune's moons and was discovered in 1846. It is unusual because it is the only large moon in our solar system that orbits in the opposite direction of its planet's rotation. It shares similarities with Pluto, which makes scientists believe it is a Kuiper Bely Object captured by Neptune's gravity.",
+            mass="2.14E+22 kg",
+            diameter="2,706.8 km",
+            gravity="0.779 m/s²",
+            orbit_distance="354,759 km"
         )

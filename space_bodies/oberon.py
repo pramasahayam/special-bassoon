@@ -7,12 +7,10 @@ class Oberon(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='oberon', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Oberon",
+            description="Oberon is the second-largest moon of Uranus and was discovered in 1787. Little was known about it until Voyager 2 passed it in 1986. The surface is heavily cratered and it is composed of roughly half ice and half rock. It has at least one large mountain that is 6 km tall.",
+            mass="2.88E+21 kg",
+            diameter="1,522.8 km",
+            gravity="0.332 m/s²",
+            orbit_distance="583,500 km"
         )

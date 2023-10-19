@@ -7,12 +7,10 @@ class Deimos(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='deimos', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Deimos",
+            description="Deimos is Mars' moon and spings around Mars every 30 hours. It is the smaller of Mars' two moons and was discovered in 1877. It is composed of C-type rock, similar to blackish carbonaceous chondrite asteroids.",
+            mass="1.48E+15 kg",
+            diameter="12.4 km",
+            gravity="0.003 m/s²",
+            orbit_distance="23,458 km"
         )

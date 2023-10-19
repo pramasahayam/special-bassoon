@@ -7,12 +7,10 @@ class Umbriel(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='umbriel', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Umbriel",
+            description="Umbriel is the darkest of Uranus' largest moons as it only reflects 16% of light that strikes the surface. Voyager 2 revealed a bright ring about 140 km in diameter and it is unclear what created the distinctive ring. It may be front deposits associated with an impact crater.",
+            mass="1.22E+21 kg",
+            diameter="1,169.4 km",
+            gravity="0.238 m/s²",
+            orbit_distance="266,000 km"
         )

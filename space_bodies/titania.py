@@ -7,12 +7,10 @@ class Titania(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='titania', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Titania",
+            description="Titania is Uranus' largest moon and 200 years after it was discovered, it was revealed that the moon is geologically active. It has a prominent system of fault valleys, some which are nearly 1,609 km long. Deposits of highly reflective material can be seen along the Sun-facing valley wall, which may represent frost.",
+            mass="3.42E+21 kg",
+            diameter="1,577.8 km",
+            gravity="0.367 m/s²",
+            orbit_distance="436,300 km"
         )

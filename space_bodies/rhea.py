@@ -7,12 +7,10 @@ class Rhea(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='rhea', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Rhea",
+            description="Rhea is the second largest of Saturn's moons but is less than a third of the radius of Saturn's largest moon, Titan. It is a small, cold, airless body and is tidally locked in phase with Saturn, always with one side facing toward it. It is highly reflective, suggesting a surface of water ice.",
+            mass="2.31E+21 kg",
+            diameter="1,528.6 km",
+            gravity="0.264 m/s²",
+            orbit_distance="527,068 km"
         )

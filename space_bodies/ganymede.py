@@ -7,12 +7,10 @@ class Ganymede(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='ganymede', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Ganymede",
+            description="Ganymede is Jupiter's largest moon, the largest moon in our solar system, and even larger than Mercury and Pluto. There is evidence of an underground saltwater ocean that may hold more water than all of Earth's surface. It is the only moon known to have its own magnetic field.",
+            mass="1.48E+23 kg",
+            diameter="5,262.4 km",
+            gravity="1.428 m/s²",
+            orbit_distance="1,070,400 km"
         )

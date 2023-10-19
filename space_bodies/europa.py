@@ -7,12 +7,10 @@ class Europa(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='europa', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Eurpoa",
+            description="Europa is one of Jupiter's moons and is the sixth closest moon to the planet. It is one of its largest and most well-known moons. Europa was discovered in 1610 when Galileo Galilei viewed it with his homemade telescope. It is primarily made of silicate rock, a water-ice crust, and a nickel core",
+            mass="4.80E+22 kg",
+            diameter="3,121.6 km",
+            gravity="1.315 m/s²",
+            orbit_distance="671,100 km"
         )
