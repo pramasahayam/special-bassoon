@@ -1,0 +1,134 @@
+@startuml
+class SolarSystem {
+    handle_event()
+    world_to_screen()
+    pick_planet()
+    draw_body()
+    render_ui()
+    set_imgui_manager()
+        imgui_manager
+    window
+    interactions
+    clicked_mouse_position
+    selected_planet
+    infobox_visible
+    infobox_visible
+    selected_planet
+    clicked_mouse_position
+    selected_planet
+    infobox_visible
+    clicked_mouse_position
+    imgui_manager
+    __init__()
+}
+WindowManager <.. SolarSystem
+UserInteractions <.. SolarSystem
+ImGuiManager <.. SolarSystem
+
+class UserInteractions {
+    handle_event()
+        imgui_manager
+    window_manager
+    screen
+    LINEAR_ZOOM_AMOUNT
+    dragging
+    CAMERA_DISTANCE
+    dragging
+    CAMERA_DISTANCE
+    CAMERA_DISTANCE
+    dragging
+    __init__()
+}
+
+class ImGuiManager {
+    setup_imgui()
+    start_frame()
+    end_frame()
+    cleanup()
+    handle_resize()
+        renderer
+    __init__()
+}
+
+class WindowManager {
+    resize()
+    get_current_dimensions()
+        screen
+    WIDTH
+    HEIGHT
+    __init__()
+}
+
+class SpaceBody {
+    compute_position()
+        radius
+    color
+    name
+    mass
+    diameter
+    avg_temperature
+    gravity
+    description
+    age
+    skyfield_name
+    data_url
+    orbital_center
+    orbital_period
+    distance_from_sun
+    orbit_distance
+    ts
+    ephemeris
+    body
+    __init__()
+}
+SolarSystem o-- SpaceBody
+
+package "Bodies" {
+
+    class Earth {
+        __init__()
+    }
+
+    class Jupiter {
+            __init__()
+    }
+
+    class Mars {
+            __init__()
+    }
+
+    class Mercury {
+            __init__()
+    }
+
+    class Moon {
+            __init__()
+    }
+
+    class Neptune {
+            __init__()
+    }
+
+    class Pluto {
+            __init__()
+    }
+
+    class Saturn {
+            __init__()
+    }
+
+    class Sun {
+            __init__()
+    }
+
+    class Uranus {
+            __init__()
+    }
+
+    class Venus {
+            __init__()
+    }
+}
+
+SpaceBody <|-- Bodies
+@enduml
