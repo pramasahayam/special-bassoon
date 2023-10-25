@@ -93,7 +93,7 @@ class SolarSystem:
         x, y, z = body.compute_position(t)
         # print(f"{body}: ({x}. {y}, {z})") # Debug
         glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
-        gluSphere(quad, body.radius, 100, 100)
+        gluSphere(quad, body.visual_radius, 100, 100)
         glPopMatrix()
 
     def render_ui(self):
