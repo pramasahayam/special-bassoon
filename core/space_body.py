@@ -62,12 +62,14 @@ class SpaceBody:
         Adjust the size of celestial bodies for better visibility.
         """
         # Determine the scaling factor based on the size of the celestial body
-        if size < SpaceBody.MIN_SIZE:
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 15
+        if size < SpaceBody.MIN_SIZE/2:
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 20
+        elif size < SpaceBody.MIN_SIZE:
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 10
         elif size < SpaceBody.SUN_RADIUS / 2: # Mainly to not include the Sun itself
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 3
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 7
         else:
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 1.2
         
         adjusted_size = size * scaling_factor
         
