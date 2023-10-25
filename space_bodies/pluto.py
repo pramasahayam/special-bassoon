@@ -11,8 +11,8 @@ class Pluto(SpaceBody):
             description="Pluto was once considered the ninth planet from the Sun but is now the best-known dwarf planet. It is a world of ice mountains and frozen planes. Pluto is located in the Kuiper Belt, a donut-shaped region beyond the orbit of Neptune.",
             mass="1.31E+22 kg",
             diameter="2,302 km",
-            gravity="0.66 m/s²",
+            gravity="0.66 m/s^2",
             avg_temperature="-232 °C",
-            day="6.375 Earth days",
-            year="248 Earth years"
+            day="27 Earth Days",
+            year="2.30E+08 Earth Years",
         )
