@@ -14,7 +14,7 @@ class SpaceBody:
 
     def __init__(self, radius, color, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
-                 mass="", diameter="", gravity="", avg_temperature="", orbit_distance="", texture_path=None):
+                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", texture_path=None):
         self.radius = radius
         self.color = color
         self.name = name
@@ -22,7 +22,10 @@ class SpaceBody:
         self.diameter = diameter
         self.avg_temperature = avg_temperature
         self.gravity = gravity
+        self.day = day
+        self.year = year
         self.description = description
+        self.AU = AU
         self.skyfield_name = skyfield_name
         self.data_url = data_url
         self.orbital_center = orbital_center
