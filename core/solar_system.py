@@ -89,9 +89,17 @@ class SolarSystem:
             glColor3fv((color[0]/255.0, color[1]/255.0, color[2]/255.0))
         
         quad = gluNewQuadric()
+
+        # If the body has a texture, bind it
+        if body.texture_id:
+            glEnable(GL_TEXTURE_2D)
+            glBindTexture(GL_TEXTURE_2D, body.texture_id)
+            gluQuadricTexture(quad, GL_TRUE)
+        else:
+            glDisable(GL_TEXTURE_2D)
+
         glPushMatrix()
         x, y, z = body.compute_position(t)
-        # print(f"{body}: ({x}. {y}, {z})") # Debug
         glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
         gluSphere(quad, body.visual_radius, 100, 100)
         glPopMatrix()

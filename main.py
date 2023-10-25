@@ -7,7 +7,12 @@ from core.imgui_manager import ImGuiManager
 
 def main():
     solar_system = SolarSystem()
+    
+    glEnable(GL_TEXTURE_2D)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
+
     imgui_manager = ImGuiManager()
     solar_system.set_imgui_manager(imgui_manager)
         
