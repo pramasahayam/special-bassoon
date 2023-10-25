@@ -129,7 +129,6 @@ class SolarSystem:
                 ("Mass", self.selected_planet.mass),
                 ("Gravitational Acceleration", self.selected_planet.gravity),
                 ("Average Temperature", self.selected_planet.avg_temperature),
-                ("Age", self.selected_planet.age),
                 ("Orbit Distance", self.selected_planet.orbit_distance),
                 ("Coordinates", self.selected_planet.compute_position(t))
             ]
