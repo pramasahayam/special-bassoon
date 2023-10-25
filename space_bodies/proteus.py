@@ -7,12 +7,10 @@ class Proteus(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='proteus', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Proteus",
+            description="Proteus is one of the largest known of Neptune's moons and has an odd box-like shape. It was discovered in 1989 by the Voyager 2. It is heavily cratered but shows no sign of geological modification. It is one of the darkest objects in our solar system and remains close to Neptune's equatorial plane.",
+            mass="5.04E+19 kg",
+            diameter="420 km",
+            gravity="0.76 m/s²",
+            orbit_distance="117,6460 km"
         )

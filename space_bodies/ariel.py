@@ -6,13 +6,11 @@ class Ariel(SpaceBody):
             radius= 5, # Multiplied by 20 for testing
             color=(0.8, 0.8, 0.8),
             skyfield_name='ariel', 
-            data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp',
+            name="Ariel",
+            description="Ariel is one of Uranus' moons and it is thought to consist of roughly equal amounts of water ice and silicate rock. It was discovered in 1851 by William Lassell who used his fortunes made in a brewery business to finance his telescopes.",
+            mass="1.29E+21 kg",
+            diameter="1,157.8 km",
+            gravity="0.258 m/s²",
+            orbit_distance="190,900 km"
         )

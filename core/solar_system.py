@@ -4,7 +4,7 @@ from OpenGL.GLU import *
 import imgui
 from core.user_interactions import UserInteractions
 from core.window_management import WindowManager
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Deimos, Phobos, Callisto, Europa, Io, Iapetus, Titan, Rhea, Oberon, Titania, Umbriel, Ariel, Nereid, Triton, Proteus
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Rhea, Oberon, Titania, Umbriel, Ariel
 
 class SolarSystem:
     def __init__(self, imgui_manager=None):
@@ -16,10 +16,9 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon(), Deimos(),
-            Phobos(), Callisto(), Europa(), Io(), Iapetus(), Titan(),
-            Rhea(), Oberon(), Titania(), Umbriel(), Ariel(), Nereid(),
-            Triton(), Proteus()
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon(), Europa(), Titan(), Deimos(),
+            Phobos(), Callisto(), Io(), Iapetus(), 
+            Rhea(), Oberon(), Titania(), Umbriel(), Ariel()
         ]
 
         self.selected_planet = None

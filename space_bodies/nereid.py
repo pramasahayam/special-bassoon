@@ -7,12 +7,10 @@ class Nereid(SpaceBody):
             color=(0.8, 0.8, 0.8),
             skyfield_name='nereid', 
             data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            name="Nereid",
+            description="Nereid is the outermost of Neptune's moons and is among the largest. It was discovered in 1949 with a ground-based telescope and it was the last satellite of Neptune to be discovered before Voyager 2. It has one of the most eccentric orbits of any moon in the solar system.",
+            mass="3.09E+19 kg",
+            diameter="340 km",
+            gravity="0.071 m/s²",
+            orbit_distance="5,513,818 km"
         )

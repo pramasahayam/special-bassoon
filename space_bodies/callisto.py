@@ -6,13 +6,11 @@ class Callisto(SpaceBody):
             radius= 5, # Multiplied by 20 for testing
             color=(0.8, 0.8, 0.8),
             skyfield_name='callisto', 
-            data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            data_url='jup365.bsp',
+            name="Callisto",
+            description="Callisto is Jupiter's second-largest moon and the third-largest in our solar system. It has multiple rings and is the most heavily cratered object in our solar system. It was discovered in 1610 and has a very icy surface that may be hiding a subsurface ocean.",
+            mass="1.08E+23 kg",
+            diameter="4,820.6 km",
+            gravity="1.236 m/s²",
+            orbit_distance="1,882,700 km"
         )

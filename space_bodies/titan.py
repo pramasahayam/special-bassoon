@@ -6,13 +6,11 @@ class Titan(SpaceBody):
             radius= 5, # Multiplied by 20 for testing
             color=(0.8, 0.8, 0.8),
             skyfield_name='titan', 
-            data_url='de421.bsp',
-            name="Luna",
-            age="4.51 billion years",
-            description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
-            mass="7.30E+22 kg",
-            diameter="3,474.8 km",
-            gravity="1.6 m/s²",
-            avg_temperature="-23 °C",
-            orbit_distance="384,400 km"
+            data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441.bsp',
+            name="Titan",
+            description="Titan is Saturn's largest moon and it is the only moon in our solar system with a substantial atmosphere. It is the only place besides Earth known to have liquids in the form of rivers, lakes, and seas on its surface. Titan is also larger than Mercury and the second-largest moon in our solar system.",
+            mass="1.35E+23 kg",
+            diameter="5,149.4 km",
+            gravity="1.354 m/s²",
+            orbit_distance="1,221,865 km"
         )
