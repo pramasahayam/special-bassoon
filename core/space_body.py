@@ -3,9 +3,12 @@ import numpy as np
 
 class SpaceBody:
 
-    MIN_SIZE = 10  # Minimum visible size threshold for the smallest body
-    MAX_SUN_SIZE = 150  # Adjusted size for the sun
-    SMALLEST_RADIUS = 0.25  # Radius of the moon
+    MIN_SIZE = 5  
+    MAX_SUN_SIZE = 250  
+    SMALLEST_RADIUS = 0.25  
+    SUN_RADIUS = 100  
+
+    BASE_SCALING_FACTOR = MAX_SUN_SIZE / SUN_RADIUS
 
     def __init__(self, radius, color, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
@@ -58,15 +61,17 @@ class SpaceBody:
         """
         Adjust the size of celestial bodies for better visibility.
         """
-        # Calculate scaling factor based on the smallest body
-        scaling_factor = SpaceBody.MIN_SIZE / SpaceBody.SMALLEST_RADIUS
+        # Determine the scaling factor based on the size of the celestial body
+        if size < SpaceBody.MIN_SIZE:
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 15
+        elif size < SpaceBody.SUN_RADIUS / 2: # Mainly to not include the Sun itself
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 3
+        else:
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR
         
-        # If the body is the sun, adjust its size separately
-        if self.name == "Sun":
-            return min(size * scaling_factor, SpaceBody.MAX_SUN_SIZE)
+        adjusted_size = size * scaling_factor
         
-        # Apply scaling factor for other celestial bodies
-        return size * scaling_factor
+        return adjusted_size
 
     def get_orbit_angle(self, ra):
         """
