@@ -9,3 +9,16 @@ from .uranus import Uranus
 from .neptune import Neptune
 from .pluto import Pluto
 from .moon import Moon
+from .europa import Europa
+from .titan import Titan
+from .deimos import Deimos
+from .phobos import Phobos
+from .callisto import Callisto
+from .ganymede import Ganymede
+from .io import Io
+from .iapetus import Iapetus
+from .rhea import Rhea
+from .oberon import Oberon
+from .titania import Titania
+from .umbriel import Umbriel
+from .ariel import Ariel
