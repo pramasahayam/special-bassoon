@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Earth(SpaceBody):
     def __init__(self):
         super().__init__(
-            radius=18.2,  # Multiplied by 20 for testing
+            radius=0.92,
             color=(0, 0.5, 1),
             skyfield_name='earth barycenter',
             data_url='de421.bsp',

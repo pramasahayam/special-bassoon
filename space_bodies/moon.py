@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Moon(SpaceBody):
     def __init__(self):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
+            radius= 0.25,
             color=(0.8, 0.8, 0.8),
             skyfield_name='moon', 
             data_url='de421.bsp',
