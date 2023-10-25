@@ -123,8 +123,10 @@ class SolarSystem:
                 ("Mass", self.selected_planet.mass),
                 ("Gravitational Acceleration", self.selected_planet.gravity),
                 ("Average Temperature", self.selected_planet.avg_temperature),
-                ("Age", self.selected_planet.age),
+                ("Distance to Earth", self.selected_planet.AU),
                 ("Orbit Distance", self.selected_planet.orbit_distance),
+                ("Day",self.selected_planet.day),
+                ("Year",self.selected_planet.year),
                 ("Coordinates", self.selected_planet.compute_position(t))
             ]
 
