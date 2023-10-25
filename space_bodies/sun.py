@@ -12,6 +12,7 @@ class Sun(SpaceBody):
             mass="1.99E+30 kg",
             diameter="1,400,000 km",
             AU="1 AU",
-            gravity="274.0 m/s²",
             avg_temperature="1.57E+07 °C",
+            day="27 Earth days",
+            year="2.30E+8 Earth years"
         )
