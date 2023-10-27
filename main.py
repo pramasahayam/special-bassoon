@@ -1,14 +1,17 @@
 import pygame
+import imgui
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from core.solar_system import SolarSystem
 from core.imgui_manager import ImGuiManager
+from core.buttons import CenterButton
 
 def main():
     solar_system = SolarSystem()
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
     imgui_manager = ImGuiManager()
+    center_button = CenterButton()
     solar_system.set_imgui_manager(imgui_manager)
         
     while True:
@@ -36,6 +39,10 @@ def main():
         
         # Render the ImGui UI
         solar_system.render_ui()
+        
+        if imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE):
+            center_button.draw_button()
+            imgui.end()
 
         imgui_manager.end_frame()
 

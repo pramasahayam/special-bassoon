@@ -3,10 +3,11 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 class UserInteractions:
-    def __init__(self, window_manager, imgui_manager):
+    def __init__(self, window_manager, imgui_manager, center_button):
         # Zooming and panning parameters
         self.imgui_manager = imgui_manager
         self.window_manager = window_manager
+        self.center_button = center_button
         self.screen = self.window_manager.screen
         self.LINEAR_ZOOM_AMOUNT = 400.0
         self.dragging = False
@@ -15,7 +16,7 @@ class UserInteractions:
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
         self.MIN_ZOOM_IN = -500
         self.MAX_ZOOM_OUT = -10000
-
+        
     def handle_event(self, event, resize):
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
@@ -46,5 +47,15 @@ class UserInteractions:
             case pygame.VIDEORESIZE:
                 width, height = event.size
                 resize(width, height)
-                self.imgui_manager.handle_resize(width, height)
+                width, height = self.screen.get_size()
+                self.center_button.update_window_size(width, height)
+                
+            case pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    # Check if the "w" key is pressed
+                    self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
+                    glLoadIdentity()  # Reset the modelview matrix to identity
+                    glTranslatef(0, 0, self.CAMERA_DISTANCE)
+                
+                
                 

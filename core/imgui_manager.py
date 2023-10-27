@@ -1,7 +1,7 @@
 import pygame
 import imgui
 from imgui.integrations.pygame import PygameRenderer
-
+       
 class ImGuiManager:
     def __init__(self):
         self.renderer = self.setup_imgui()
@@ -10,7 +10,7 @@ class ImGuiManager:
         # Initialize ImGui
         imgui.create_context()
         imgui.get_io().display_size = pygame.display.Info().current_w, pygame.display.Info().current_h
-
+        
         # Load the font
         io = imgui.get_io()
         font_path = "utils/fonts/TimesNewRoman.ttf"
@@ -40,3 +40,4 @@ class ImGuiManager:
     def handle_resize(self, width, height):
         """Update the display size for ImGui."""
         imgui.get_io().display_size = width, height
+        
