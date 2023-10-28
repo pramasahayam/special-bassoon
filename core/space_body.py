@@ -43,8 +43,8 @@ class SpaceBody:
         self.body = self.ephemeris[skyfield_name]
 
     def load_texture(self):
-        print("loading textures...") # Debug
         if self.texture_path:
+            print(f"Loading Texture: {self.texture_path}") # Debug
             texture_surface = pygame.image.load(self.texture_path)
             texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
             width, height = texture_surface.get_size()

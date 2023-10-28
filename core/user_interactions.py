@@ -47,4 +47,9 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
                 self.imgui_manager.handle_resize(width, height)
+
+    def get_camera_position(self):
+        modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
+        camera_position = [-modelview_matrix[3][i] for i in range(3)]
+        return camera_position
                 

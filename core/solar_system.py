@@ -1,7 +1,8 @@
 import pygame
+import imgui
+import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import imgui
 from core.user_interactions import UserInteractions
 from core.window_management import WindowManager
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Rhea, Oberon, Titania, Umbriel, Ariel
@@ -38,58 +39,77 @@ class SolarSystem:
             case pygame.MOUSEBUTTONUP:
                 match event.button:
                     case 1:
-                        if self.interactions.dragging:
-                            self.interactions.dragging = False
-                            return
+                        ray_origin = np.array(self.interactions.get_camera_position())
+                        ray_direction = self.compute_ray_from_mouse(event.pos) 
 
-                        clicked_planet = self.pick_planet(event.pos, t)
+                        # Debug: Print ray's origin and direction
+                        print(f"Ray Origin: {ray_origin}")
+                        print(f"Ray Direction: {ray_direction}")
 
-                        if clicked_planet:
-                            # If the user clicked on the same planet as before, do nothing
-                            if clicked_planet == self.selected_planet:
-                                return
+                        for body in self.space_bodies:
+                            body_position = np.array(body.compute_position(t))
 
-                            # If the user clicked on a different planet, update the selected planet
-                            self.selected_planet = clicked_planet
-                            self.infobox_visible = True
-                            self.clicked_mouse_position = event.pos  # Store the mouse position
-                            print(f"Clicked on: {self.selected_planet.name}")  # Debug
+                            distance_to_body = np.linalg.norm(body_position - ray_origin)
+                            print(f"Distance from camera to {body.name}: {distance_to_body}")
 
-    def world_to_screen(self, x, y, z):
-        modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
-        projection = glGetDoublev(GL_PROJECTION_MATRIX)
-        viewport = glGetIntegerv(GL_VIEWPORT)
-        screen_x, screen_y, screen_z = gluProject(x, y, z, modelview, projection, viewport)
-        return screen_x, self.window.HEIGHT - screen_y  # Flip the y-coordinate because of different coordinate systems
+                            # Debug: Print body's position
+                            print(f"{body.name} Position: {body_position}")
 
-    def pick_planet(self, mouse_pos, t):
-        # Render each body with a unique color for picking
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        for idx, body in enumerate(self.space_bodies):
-            unique_color = (idx+1, 0, 0)
-            self.draw_body(body, t, unique_color)
-        
+                            if self.intersects_sphere(ray_origin, ray_direction, body_position, body.visual_radius):
+                                # Debug: Print which body the ray intersects with
+                                print(f"Ray intersects with: {body.name}")
+
+                                self.selected_planet = body
+                                self.infobox_visible = True
+                                self.clicked_mouse_position = event.pos
+                                print(f"Clicked on: {self.selected_planet.name}")
+                                break  # Exit the loop as soon as we find an intersection
+
+
+    def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
         _, current_height = self.window.get_current_dimensions()
-        y = current_height - y
 
-        color_under_mouse = glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE)
+        # Convert mouse position to normalized device coordinates
+        ndc_x = (2.0 * x) / self.window.WIDTH - 1.0
+        ndc_y = 1.0 - (2.0 * y) / current_height
 
-        # Convert the color back to an index
-        planet_idx = int(color_under_mouse[0]) - 1
+        # Convert NDC to clip space
+        clip_coords = [ndc_x, ndc_y, -1.0, 1.0]  # -1.0 for forward direction, 1.0 for homogeneous coordinate
 
-        print(f"Planet index: {planet_idx}")  # Debug
+        # Multiply clip coordinates by the inverse projection matrix to get eye coordinates
+        inv_projection = np.linalg.inv(glGetDoublev(GL_PROJECTION_MATRIX))
+        eye_coords = np.dot(inv_projection, clip_coords)
+        eye_coords = [eye_coords[0], eye_coords[1], -1.0, 0.0]  # Set forward direction
 
-        if 0 <= planet_idx < len(self.space_bodies):
-            return self.space_bodies[planet_idx]
-        return None
+        # Multiply eye coordinates by the inverse view matrix to get world coordinates
+        inv_view = np.linalg.inv(glGetDoublev(GL_MODELVIEW_MATRIX))
+        world_coords = np.dot(inv_view, eye_coords)
 
-    def draw_body(self, body, t, color=None):
-        if color is None:
-            glColor3fv(body.color)
-        else:
-            glColor3fv((color[0]/255.0, color[1]/255.0, color[2]/255.0))
-        
+        # The ray's direction in world space
+        ray_direction = [world_coords[0], world_coords[1], world_coords[2]]
+        ray_direction = ray_direction / np.linalg.norm(ray_direction)  # Normalize
+
+        return ray_direction
+    
+    def intersects_sphere(self, ray_origin, ray_direction, sphere_center, sphere_radius):
+        # Compute the vector from the ray's origin to the sphere's center
+        oc = ray_origin - sphere_center
+
+        # Quadratic formula components
+        a = np.dot(ray_direction, ray_direction)
+        b = 2.0 * np.dot(oc, ray_direction)
+        c = np.dot(oc, oc) - sphere_radius * sphere_radius
+
+        # Discriminant
+        discriminant = b * b - 4 * a * c
+        print(f"Discriminant for {sphere_center}: {discriminant}")
+        return discriminant > 0
+
+
+    def draw_body(self, body, t):
+        glColor3fv(body.color)
+    
         quad = gluNewQuadric()
 
         # If the body has a texture, bind it
