@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Titania(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= 5,
             skyfield_name='titania', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp',
             name="Titania",
@@ -12,5 +11,6 @@ class Titania(SpaceBody):
             mass="3.42E+21 kg",
             diameter="1,577.8 km",
             gravity="0.367 m/s²",
-            orbit_distance="436,300 km"
+            orbit_distance="436,300 km",
+            orbital_center=orbital_center
         )

@@ -12,11 +12,10 @@ class SpaceBody:
 
     BASE_SCALING_FACTOR = MAX_SUN_SIZE / SUN_RADIUS
 
-    def __init__(self, radius, color, skyfield_name, data_url, 
+    def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
                  mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", texture_path=None):
         self.radius = radius
-        self.color = color
         self.name = name
         self.mass = mass
         self.diameter = diameter
@@ -80,18 +79,31 @@ class SpaceBody:
         # Vary z-coordinate based on actual distance
         z = self.get_height(dist.au)
         
+        # If the celestial body has an orbital center (i.e., it's a moon)
+        if self.orbital_center:
+            # Compute the position of the parent planet
+            parent_x, parent_y, parent_z = self.orbital_center.compute_position(t)
+            
+            # Adjust the moon's position based on the parent planet's position
+            x += parent_x/5
+            y += parent_y/5
+            z += parent_z/5
+            
         return x, y, z
+
     
     def adjust_size_for_visibility(self, size):
         """
         Adjust the size of celestial bodies for better visibility.
         """
         # Determine the scaling factor based on the size of the celestial body
-        if size < SpaceBody.MIN_SIZE/2:
+        if size <= SpaceBody.MIN_SIZE/20:
             scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 20
-        elif size < SpaceBody.MIN_SIZE:
+        elif size <= SpaceBody.MIN_SIZE/2 and size >= SpaceBody.MIN_SIZE/20:
+            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 20
+        elif size <= SpaceBody.MIN_SIZE and size >= SpaceBody.MIN_SIZE/2:
             scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 10
-        elif size < SpaceBody.SUN_RADIUS / 2: # Mainly to not include the Sun itself
+        elif size <= SpaceBody.SUN_RADIUS / 2: # Mainly to not include the Sun itself
             scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 7
         else:
             scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 1.2

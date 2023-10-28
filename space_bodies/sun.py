@@ -4,7 +4,6 @@ class Sun(SpaceBody):
     def __init__(self):
         super().__init__(
             radius=100,
-            color=(1, 1, 0),
             skyfield_name='sun', 
             data_url='de421.bsp',
             name="Sun",

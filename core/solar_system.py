@@ -17,9 +17,9 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon(), Europa(), Titan(), Deimos(),
-            Phobos(), Callisto(), Io(), Iapetus(), 
-            Rhea(), Oberon(), Titania(), Umbriel(), Ariel()
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon(Earth()), Europa(Jupiter()), Titan(Saturn()), Deimos(Mars()),
+            Phobos(Mars()), Callisto(Jupiter()), Io(Jupiter()), Iapetus(Saturn()), 
+            Rhea(Saturn()), Oberon(Uranus()), Titania(Uranus()), Umbriel(Uranus()), Ariel(Uranus())
         ]
 
         self.selected_planet = None
@@ -40,25 +40,15 @@ class SolarSystem:
                 match event.button:
                     case 1:
                         ray_origin = np.array(self.interactions.get_camera_position())
-                        ray_direction = self.compute_ray_from_mouse(event.pos) 
-
-                        # Debug: Print ray's origin and direction
-                        print(f"Ray Origin: {ray_origin}")
-                        print(f"Ray Direction: {ray_direction}")
+                        ray_direction = self.compute_ray_from_mouse(event.pos)
 
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
 
                             distance_to_body = np.linalg.norm(body_position - ray_origin)
-                            print(f"Distance from camera to {body.name}: {distance_to_body}")
-
-                            # Debug: Print body's position
-                            print(f"{body.name} Position: {body_position}")
 
                             scaled_body_position = body_position * 1000
                             if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.visual_radius):
-                                # Debug: Print which body the ray intersects with
-                                print(f"Ray intersects with: {body.name}")
 
                                 self.selected_planet = body
                                 self.infobox_visible = True
@@ -104,13 +94,10 @@ class SolarSystem:
 
         # Discriminant
         discriminant = b * b - 4 * a * c
-        print(f"Discriminant for {sphere_center}: {discriminant}")
         return discriminant > 0
 
 
     def draw_body(self, body, t):
-        glColor3fv(body.color)
-    
         quad = gluNewQuadric()
 
         # If the body has a texture, bind it
@@ -135,9 +122,6 @@ class SolarSystem:
 
         if self.infobox_visible and self.selected_planet and self.clicked_mouse_position:
             mouse_x, mouse_y = self.clicked_mouse_position
-            
-            # Adjust the mouse position based on the window dimensions
-            # _, current_height = self.window.get_current_dimensions()
             
             offset_x = -350 
             offset_y = -150   

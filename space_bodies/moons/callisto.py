@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Callisto(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= 5,
             skyfield_name='callisto', 
             data_url='jup365.bsp',
             name="Callisto",
@@ -12,5 +11,6 @@ class Callisto(SpaceBody):
             mass="1.08E+23 kg",
             diameter="4,820.6 km",
             gravity="1.236 m/s²",
-            orbit_distance="1,882,700 km"
+            orbit_distance="1,882,700 km",
+            orbital_center=orbital_center
         )

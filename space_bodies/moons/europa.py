@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Europa(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= 5,
             skyfield_name='europa', 
             data_url='jup365.bsp',
             name="Europa",
@@ -12,5 +11,6 @@ class Europa(SpaceBody):
             mass="4.80E+22 kg",
             diameter="3,121.6 km",
             gravity="1.315 m/s²",
-            orbit_distance="671,100 km"
+            orbit_distance="671,100 km",
+            orbital_center=orbital_center
         )

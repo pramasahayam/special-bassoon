@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Io(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= 5,
             skyfield_name='io', 
             data_url='jup365.bsp',
             name="Io",
@@ -12,5 +11,6 @@ class Io(SpaceBody):
             mass="8.93E+22 kg",
             diameter="3,643.2 km",
             gravity="1.796 m/s²",
-            orbit_distance="421,800 km"
+            orbit_distance="421,800 km",
+            orbital_center=orbital_center
         )

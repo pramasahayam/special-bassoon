@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Phobos(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= .17, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= .17,
             skyfield_name='phobos', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp',
             name="Phobos",
@@ -12,5 +11,6 @@ class Phobos(SpaceBody):
             mass="1.07E+16 kg",
             diameter="22.2 km",
             gravity="0.0057 m/s²",
-            orbit_distance="9,376 km"
+            orbit_distance="9,376 km",
+            orbital_center=orbital_center
         )

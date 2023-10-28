@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Moon(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 0.25,
-            color=(0.8, 0.8, 0.8),
+            radius=0.25,
             skyfield_name='moon', 
             data_url='de421.bsp',
             name="Luna",
@@ -13,4 +12,5 @@ class Moon(SpaceBody):
             diameter="3,474.8 km",
             gravity="1.6 m/s²",
             orbit_distance="384,400 km",
+            orbital_center=orbital_center
         )

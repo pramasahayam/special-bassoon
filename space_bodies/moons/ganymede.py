@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Ganymede(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= 5,
             skyfield_name='ganymede', 
             data_url='jup365.bsp',
             name="Ganymede",
@@ -12,5 +11,6 @@ class Ganymede(SpaceBody):
             mass="1.48E+23 kg",
             diameter="5,262.4 km",
             gravity="1.428 m/s²",
-            orbit_distance="1,070,400 km"
+            orbit_distance="1,070,400 km",
+            orbital_center=orbital_center
         )

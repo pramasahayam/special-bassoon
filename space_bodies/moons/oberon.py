@@ -1,10 +1,9 @@
 from core.space_body import SpaceBody
 
 class Oberon(SpaceBody):
-    def __init__(self):
+    def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5, # Multiplied by 20 for testing
-            color=(0.8, 0.8, 0.8),
+            radius= 5,
             skyfield_name='oberon', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp',
             name="Oberon",
@@ -12,5 +11,6 @@ class Oberon(SpaceBody):
             mass="2.88E+21 kg",
             diameter="1,522.8 km",
             gravity="0.332 m/s²",
-            orbit_distance="583,500 km"
+            orbit_distance="583,500 km",
+            orbital_center=orbital_center
         )
