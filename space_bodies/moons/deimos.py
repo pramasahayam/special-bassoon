@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Deimos(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 0.25,
+            radius= 0.09,
             skyfield_name='deimos', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp',
             name="Deimos",

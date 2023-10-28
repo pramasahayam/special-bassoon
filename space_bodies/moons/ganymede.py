@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Ganymede(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5,
+            radius= 0.378,
             skyfield_name='ganymede', 
             data_url='jup365.bsp',
             name="Ganymede",

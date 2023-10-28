@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Titan(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5,
+            radius= 0.370,
             skyfield_name='titan', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441.bsp',
             name="Titan",

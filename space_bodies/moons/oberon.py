@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Oberon(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5,
+            radius= 0.109,
             skyfield_name='oberon', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp',
             name="Oberon",

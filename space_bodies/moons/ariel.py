@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Ariel(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5,
+            radius= 0.083,
             skyfield_name='ariel', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp',
             name="Ariel",

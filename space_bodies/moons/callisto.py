@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Callisto(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= 5,
+            radius= 0.346,
             skyfield_name='callisto', 
             data_url='jup365.bsp',
             name="Callisto",

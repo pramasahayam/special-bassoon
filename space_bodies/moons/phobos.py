@@ -3,7 +3,7 @@ from core.space_body import SpaceBody
 class Phobos(SpaceBody):
     def __init__(self, orbital_center=None):
         super().__init__(
-            radius= .17,
+            radius= .016,
             skyfield_name='phobos', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp',
             name="Phobos",
