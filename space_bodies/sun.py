@@ -13,8 +13,7 @@ class Sun(SpaceBody):
             diameter="1,400,000 km",
             AU="1 AU",
             avg_temperature="1.57E+07 °C",
-            texture_path="textures/sun_texture.png",
             day="27 Earth days",
-            year="2.30E+8 Earth years"
-
+            year="2.30E+8 Earth years",
+            texture_path="textures/sun_texture.png"
         )
