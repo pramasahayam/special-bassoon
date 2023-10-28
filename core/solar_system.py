@@ -55,7 +55,8 @@ class SolarSystem:
                             # Debug: Print body's position
                             print(f"{body.name} Position: {body_position}")
 
-                            if self.intersects_sphere(ray_origin, ray_direction, body_position, body.visual_radius):
+                            scaled_body_position = body_position * 1000
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.visual_radius):
                                 # Debug: Print which body the ray intersects with
                                 print(f"Ray intersects with: {body.name}")
 
