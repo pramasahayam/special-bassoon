@@ -124,6 +124,9 @@ class SolarSystem:
         glPushMatrix()
         x, y, z = body.compute_position(t)
         glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
+
+        glRotatef(30, 0, 1, 0) # Rotate for visualization
+
         gluSphere(quad, body.visual_radius, 100, 100)
         glPopMatrix()
 
@@ -155,8 +158,7 @@ class SolarSystem:
                 ("Distance to Earth", self.selected_planet.AU),
                 ("Orbit Distance", self.selected_planet.orbit_distance),
                 ("Day",self.selected_planet.day),
-                ("Year",self.selected_planet.year),
-                ("Coordinates", self.selected_planet.compute_position(t))
+                ("Year",self.selected_planet.year)
             ]
 
             total_height = sum(text_height for _, value in attributes if value)
