@@ -12,5 +12,5 @@ class Moon(SpaceBody):
             mass="7.30E+22 kg",
             diameter="3,474.8 km",
             gravity="1.6 m/s²",
-            orbit_distance="384,400 km"
+            orbit_distance="384,400 km",
         )

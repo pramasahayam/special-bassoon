@@ -16,4 +16,5 @@ class Earth(SpaceBody):
             avg_temperature="15 °C",
             day="1 Earth Day",
             year="1 Earth Year",
+            texture_path="textures/planets/earth_texture.png"
         )

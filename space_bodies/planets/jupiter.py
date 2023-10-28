@@ -15,4 +15,5 @@ class Jupiter(SpaceBody):
             avg_temperature="-110 °C",
             day="0.414 Earth Days",
             year="11.86 Earth Years",
+            texture_path="textures/planets/jupiter_texture.png"
         )

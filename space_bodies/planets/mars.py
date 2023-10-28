@@ -15,4 +15,5 @@ class Mars(SpaceBody):
             avg_temperature="-65 °C",
             day="1.025 Earth Days",
             year="1.881 Earth Years",
+            texture_path="textures/planets/mars_texture.png"
         )
