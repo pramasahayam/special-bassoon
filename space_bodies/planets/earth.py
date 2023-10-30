@@ -16,5 +16,6 @@ class Earth(SpaceBody):
             day="1 Earth Day",
             year="1 Earth Year",
             texture_path="textures/planets/earth_texture.png",
-            scaling_multiplier=30
+            scaling_multiplier=30,
+            compact_multiplier=0.5
         )

@@ -5,7 +5,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from core.user_interactions import UserInteractions
 from core.window_management import WindowManager
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Ganymede, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon#, Europa, Ganymede, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel
 
 class SolarSystem:
     def __init__(self, imgui_manager=None):
@@ -17,9 +17,9 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon(Earth()), Europa(Jupiter()), Titan(Saturn()), Deimos(Mars()),
-            Phobos(Mars()), Callisto(Jupiter()), Io(Jupiter()), Iapetus(Saturn()), Oberon(Uranus()), Titania(Uranus()), Umbriel(Uranus()), Ariel(Uranus()), 
-            Ganymede(Jupiter())
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon(Earth())#, Europa(Jupiter()), Titan(Saturn()), Deimos(Mars()),
+            # Phobos(Mars()), Callisto(Jupiter()), Io(Jupiter()), Iapetus(Saturn()), Oberon(Uranus()), Titania(Uranus()), Umbriel(Uranus()), Ariel(Uranus()), 
+            # Ganymede(Jupiter())
         ]
 
         self.selected_planet = None

@@ -15,5 +15,6 @@ class Jupiter(SpaceBody):
             day="0.414 Earth Days",
             year="11.86 Earth Years",
             texture_path="textures/planets/jupiter_texture.png",
-            scaling_multiplier=6
+            scaling_multiplier=6,
+            compact_multiplier=0.3
         )

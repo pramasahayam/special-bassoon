@@ -15,5 +15,6 @@ class Mercury(SpaceBody):
             day="59 Earth Days",
             year="0.241 Earth Years",
             texture_path="textures/planets/mercury_texture.png",
-            scaling_multiplier=50
+            scaling_multiplier=50,
+            compact_multiplier=0.9
         )

@@ -15,5 +15,6 @@ class Mars(SpaceBody):
             day="1.025 Earth Days",
             year="1.881 Earth Years",
             texture_path="textures/planets/mars_texture.png",
-            scaling_multiplier=30
+            scaling_multiplier=30,
+            compact_multiplier=0.8
         )

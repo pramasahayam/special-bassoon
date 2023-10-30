@@ -14,5 +14,6 @@ class Pluto(SpaceBody):
             avg_temperature="-232 °C",
             day="27 Earth Days",
             year="2.30E+08 Earth Years",
-            scaling_multiplier=50
+            scaling_multiplier=50,
+            compact_multiplier=0.2
         )

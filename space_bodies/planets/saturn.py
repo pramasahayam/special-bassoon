@@ -15,5 +15,6 @@ class Saturn(SpaceBody):
             day="0.446 Earth Days",
             year="29 Earth Years",
             texture_path="textures/planets/saturn_texture.png",
-            scaling_multiplier=6
+            scaling_multiplier=6,
+            compact_multiplier=0.2
         )

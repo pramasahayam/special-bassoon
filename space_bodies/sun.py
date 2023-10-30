@@ -15,5 +15,6 @@ class Sun(SpaceBody):
             day="27 Earth days",
             year="2.30E+8 Earth years",
             texture_path="textures/sun_texture.png",
-            scaling_multiplier=1
+            scaling_multiplier=1,
+            compact_multiplier=1
         )

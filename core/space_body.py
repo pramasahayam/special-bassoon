@@ -87,9 +87,9 @@ class SpaceBody:
             z = parent_z + z_unit * self.distance_multiplier
 
         # Apply the compactness factor to the computed positions
-        x *= self.COMPACT_FACTOR
-        y *= self.COMPACT_FACTOR
-        z *= self.COMPACT_FACTOR
+        x *= self.compact_multiplier
+        y *= self.compact_multiplier
+        z *= self.compact_multiplier
 
         return x, y, z
 

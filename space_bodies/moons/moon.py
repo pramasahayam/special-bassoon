@@ -14,5 +14,6 @@ class Moon(SpaceBody):
             orbit_distance="384,400 km",
             orbital_center=orbital_center,
             scaling_multiplier=25,
-            distance_multiplier=1.2
+            distance_multiplier=1.2,
+            compact_multiplier=.2
         )

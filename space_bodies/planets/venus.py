@@ -15,5 +15,6 @@ class Venus(SpaceBody):
             day="243 Earth Days",
             year="0.616 Earth Years",
             texture_path="textures/planets/venus_texture.png",
-            scaling_multiplier=25
+            scaling_multiplier=25,
+            compact_multiplier=0.9
         )
