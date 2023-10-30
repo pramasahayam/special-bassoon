@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
+from OpenGL.GLU import *
 
 class UserInteractions:
     def __init__(self, window_manager, imgui_manager):
@@ -47,4 +48,18 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
                 self.imgui_manager.handle_resize(width, height)
-                
+
+    def selectionZoom(self,planet,radius,pos, eventpos):
+        x,y,z=pos
+        ex,ey=eventpos
+        print(ex)
+        print(ey)
+        change_distance = abs(self.CAMERA_DISTANCE+radius)-500
+        self.CAMERA_DISTANCE = self.CAMERA_DISTANCE + change_distance
+        #rect=self.screen.get_rect(center=(0,0))
+        #pygame.Rect.move_ip(rect, self.window_manager.WIDTH-x, self.window_manager.HEIGHT-y)
+        #self.window_manager.screen.blit(self.window_manager.screen, rect)
+        #center = screen.get_rect().center
+        #screen.blit(planet, center)
+        #screen.get_rect(center=(x,y,0))
+        glTranslatef(ex-350,ey-150, change_distance)
