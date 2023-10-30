@@ -24,6 +24,7 @@ class UserInteractions:
                     case 1:
                         self.dragging = True
                         self.last_mouse_x, self.last_mouse_y = event.pos
+                        print(self.dragging)
                     case 4:  # Zooming in
                         new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
                         if new_distance <= self.MIN_ZOOM_IN:
@@ -37,6 +38,7 @@ class UserInteractions:
             case pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False
+                    print(self.dragging)
             case pygame.MOUSEMOTION:
                 if self.dragging:
                     mouse_x, mouse_y = event.pos
@@ -44,22 +46,32 @@ class UserInteractions:
                     dy = mouse_y - self.last_mouse_y
                     glTranslatef(dx * 3, -dy * 3, 0)
                     self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
+                    print(mouse_x)
+                    print(self.last_mouse_x)
             case pygame.VIDEORESIZE:
                 width, height = event.size
                 resize(width, height)
                 self.imgui_manager.handle_resize(width, height)
 
-    def selectionZoom(self,planet,radius,pos, eventpos):
+    def selectionZoom(self,radius,pos,eventpos):
         x,y,z=pos
+        print(x)
+        print(y)
         ex,ey=eventpos
         print(ex)
         print(ey)
+        print(self.CAMERA_DISTANCE)
+        print(self.dragging)
+        print(ex)
+        print(self.last_mouse_x)
+        if self.dragging:
+            print(mouse_x - self.last_mouse_x)
+            print(mouse_y - self.last_mouse_y)
+            mouse_x, mouse_y = eventpos
+            dx = mouse_x - self.last_mouse_x
+            dy = mouse_y - self.last_mouse_y
+            glTranslatef(dx * 3, -dy * 3, 0)
+            self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
         change_distance = abs(self.CAMERA_DISTANCE+radius)-500
         self.CAMERA_DISTANCE = self.CAMERA_DISTANCE + change_distance
-        #rect=self.screen.get_rect(center=(0,0))
-        #pygame.Rect.move_ip(rect, self.window_manager.WIDTH-x, self.window_manager.HEIGHT-y)
-        #self.window_manager.screen.blit(self.window_manager.screen, rect)
-        #center = screen.get_rect().center
-        #screen.blit(planet, center)
-        #screen.get_rect(center=(x,y,0))
-        glTranslatef(ex-350,ey-150, change_distance)
+        glTranslatef(-x*1000,-y*1000, change_distance)
