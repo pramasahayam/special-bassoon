@@ -12,5 +12,7 @@ class Titania(SpaceBody):
             diameter="1,577.8 km",
             gravity="0.367 m/s²",
             orbit_distance="436,300 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            scaling_multiplier= 50,
+            distance_multiplier=1.1
         )

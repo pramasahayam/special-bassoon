@@ -14,5 +14,6 @@ class Mercury(SpaceBody):
             avg_temperature="167 °C",
             day="59 Earth Days",
             year="0.241 Earth Years",
-            texture_path="textures/planets/mercury_texture.png"
+            texture_path="textures/planets/mercury_texture.png",
+            scaling_multiplier=50
         )

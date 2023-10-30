@@ -12,5 +12,7 @@ class Deimos(SpaceBody):
             diameter="12.4 km",
             gravity="0.003 m/s²",
             orbit_distance="23,458 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            scaling_multiplier=20,
+            distance_multiplier=1.1
         )

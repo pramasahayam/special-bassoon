@@ -12,5 +12,7 @@ class Oberon(SpaceBody):
             diameter="1,522.8 km",
             gravity="0.332 m/s²",
             orbit_distance="583,500 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            scaling_multiplier=45,
+            distance_multiplier=1.15
         )

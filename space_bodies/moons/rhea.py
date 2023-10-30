@@ -12,5 +12,7 @@ class Rhea(SpaceBody):
             diameter="1,528.6 km",
             gravity="0.264 m/s²",
             orbit_distance="527,068 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            scaling_multiplier=20,
+            distance_from_sun=100
         )

@@ -12,5 +12,7 @@ class Phobos(SpaceBody):
             diameter="22.2 km",
             gravity="0.0057 m/s²",
             orbit_distance="9,376 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            scaling_multiplier=85,
+            distance_multiplier=1.15
         )

@@ -12,5 +12,7 @@ class Umbriel(SpaceBody):
             diameter="1,169.4 km",
             gravity="0.238 m/s²",
             orbit_distance="266,000 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            scaling_multiplier=50,
+            distance_multiplier=1.25
         )

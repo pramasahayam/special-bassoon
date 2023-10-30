@@ -5,16 +5,14 @@ import numpy as np
 
 class SpaceBody:
 
-    MIN_SIZE = 5  
-    MAX_SUN_SIZE = 250  
-    SMALLEST_RADIUS = 0.25  
+    MAX_SUN_SIZE = 250   
     SUN_RADIUS = 100  
 
     BASE_SCALING_FACTOR = MAX_SUN_SIZE / SUN_RADIUS
 
     def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
-                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", texture_path=None):
+                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", texture_path=None, scaling_multiplier=1, distance_multiplier=1):
         self.radius = radius
         self.name = name
         self.mass = mass
@@ -31,7 +29,9 @@ class SpaceBody:
         self.orbital_period = orbital_period
         self.distance_from_sun = distance_from_sun
         self.orbit_distance = orbit_distance
-        self.visual_radius = self.adjust_size_for_visibility(self.radius)
+        self.scaling_multiplier = scaling_multiplier
+        self.distance_multiplier = distance_multiplier
+        self.visual_radius = self.adjust_size_for_visibility()
 
         self.texture_path = texture_path
         self.texture_id = None
@@ -85,32 +85,23 @@ class SpaceBody:
             parent_x, parent_y, parent_z = self.orbital_center.compute_position(t)
             
             # Adjust the moon's position based on the parent planet's position
-            x += parent_x/5
-            y += parent_y/5
-            z += parent_z/5
+            x = x*self.distance_multiplier
+            y = y*self.distance_multiplier 
+            z = z*self.distance_multiplier
             
         return x, y, z
 
     
-    def adjust_size_for_visibility(self, size):
+    def adjust_size_for_visibility(self):
         """
         Adjust the size of celestial bodies for better visibility.
         """
-        # Determine the scaling factor based on the size of the celestial body
-        if size <= SpaceBody.MIN_SIZE/20:
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 20
-        elif size <= SpaceBody.MIN_SIZE/2 and size >= SpaceBody.MIN_SIZE/20:
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 20
-        elif size <= SpaceBody.MIN_SIZE and size >= SpaceBody.MIN_SIZE/2:
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 10
-        elif size <= SpaceBody.SUN_RADIUS / 2: # Mainly to not include the Sun itself
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 7
-        else:
-            scaling_factor = SpaceBody.BASE_SCALING_FACTOR * 1.2
-        
-        adjusted_size = size * scaling_factor
-        
+        scaling_factor = self.BASE_SCALING_FACTOR * self.scaling_multiplier
+        adjusted_size = self.radius * scaling_factor
         return adjusted_size
+
+
+
 
     def get_orbit_angle(self, ra):
         """
