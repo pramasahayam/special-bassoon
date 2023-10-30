@@ -3,12 +3,10 @@ import pygame
 from OpenGL.GL import glGenTextures, glBindTexture, glTexImage2D, GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE, glTexParameterf, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_REPEAT, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR
 import numpy as np
 
-class SpaceBody:
+class SpaceBody:  
 
-    MAX_SUN_SIZE = 250   
-    SUN_RADIUS = 100  
-
-    BASE_SCALING_FACTOR = MAX_SUN_SIZE / SUN_RADIUS
+    BASE_SCALING_FACTOR = 2.5
+    COMPACT_FACTOR = .5
 
     def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
@@ -64,34 +62,36 @@ class SpaceBody:
         Returns x, y, z coordinates.
         """
         astrometric = self.body.at(t)
-        ra, dec, dist = astrometric.radec()
+        x, y, z = astrometric.position.au
 
-        # Determine angle based on current position in orbit
-        angle = self.get_orbit_angle(ra.radians)
-
-        # Scale distance using a non-linear function
-        scaled_distance = self.scale_distance(dist.au)
-        
-        # Calculate x, y coordinates
-        x = scaled_distance * np.cos(angle)
-        y = scaled_distance * np.sin(angle)
-        
-        # Vary z-coordinate based on actual distance
-        z = self.get_height(dist.au)
-        
         # If the celestial body has an orbital center (i.e., it's a moon)
         if self.orbital_center:
-            # Compute the position of the parent planet
-            parent_x, parent_y, parent_z = self.orbital_center.compute_position(t)
-            
-            # Adjust the moon's position based on the parent planet's position
-            x = x*self.distance_multiplier
-            y = y*self.distance_multiplier 
-            z = z*self.distance_multiplier
-            
+            parent_astrometric = self.orbital_center.body.at(t)
+            parent_x, parent_y, parent_z = parent_astrometric.position.au
+
+            # Compute the relative position of the moon to its parent planet
+            x_rel = x - parent_x
+            y_rel = y - parent_y
+            z_rel = z - parent_z
+
+            # Normalize the relative position to get a unit vector
+            magnitude = np.sqrt(x_rel**2 + y_rel**2 + z_rel**2)
+            x_unit = x_rel / magnitude
+            y_unit = y_rel / magnitude
+            z_unit = z_rel / magnitude
+
+            # Scale the unit vector using the distance_multiplier
+            x = parent_x + x_unit * self.distance_multiplier
+            y = parent_y + y_unit * self.distance_multiplier
+            z = parent_z + z_unit * self.distance_multiplier
+
+        # Apply the compactness factor to the computed positions
+        x *= self.COMPACT_FACTOR
+        y *= self.COMPACT_FACTOR
+        z *= self.COMPACT_FACTOR
+
         return x, y, z
 
-    
     def adjust_size_for_visibility(self):
         """
         Adjust the size of celestial bodies for better visibility.
@@ -99,9 +99,6 @@ class SpaceBody:
         scaling_factor = self.BASE_SCALING_FACTOR * self.scaling_multiplier
         adjusted_size = self.radius * scaling_factor
         return adjusted_size
-
-
-
 
     def get_orbit_angle(self, ra):
         """
