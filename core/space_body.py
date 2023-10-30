@@ -6,11 +6,11 @@ import numpy as np
 class SpaceBody:  
 
     BASE_SCALING_FACTOR = 2.5
-    COMPACT_FACTOR = .5
 
     def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
-                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", texture_path=None, scaling_multiplier=1, distance_multiplier=1):
+                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", 
+                texture_path=None, scaling_multiplier=1, distance_multiplier=1, compact_multiplier=1):
         self.radius = radius
         self.name = name
         self.mass = mass
@@ -29,6 +29,7 @@ class SpaceBody:
         self.orbit_distance = orbit_distance
         self.scaling_multiplier = scaling_multiplier
         self.distance_multiplier = distance_multiplier
+        self.compact_multiplier = compact_multiplier
         self.visual_radius = self.adjust_size_for_visibility()
 
         self.texture_path = texture_path
