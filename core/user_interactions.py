@@ -48,7 +48,9 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
                 width, height = self.screen.get_size()
-                self.center_button.update_window_size(width, height)
+                dimensions = self.window_manager.get_current_dimensions()
+                self.center_button.update_window_size(dimensions[0], dimensions[1])
+
                 
             case pygame.KEYDOWN:
                 if event.key == pygame.K_w:

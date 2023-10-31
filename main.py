@@ -21,13 +21,13 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-
+            
             # Handle zooming, panning, and other user interactions
             solar_system.interactions.handle_event(event, solar_system.window.resize)
             
             # Handle picking a planet and displaying its info box
             solar_system.handle_event(event, t)
-
+            
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
         # Start ImGui frame
@@ -40,10 +40,9 @@ def main():
         # Render the ImGui UI
         solar_system.render_ui()
         
-        if imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE):
-            center_button.draw_button()
-            imgui.end()
-
+        center_button.calculate_button_position(0, 600)
+        center_button.draw_button()
+            
         imgui_manager.end_frame()
 
         pygame.display.flip()
