@@ -12,19 +12,12 @@ class CenterButton():
         self.button_height = 40
         self.width = pygame.display.Info().current_w
         self.height = pygame.display.Info().current_h
-        
-    def center(self):
-        UserInteractions.CAMERA_DISTANCE = UserInteractions.INITIAL_CAMERA_DISTANCE
-        glLoadIdentity()  # Reset the modelview matrix to identity
-        glTranslatef(0, 0, UserInteractions.CAMERA_DISTANCE)
+        self.button_position = (0,0)
 
     def update_window_size(self, width, height):
         self.width = width
         self.height = height
         self.calculate_button_position(self.width, self.height)
-        print(f'width is: {self.width}')
-        print(f'height is: {self.height}')
-        print(' ')
         
     def calculate_button_position(self, width, height):
         button_x = 0 # Set the left edge of the button at the left edge of the window
@@ -36,11 +29,13 @@ class CenterButton():
         imgui.set_next_window_position(*self.button_position)  # Use the stored button position
         imgui.set_next_window_size(self.button_width, self.button_height)
         imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE)
-        
-        if imgui.button("Center"):
-            glLoadIdentity()  # Reset the modelview matrix to identity
-            glTranslatef(0, 0, -5000)
-        
+
+        button_clicked = imgui.button("Center")
+
+        if button_clicked:
+            print("Button clicked!")  # Add a debug message
+
         imgui.end()
+        return button_clicked
     
  

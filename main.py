@@ -27,7 +27,7 @@ def main():
             
             # Handle picking a planet and displaying its info box
             solar_system.handle_event(event, t)
-            
+                  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
         # Start ImGui frame
@@ -41,7 +41,10 @@ def main():
         solar_system.render_ui()
         
         center_button.calculate_button_position(0, 600)
-        center_button.draw_button()
+        if center_button.draw_button():
+            # Perform the actions when the "Center" button is clicked
+            glLoadIdentity()  # Reset the modelview matrix to identity
+            glTranslatef(0, 0, -5000)
             
         imgui_manager.end_frame()
 
