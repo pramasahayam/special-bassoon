@@ -16,6 +16,10 @@ class UserInteractions:
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
         self.MIN_ZOOM_IN = -500
         self.MAX_ZOOM_OUT = -10000
+        self.centerx, self.centery = 0,0
+        self.total_pan_x,self.total_pan_y=0,0
+        self.dragx,self.dragy = 0,0
+        self.diddrag=False
 
     def handle_event(self, event, resize):
         match event.type:
@@ -23,8 +27,9 @@ class UserInteractions:
                 match event.button:
                     case 1:
                         self.dragging = True
+                        self.diddrag= True
                         self.last_mouse_x, self.last_mouse_y = event.pos
-                        print(self.dragging)
+                        print("in1", self.last_mouse_x)
                     case 4:  # Zooming in
                         new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
                         if new_distance <= self.MIN_ZOOM_IN:
@@ -38,7 +43,6 @@ class UserInteractions:
             case pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.dragging = False
-                    print(self.dragging)
             case pygame.MOUSEMOTION:
                 if self.dragging:
                     mouse_x, mouse_y = event.pos
@@ -46,8 +50,8 @@ class UserInteractions:
                     dy = mouse_y - self.last_mouse_y
                     glTranslatef(dx * 3, -dy * 3, 0)
                     self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
-                    print(mouse_x)
-                    print(self.last_mouse_x)
+                    self.total_pan_x,self.total_pan_y=self.last_mouse_x, self.last_mouse_y
+                    print("in2", self.last_mouse_x)
             case pygame.VIDEORESIZE:
                 width, height = event.size
                 resize(width, height)
@@ -55,23 +59,27 @@ class UserInteractions:
 
     def selectionZoom(self,radius,pos,eventpos):
         x,y,z=pos
-        print(x)
-        print(y)
         ex,ey=eventpos
-        print(ex)
-        print(ey)
-        print(self.CAMERA_DISTANCE)
-        print(self.dragging)
-        print(ex)
-        print(self.last_mouse_x)
-        if self.dragging:
-            print(mouse_x - self.last_mouse_x)
-            print(mouse_y - self.last_mouse_y)
-            mouse_x, mouse_y = eventpos
-            dx = mouse_x - self.last_mouse_x
-            dy = mouse_y - self.last_mouse_y
-            glTranslatef(dx * 3, -dy * 3, 0)
-            self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
+        # if self.diddrag:
+        #     print("in")
+        #     print(ex)
+        #     print(self.total_pan_x)
+        #     self.dragx = (-self.total_pan_x) 
+        #     self.dragy = (-self.total_pan_y)
+        #     #glTranslatef(self.dragx,self.dragy, 0)
+        #     print(self.dragx)
+        # if self.dragging:
+        #     mouse_x, mouse_y = eventpos
+        #     dx = mouse_x - self.last_mouse_x
+        #     dy = mouse_y - self.last_mouse_y
+        #     self.total_pan_x += dx
+        #     self.total_pan_y += dy
+        #     glTranslatef(dx * 3, -dy * 3, 0)
+        #     self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
         change_distance = abs(self.CAMERA_DISTANCE+radius)-500
         self.CAMERA_DISTANCE = self.CAMERA_DISTANCE + change_distance
-        glTranslatef(-x*1000,-y*1000, change_distance)
+        #print(self.dragx)
+        glTranslatef(-x*1000-self.centerx,-y*1000-self.centery, change_distance)
+        #glTranslatef(-x*1000-self.centerx+self.dragx,-y*1000-self.centery+self.dragy, change_distance)
+        self.centerx,self.centery = -x*1000,-y*1000
+        #self.dragx,self.dragy = 0,0
