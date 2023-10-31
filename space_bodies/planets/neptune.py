@@ -13,7 +13,5 @@ class Neptune(SpaceBody):
             gravity="11 m/s^2",
             avg_temperature="-200 °C",
             day="0.667 Earth Days",
-            year="165 Earth Years",
-            scaling_multiplier=10,
-            compact_multiplier=0.2
+            year="165 Earth Years"
         )

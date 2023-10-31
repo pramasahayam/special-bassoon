@@ -12,7 +12,5 @@ class Titan(SpaceBody):
             diameter="5,149.4 km",
             gravity="1.354 m/s²",
             orbit_distance="1,221,865 km",
-            orbital_center=orbital_center,
-            scaling_multiplier=20,
-            distance_multiplier=1.1
+            orbital_center=orbital_center
         )

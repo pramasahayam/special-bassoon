@@ -12,7 +12,5 @@ class Ariel(SpaceBody):
             diameter="1,157.8 km",
             gravity="0.258 m/s²",
             orbit_distance="190,900 km",
-            orbital_center=orbital_center,
-            scaling_multiplier=50,
-            distance_multiplier=1.2
+            orbital_center=orbital_center
         )

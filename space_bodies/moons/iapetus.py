@@ -12,7 +12,5 @@ class Iapetus(SpaceBody):
             diameter="1,471.2 km",
             gravity="0.223 m/s²",
             orbit_distance="3,560,851 km",
-            orbital_center=orbital_center,
-            scaling_multiplier=30,
-            distance_multiplier=1.2
+            orbital_center=orbital_center
         )

@@ -9,8 +9,8 @@ class SpaceBody:
 
     def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
-                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="", 
-                texture_path=None, scaling_multiplier=1, distance_multiplier=1, compact_multiplier=1):
+                 mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="",
+                texture_path=None):
         self.radius = radius
         self.name = name
         self.mass = mass
@@ -27,10 +27,6 @@ class SpaceBody:
         self.orbital_period = orbital_period
         self.distance_from_sun = distance_from_sun
         self.orbit_distance = orbit_distance
-        self.scaling_multiplier = scaling_multiplier
-        self.distance_multiplier = distance_multiplier
-        self.compact_multiplier = compact_multiplier
-        self.visual_radius = self.adjust_size_for_visibility()
 
         self.texture_path = texture_path
         self.texture_id = None
@@ -59,62 +55,13 @@ class SpaceBody:
 
     def compute_position(self, t):
         """
-        Compute the position using Skyfield and adjust for visualization.
-        Returns x, y, z coordinates.
+        Compute the position using Skyfield ephemeris data.
+        Returns x, y, z coordinates in astronomical units (au).
         """
         astrometric = self.body.at(t)
         x, y, z = astrometric.position.au
 
-        # If the celestial body has an orbital center (i.e., it's a moon)
-        if self.orbital_center:
-            parent_astrometric = self.orbital_center.body.at(t)
-            parent_x, parent_y, parent_z = parent_astrometric.position.au
-
-            # Compute the relative position of the moon to its parent planet
-            x_rel = x - parent_x
-            y_rel = y - parent_y
-            z_rel = z - parent_z
-
-            # Normalize the relative position to get a unit vector
-            magnitude = np.sqrt(x_rel**2 + y_rel**2 + z_rel**2)
-            x_unit = x_rel / magnitude
-            y_unit = y_rel / magnitude
-            z_unit = z_rel / magnitude
-
-            # Scale the unit vector using the distance_multiplier
-            x = parent_x + x_unit * self.distance_multiplier
-            y = parent_y + y_unit * self.distance_multiplier
-            z = parent_z + z_unit * self.distance_multiplier
-
-        # Apply the compactness factor to the computed positions
-        x *= self.compact_multiplier
-        y *= self.compact_multiplier
-        z *= self.compact_multiplier
-
         return x, y, z
 
-    def adjust_size_for_visibility(self):
-        """
-        Adjust the size of celestial bodies for better visibility.
-        """
-        scaling_factor = self.BASE_SCALING_FACTOR * self.scaling_multiplier
-        adjusted_size = self.radius * scaling_factor
-        return adjusted_size
 
-    def get_orbit_angle(self, ra):
-        """
-        Determine the angle based on the right ascension.
-        """
-        return ra
-
-    def scale_distance(self, distance):
-        """
-        Scale the distance using a non-linear function.
-        """
-        return np.log(distance + 1)
-
-    def get_height(self, distance):
-        """
-        Vary the z-coordinate based on the distance.
-        """
-        return distance / 10.0
+    

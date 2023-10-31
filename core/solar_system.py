@@ -3,6 +3,7 @@ import imgui
 import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
+from OpenGL.GLUT import *
 from core.user_interactions import UserInteractions
 from core.window_management import WindowManager
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon#, Europa, Ganymede, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel
@@ -48,7 +49,7 @@ class SolarSystem:
                             distance_to_body = np.linalg.norm(body_position - ray_origin)
 
                             scaled_body_position = body_position * 1000
-                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.visual_radius):
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius):
 
                                 self.selected_planet = body
                                 self.infobox_visible = True
@@ -87,17 +88,48 @@ class SolarSystem:
         # Compute the vector from the ray's origin to the sphere's center
         oc = ray_origin - sphere_center
 
-        # Quadratic formula components
+        # Quadratic formula components for the celestial body
         a = np.dot(ray_direction, ray_direction)
         b = 2.0 * np.dot(oc, ray_direction)
         c = np.dot(oc, oc) - sphere_radius * sphere_radius
 
-        # Discriminant
+        # Discriminant for the celestial body
         discriminant = b * b - 4 * a * c
-        return discriminant > 0
 
+        # Check for intersection with the ring
+        if sphere_radius <= 3:
+            ring_radius = sphere_radius * 200
+        elif sphere_radius <= 11:
+            ring_radius = sphere_radius * 30
+        elif sphere_radius >= 3:
+            ring_radius = sphere_radius * 8
+
+        oc_ring = ray_origin - sphere_center
+        a_ring = np.dot(ray_direction, ray_direction)
+        b_ring = 2.0 * np.dot(oc_ring, ray_direction)
+        c_ring = np.dot(oc_ring, oc_ring) - ring_radius * ring_radius
+
+        # Discriminant for the ring
+        discriminant_ring = b_ring * b_ring - 4 * a_ring * c_ring
+
+        return discriminant > 0 or discriminant_ring > 0
 
     def draw_body(self, body, t):
+        glPushMatrix()  # Save the current OpenGL state
+
+        # Compute the position of the celestial body
+        x, y, z = body.compute_position(t)
+        glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
+
+        # Draw the ring around the celestial body if it's not selected
+        if body != self.selected_planet and not body.orbital_center:
+            glDisable(GL_TEXTURE_2D)  # Ensure textures are disabled for the ring
+            self.draw_ring(body.radius)
+
+        # Now, apply the rotation for the celestial body
+        glRotatef(30, 0, 1, 0)  # Rotate for visualization
+
+        # Existing code to draw the celestial body
         quad = gluNewQuadric()
 
         # If the body has a texture, bind it
@@ -108,14 +140,30 @@ class SolarSystem:
         else:
             glDisable(GL_TEXTURE_2D)
 
-        glPushMatrix()
-        x, y, z = body.compute_position(t)
-        glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
+        gluSphere(quad, body.radius*2, 100, 100)
 
-        glRotatef(30, 0, 1, 0) # Rotate for visualization
+        glPopMatrix()  # Restore the saved OpenGL state
 
-        gluSphere(quad, body.visual_radius, 100, 100)
-        glPopMatrix()
+
+
+    def draw_ring(self, body_radius):
+        if body_radius <= 3:
+            ring_radius = body_radius * 200
+        elif body_radius <= 11:
+            ring_radius = body_radius * 30
+        elif body_radius >= 3:
+            ring_radius = body_radius * 7
+        num_segments = 100  # Adjust for smoother circle
+
+        glBegin(GL_LINE_LOOP)
+        for i in range(num_segments):
+            theta = 2.0 * np.pi * float(i) / float(num_segments)
+            dx = ring_radius * np.cos(theta)
+            dy = ring_radius * np.sin(theta)
+            glVertex2f(dx, dy)
+        glEnd()
+
+
 
     def render_ui(self):
         t = self.space_bodies[0].ts.now()
@@ -196,16 +244,3 @@ class SolarSystem:
     def set_imgui_manager(self, imgui_manager):
         self.imgui_manager = imgui_manager
         self.interactions.imgui_manager = imgui_manager
-
-
-
-
-
-
-
-
-
-
-
-
-

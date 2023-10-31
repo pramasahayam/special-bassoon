@@ -12,7 +12,5 @@ class Europa(SpaceBody):
             diameter="3,121.6 km",
             gravity="1.315 m/s²",
             orbit_distance="671,100 km",
-            orbital_center=orbital_center,
-            scaling_multiplier=20,
-            distance_multiplier=1.15
+            orbital_center=orbital_center
         )
