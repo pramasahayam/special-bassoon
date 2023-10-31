@@ -41,7 +41,7 @@ def main():
             solar_system.draw_body(body, t)
         
         # Render the ImGui UI
-        solar_system.render_ui()
+        imgui_manager.render_infobox(solar_system)
 
         imgui_manager.end_frame()
 

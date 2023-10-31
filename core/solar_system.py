@@ -63,9 +63,6 @@ class SolarSystem:
                                 # Here, you can add the logic to zoom the camera into the celestial body
                                 break
 
-
-
-
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
         _, current_height = self.window.get_current_dimensions()
@@ -158,8 +155,6 @@ class SolarSystem:
 
         glPopMatrix()  # Restore the saved OpenGL state
 
-
-
     def draw_ring(self, body_radius):
         if body_radius <= 3:
             ring_radius = body_radius * 200
@@ -176,84 +171,15 @@ class SolarSystem:
             dy = ring_radius * np.sin(theta)
             glVertex2f(dx, dy)
         glEnd()
-
-
-
-    def render_ui(self):
-        t = self.space_bodies[0].ts.now()
-
-        if self.infobox_visible and self.selected_planet and self.clicked_mouse_position:
-            mouse_x, mouse_y = self.clicked_mouse_position
-            
-            offset_x = -350 
-            offset_y = -150   
-            infobox_x = mouse_x + offset_x
-            infobox_y = mouse_y + offset_y
-            
-            text_height = imgui.get_text_line_height()
-            separator_height = imgui.get_frame_height_with_spacing()
-            
-            # List of attributes to display with their labels
-            attributes = [
-                ("Name", self.selected_planet.name),
-                ("Description", self.selected_planet.description),
-                ("Diameter", self.selected_planet.diameter),
-                ("Mass", self.selected_planet.mass),
-                ("Gravitational Acceleration", self.selected_planet.gravity),
-                ("Average Temperature", self.selected_planet.avg_temperature),
-                ("Distance to Earth", self.selected_planet.AU),
-                ("Orbit Distance", self.selected_planet.orbit_distance),
-                ("Day",self.selected_planet.day),
-                ("Year",self.selected_planet.year)
-            ]
-
-            total_height = sum(text_height for _, value in attributes if value)
-
-            total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
-
-            if self.selected_planet.description:
-                description_width = 280
-                total_height += imgui.calc_text_size(f"Description: {self.selected_planet.description}", wrap_width=description_width)[1] - text_height
-
-            # Add padding to the total height
-            padding = 10  # Adjust as needed
-            total_height += 2 * padding
-            
-            # Calculate the maximum width based on the longest attribute
-            max_width = max(imgui.calc_text_size(f"{label}: {value}")[0] for label, value in attributes if value)
-            infobox_width = max(300, max_width + 20)  # 20 is for some padding on the sides
-
-            # Set the position and size of the ImGui window
-            imgui.set_next_window_position(infobox_x, infobox_y)
-            imgui.set_next_window_size(300, total_height)
-            
-            flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
         
-            imgui.begin("Info Box", self.infobox_visible, flags)
+    def get_selected_planet(self):
+        return self.selected_planet
 
-            imgui.set_cursor_pos((imgui.get_cursor_pos()[0], imgui.get_cursor_pos()[1] + padding))  # Add top padding
-        
-            for i, (label, value) in enumerate(attributes):
-                if value: 
-                    if label == "Name":
-                        # Bold and center the name
-                        text_width = imgui.calc_text_size(value)[0]
-                        centered_x = (imgui.get_window_width() - text_width) / 2
-                        imgui.set_cursor_pos((centered_x, imgui.get_cursor_pos()[1]))
-                        imgui.push_style_color(imgui.COLOR_TEXT, 1, 1, 0, 1)  
-                        imgui.text(value)
-                        imgui.pop_style_color()  # Reset to default color
-                    elif label == "Description":
-                        imgui.text_wrapped(f"{label}: {value}")  
-                    elif label == "Coordinates":
-                        imgui.text_wrapped(f"{label}: {value}")
-                    else:
-                        imgui.text(f"{label}: {value}")
-                    
-                    if i < len(attributes) - 1:
-                        imgui.separator()
+    def is_infobox_visible(self):
+        return self.infobox_visible
 
-            imgui.end()
+    def get_clicked_mouse_position(self):
+        return self.clicked_mouse_position
 
     def set_imgui_manager(self, imgui_manager):
         self.imgui_manager = imgui_manager
