@@ -8,7 +8,7 @@ class UserInteractions:
         self.imgui_manager = imgui_manager
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
-        self.LINEAR_ZOOM_AMOUNT = 800.0
+        self.LINEAR_ZOOM_AMOUNT = 400.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -40000

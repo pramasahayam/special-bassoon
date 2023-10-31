@@ -43,19 +43,27 @@ class SolarSystem:
                         ray_origin = np.array(self.interactions.get_camera_position())
                         ray_direction = self.compute_ray_from_mouse(event.pos)
 
+                        # First, check for intersections with celestial bodies
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
-
-                            distance_to_body = np.linalg.norm(body_position - ray_origin)
-
                             scaled_body_position = body_position * 1000
-                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius):
-
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "body":
                                 self.selected_planet = body
                                 self.infobox_visible = True
                                 self.clicked_mouse_position = event.pos
                                 print(f"Clicked on: {self.selected_planet.name}")
-                                break  # Exit the loop as soon as we find an intersection
+                                return  # Exit the function as soon as we find an intersection with a celestial body
+
+                        # If no celestial body is intersected, then check for intersections with the rings
+                        for body in self.space_bodies:
+                            body_position = np.array(body.compute_position(t))
+                            scaled_body_position = body_position * 1000
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
+                                print(f"Ring of {body.name} was clicked!")
+                                # Here, you can add the logic to zoom the camera into the celestial body
+                                break
+
+
 
 
     def compute_ray_from_mouse(self, mouse_pos):
@@ -96,6 +104,9 @@ class SolarSystem:
         # Discriminant for the celestial body
         discriminant = b * b - 4 * a * c
 
+        if discriminant > 0:
+            return "body"
+
         # Check for intersection with the ring
         if sphere_radius <= 3:
             ring_radius = sphere_radius * 200
@@ -112,7 +123,10 @@ class SolarSystem:
         # Discriminant for the ring
         discriminant_ring = b_ring * b_ring - 4 * a_ring * c_ring
 
-        return discriminant > 0 or discriminant_ring > 0
+        if discriminant_ring > 0:
+            return "ring"
+
+        return None
 
     def draw_body(self, body, t):
         glPushMatrix()  # Save the current OpenGL state
