@@ -21,11 +21,9 @@ class ImGuiManager:
 
         return renderer
 
-    def start_frame(self, screen):
-        """Start a new ImGui frame and handle Pygame events."""
+    def start_frame(self):
+        """Start a new ImGui frame."""
         imgui.new_frame()
-        for event in pygame.event.get():
-            self.renderer.process_event(event)
 
     def end_frame(self):
         """End the current ImGui frame and render it."""

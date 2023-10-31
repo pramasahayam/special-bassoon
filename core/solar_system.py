@@ -1,18 +1,15 @@
 import pygame
-import imgui
 import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from core.user_interactions import UserInteractions
-from core.window_management import WindowManager
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon#, Europa, Ganymede, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon
 
 class SolarSystem:
-    def __init__(self, imgui_manager=None):
-        self.imgui_manager = imgui_manager
-        self.window = WindowManager()
-        self.interactions = UserInteractions(self.window, self.imgui_manager)
+    def __init__(self, window_manager, imgui_manager):
+        self.window_manager = window_manager
+        self.interactions = UserInteractions(self.window_manager, imgui_manager)
         self.clicked_mouse_position = None
         
         # List of space bodies in our solar system
@@ -65,10 +62,10 @@ class SolarSystem:
 
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
-        _, current_height = self.window.get_current_dimensions()
+        _, current_height = self.window_manager.get_current_dimensions()
 
         # Convert mouse position to normalized device coordinates
-        ndc_x = (2.0 * x) / self.window.WIDTH - 1.0
+        ndc_x = (2.0 * x) / self.window_manager.WIDTH - 1.0
         ndc_y = 1.0 - (2.0 * y) / current_height
 
         # Convert NDC to clip space
@@ -180,7 +177,3 @@ class SolarSystem:
 
     def get_clicked_mouse_position(self):
         return self.clicked_mouse_position
-
-    def set_imgui_manager(self, imgui_manager):
-        self.imgui_manager = imgui_manager
-        self.interactions.imgui_manager = imgui_manager
