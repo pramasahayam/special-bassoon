@@ -51,7 +51,7 @@ class SolarSystem:
 
                             # If the user clicked on a different planet, update the selected planet
                             self.selected_planet = clicked_planet
-                            UserInteractions.selectionZoom(self.interactions, self.selected_planet.radius,self.selected_planet.compute_position(self.space_bodies[0].ts.now()), event.pos)
+                            UserInteractions.selectionZoom(self.interactions, self.selected_planet.radius,self.selected_planet.compute_position(self.space_bodies[0].ts.now()))
                             self.infobox_visible = True
                             self.clicked_mouse_position = event.pos  # Store the mouse position
                             print(f"Clicked on: {self.selected_planet.name}")  # Debug
