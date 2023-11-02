@@ -3,8 +3,7 @@ from core.space_body import SpaceBody
 class Sun(SpaceBody):
     def __init__(self):
         super().__init__(
-            radius=100,
-            color=(1, 1, 0),
+            radius=50,
             skyfield_name='sun', 
             data_url='de421.bsp',
             name="Sun",
@@ -13,8 +12,7 @@ class Sun(SpaceBody):
             diameter="1,400,000 km",
             AU="1 AU",
             avg_temperature="1.57E+07 °C",
-            texture_path="textures/sun_texture.png",
             day="27 Earth days",
-            year="2.30E+8 Earth years"
-
+            year="2.30E+8 Earth years",
+            texture_path="textures/sun_texture.png"
         )

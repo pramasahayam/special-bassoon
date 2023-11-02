@@ -1,24 +1,23 @@
 import pygame
+import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import imgui
+from OpenGL.GLUT import *
 from core.user_interactions import UserInteractions
-from core.window_management import WindowManager
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Rhea, Oberon, Titania, Umbriel, Ariel
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon
 
 class SolarSystem:
-    def __init__(self, imgui_manager=None):
-        self.imgui_manager = imgui_manager
-        self.window = WindowManager()
-        self.interactions = UserInteractions(self.window, self.imgui_manager)
+    def __init__(self, window_manager, imgui_manager):
+        self.window_manager = window_manager
+        self.interactions = UserInteractions(self.window_manager, imgui_manager)
         self.clicked_mouse_position = None
         
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon(), Europa(), Titan(), Deimos(),
-            Phobos(), Callisto(), Io(), Iapetus(), 
-            Rhea(), Oberon(), Titania(), Umbriel(), Ariel()
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon(Earth())#, Europa(Jupiter()), Titan(Saturn()), Deimos(Mars()),
+            # Phobos(Mars()), Callisto(Jupiter()), Io(Jupiter()), Iapetus(Saturn()), Oberon(Uranus()), Titania(Uranus()), Umbriel(Uranus()), Ariel(Uranus()), 
+            # Ganymede(Jupiter())
         ]
 
         self.selected_planet = None
@@ -38,58 +37,107 @@ class SolarSystem:
             case pygame.MOUSEBUTTONUP:
                 match event.button:
                     case 1:
-                        if self.interactions.dragging:
-                            self.interactions.dragging = False
-                            return
+                        ray_origin = np.array(self.interactions.get_camera_position())
+                        ray_direction = self.compute_ray_from_mouse(event.pos)
 
-                        clicked_planet = self.pick_planet(event.pos, t)
+                        # First, check for intersections with celestial bodies
+                        for body in self.space_bodies:
+                            body_position = np.array(body.compute_position(t))
+                            scaled_body_position = body_position * 1000
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "body":
+                                self.selected_planet = body
+                                self.infobox_visible = True
+                                self.clicked_mouse_position = event.pos
+                                print(f"Clicked on: {self.selected_planet.name}")
+                                return  # Exit the function as soon as we find an intersection with a celestial body
 
-                        if clicked_planet:
-                            # If the user clicked on the same planet as before, do nothing
-                            if clicked_planet == self.selected_planet:
-                                return
+                        # If no celestial body is intersected, then check for intersections with the rings
+                        for body in self.space_bodies:
+                            body_position = np.array(body.compute_position(t))
+                            scaled_body_position = body_position * 1000
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
+                                print(f"Ring of {body.name} was clicked!")
+                                # Here, you can add the logic to zoom the camera into the celestial body
+                                break
 
-                            # If the user clicked on a different planet, update the selected planet
-                            self.selected_planet = clicked_planet
-                            self.infobox_visible = True
-                            self.clicked_mouse_position = event.pos  # Store the mouse position
-                            print(f"Clicked on: {self.selected_planet.name}")  # Debug
-
-    def world_to_screen(self, x, y, z):
-        modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
-        projection = glGetDoublev(GL_PROJECTION_MATRIX)
-        viewport = glGetIntegerv(GL_VIEWPORT)
-        screen_x, screen_y, screen_z = gluProject(x, y, z, modelview, projection, viewport)
-        return screen_x, self.window.HEIGHT - screen_y  # Flip the y-coordinate because of different coordinate systems
-
-    def pick_planet(self, mouse_pos, t):
-        # Render each body with a unique color for picking
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        for idx, body in enumerate(self.space_bodies):
-            unique_color = (idx+1, 0, 0)
-            self.draw_body(body, t, unique_color)
-        
+    def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
-        _, current_height = self.window.get_current_dimensions()
-        y = current_height - y
+        _, current_height = self.window_manager.get_current_dimensions()
 
-        color_under_mouse = glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE)
+        # Convert mouse position to normalized device coordinates
+        ndc_x = (2.0 * x) / self.window_manager.WIDTH - 1.0
+        ndc_y = 1.0 - (2.0 * y) / current_height
 
-        # Convert the color back to an index
-        planet_idx = int(color_under_mouse[0]) - 1
+        # Convert NDC to clip space
+        clip_coords = [ndc_x, ndc_y, -1.0, 1.0]  # -1.0 for forward direction, 1.0 for homogeneous coordinate
 
-        print(f"Planet index: {planet_idx}")  # Debug
+        # Multiply clip coordinates by the inverse projection matrix to get eye coordinates
+        inv_projection = np.linalg.inv(glGetDoublev(GL_PROJECTION_MATRIX))
+        eye_coords = np.dot(inv_projection, clip_coords)
+        eye_coords = [eye_coords[0], eye_coords[1], -1.0, 0.0]  # Set forward direction
 
-        if 0 <= planet_idx < len(self.space_bodies):
-            return self.space_bodies[planet_idx]
+        # Multiply eye coordinates by the inverse view matrix to get world coordinates
+        inv_view = np.linalg.inv(glGetDoublev(GL_MODELVIEW_MATRIX))
+        world_coords = np.dot(inv_view, eye_coords)
+
+        # The ray's direction in world space
+        ray_direction = [world_coords[0], world_coords[1], world_coords[2]]
+        ray_direction = ray_direction / np.linalg.norm(ray_direction)  # Normalize
+
+        return ray_direction
+    
+    def intersects_sphere(self, ray_origin, ray_direction, sphere_center, sphere_radius):
+        # Compute the vector from the ray's origin to the sphere's center
+        oc = ray_origin - sphere_center
+
+        # Quadratic formula components for the celestial body
+        a = np.dot(ray_direction, ray_direction)
+        b = 2.0 * np.dot(oc, ray_direction)
+        c = np.dot(oc, oc) - sphere_radius * sphere_radius
+
+        # Discriminant for the celestial body
+        discriminant = b * b - 4 * a * c
+
+        if discriminant > 0:
+            return "body"
+
+        # Check for intersection with the ring
+        if sphere_radius <= 3:
+            ring_radius = sphere_radius * 200
+        elif sphere_radius <= 11:
+            ring_radius = sphere_radius * 30
+        elif sphere_radius >= 3:
+            ring_radius = sphere_radius * 8
+
+        oc_ring = ray_origin - sphere_center
+        a_ring = np.dot(ray_direction, ray_direction)
+        b_ring = 2.0 * np.dot(oc_ring, ray_direction)
+        c_ring = np.dot(oc_ring, oc_ring) - ring_radius * ring_radius
+
+        # Discriminant for the ring
+        discriminant_ring = b_ring * b_ring - 4 * a_ring * c_ring
+
+        if discriminant_ring > 0:
+            return "ring"
+
         return None
 
-    def draw_body(self, body, t, color=None):
-        if color is None:
-            glColor3fv(body.color)
-        else:
-            glColor3fv((color[0]/255.0, color[1]/255.0, color[2]/255.0))
-        
+    def draw_body(self, body, t):
+        glPushMatrix()  # Save the current OpenGL state
+
+        # Compute the position of the celestial body
+        x, y, z = body.compute_position(t)
+        glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
+
+        # Draw the ring around the celestial body if it's not selected
+        if body != self.selected_planet and not body.orbital_center:
+            glDisable(GL_TEXTURE_2D)  # Ensure textures are disabled for the ring
+            self.draw_ring(body.radius)
+
+        # Now, apply the rotation for the celestial body
+        glRotatef(30, 0, 1, 0)  # Rotate for visualization
+
+        # Existing code to draw the celestial body
         quad = gluNewQuadric()
 
         # If the body has a texture, bind it
@@ -100,105 +148,32 @@ class SolarSystem:
         else:
             glDisable(GL_TEXTURE_2D)
 
-        glPushMatrix()
-        x, y, z = body.compute_position(t)
-        glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
-        gluSphere(quad, body.visual_radius, 100, 100)
-        glPopMatrix()
+        gluSphere(quad, body.radius*2, 100, 100)
 
-    def render_ui(self):
-        t = self.space_bodies[0].ts.now()
+        glPopMatrix()  # Restore the saved OpenGL state
 
-        if self.infobox_visible and self.selected_planet and self.clicked_mouse_position:
-            mouse_x, mouse_y = self.clicked_mouse_position
-            
-            # Adjust the mouse position based on the window dimensions
-            # _, current_height = self.window.get_current_dimensions()
-            
-            offset_x = -350 
-            offset_y = -150   
-            infobox_x = mouse_x + offset_x
-            infobox_y = mouse_y + offset_y
-            
-            text_height = imgui.get_text_line_height()
-            separator_height = imgui.get_frame_height_with_spacing()
-            
-            # List of attributes to display with their labels
-            attributes = [
-                ("Name", self.selected_planet.name),
-                ("Description", self.selected_planet.description),
-                ("Diameter", self.selected_planet.diameter),
-                ("Mass", self.selected_planet.mass),
-                ("Gravitational Acceleration", self.selected_planet.gravity),
-                ("Average Temperature", self.selected_planet.avg_temperature),
-                ("Distance to Earth", self.selected_planet.AU),
-                ("Orbit Distance", self.selected_planet.orbit_distance),
-                ("Day",self.selected_planet.day),
-                ("Year",self.selected_planet.year),
-                ("Coordinates", self.selected_planet.compute_position(t))
-            ]
+    def draw_ring(self, body_radius):
+        if body_radius <= 3:
+            ring_radius = body_radius * 200
+        elif body_radius <= 11:
+            ring_radius = body_radius * 30
+        elif body_radius >= 3:
+            ring_radius = body_radius * 7
+        num_segments = 100  # Adjust for smoother circle
 
-            total_height = sum(text_height for _, value in attributes if value)
-
-            total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
-
-            if self.selected_planet.description:
-                description_width = 280
-                total_height += imgui.calc_text_size(f"Description: {self.selected_planet.description}", wrap_width=description_width)[1] - text_height
-
-            # Add padding to the total height
-            padding = 10  # Adjust as needed
-            total_height += 2 * padding
-            
-            # Calculate the maximum width based on the longest attribute
-            max_width = max(imgui.calc_text_size(f"{label}: {value}")[0] for label, value in attributes if value)
-            infobox_width = max(300, max_width + 20)  # 20 is for some padding on the sides
-
-            # Set the position and size of the ImGui window
-            imgui.set_next_window_position(infobox_x, infobox_y)
-            imgui.set_next_window_size(300, total_height)
-            
-            flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
+        glBegin(GL_LINE_LOOP)
+        for i in range(num_segments):
+            theta = 2.0 * np.pi * float(i) / float(num_segments)
+            dx = ring_radius * np.cos(theta)
+            dy = ring_radius * np.sin(theta)
+            glVertex2f(dx, dy)
+        glEnd()
         
-            imgui.begin("Info Box", self.infobox_visible, flags)
+    def get_selected_planet(self):
+        return self.selected_planet
 
-            imgui.set_cursor_pos((imgui.get_cursor_pos()[0], imgui.get_cursor_pos()[1] + padding))  # Add top padding
-        
-            for i, (label, value) in enumerate(attributes):
-                if value: 
-                    if label == "Name":
-                        # Bold and center the name
-                        text_width = imgui.calc_text_size(value)[0]
-                        centered_x = (imgui.get_window_width() - text_width) / 2
-                        imgui.set_cursor_pos((centered_x, imgui.get_cursor_pos()[1]))
-                        imgui.push_style_color(imgui.COLOR_TEXT, 1, 1, 0, 1)  
-                        imgui.text(value)
-                        imgui.pop_style_color()  # Reset to default color
-                    elif label == "Description":
-                        imgui.text_wrapped(f"{label}: {value}")  
-                    elif label == "Coordinates":
-                        imgui.text_wrapped(f"{label}: {value}")
-                    else:
-                        imgui.text(f"{label}: {value}")
-                    
-                    if i < len(attributes) - 1:
-                        imgui.separator()
+    def is_infobox_visible(self):
+        return self.infobox_visible
 
-            imgui.end()
-
-    def set_imgui_manager(self, imgui_manager):
-        self.imgui_manager = imgui_manager
-        self.interactions.imgui_manager = imgui_manager
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def get_clicked_mouse_position(self):
+        return self.clicked_mouse_position
