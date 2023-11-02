@@ -76,14 +76,14 @@ class SolarSystem:
         x, y = mouse_pos
         _, current_height = self.window.get_current_dimensions()
         y = current_height - y
-
+        
         color_under_mouse = glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE)
 
         # Convert the color back to an index
         planet_idx = int(color_under_mouse[0]) - 1
 
         print(f"Planet index: {planet_idx}")  # Debug
-
+        
         if 0 <= planet_idx < len(self.space_bodies):
             return self.space_bodies[planet_idx]
         return None
@@ -104,7 +104,7 @@ class SolarSystem:
 
     def render_ui(self):
         t = self.space_bodies[0].ts.now()
-
+        
         if self.infobox_visible and self.selected_planet and self.clicked_mouse_position:
             mouse_x, mouse_y = self.clicked_mouse_position
             

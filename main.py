@@ -24,10 +24,10 @@ def main():
             
             # Handle zooming, panning, and other user interactions
             solar_system.interactions.handle_event(event, solar_system.window.resize)
-            
+              
             # Handle picking a planet and displaying its info box
             solar_system.handle_event(event, t)
-                  
+              
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
         # Start ImGui frame
@@ -36,16 +36,14 @@ def main():
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
+            
+        center_button.calculate_button_position(0, 600)    
         
         # Render the ImGui UI
+        imgui_manager.render_center_button(center_button)
+        
         solar_system.render_ui()
         
-        center_button.calculate_button_position(0, 600)
-        if center_button.draw_button():
-            # Perform the actions when the "Center" button is clicked
-            glLoadIdentity()  # Reset the modelview matrix to identity
-            glTranslatef(0, 0, -5000)
-            
         imgui_manager.end_frame()
 
         pygame.display.flip()

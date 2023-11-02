@@ -1,10 +1,13 @@
 import pygame
 import imgui
 from imgui.integrations.pygame import PygameRenderer
+from core.buttons import CenterButton
+from OpenGL.GL import *
        
 class ImGuiManager:
     def __init__(self):
         self.renderer = self.setup_imgui()
+        self.center_button = CenterButton
 
     def setup_imgui(self):
         # Initialize ImGui
@@ -40,4 +43,16 @@ class ImGuiManager:
     def handle_resize(self, width, height):
         """Update the display size for ImGui."""
         imgui.get_io().display_size = width, height
+        
+    def render_center_button(self, center_button):
+        imgui.set_next_window_position(*center_button.button_position)  # Use the stored button position
+        imgui.set_next_window_size(center_button.button_width, center_button.button_height) #
+        imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE)
+
+        if imgui.button("Center"):
+            """glLoadIdentity()  # Reset the modelview matrix to identity
+            glTranslatef(0, 0, -5000)"""
+            print("Button clicked!")  # Add a debug message
+
+        imgui.end()
         
