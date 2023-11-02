@@ -4,7 +4,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from core.solar_system import SolarSystem
 from core.imgui_manager import ImGuiManager
-from core.window_management import WindowManager
+from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 
 def main():

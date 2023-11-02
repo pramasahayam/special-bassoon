@@ -50,6 +50,20 @@ class ImGuiManager:
             self.render_infobox_content(attributes)
             
             imgui.end()
+    
+    def render_date_picker(self, solar_system):
+        imgui.set_next_window_position(0, 0)
+        imgui.set_next_window_size(-1, 50)  # -1 for full width, 50px high
+
+        flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
+
+        imgui.begin("Date Picker", flags=flags)
+
+        changed, date_str = imgui.input_text("Date", solar_system.current_date_str, 256)
+        if changed:
+            solar_system.set_date_from_str(date_str)
+
+        imgui.end()
 
     def setup_infobox_position(self, solar_system):
         mouse_x, mouse_y = solar_system.get_clicked_mouse_position()
