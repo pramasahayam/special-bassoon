@@ -1,12 +1,12 @@
-class DateManager:
-    def __init__(self, solar_system):
-        self.solar_system = solar_system
-        self.current_date = self.solar_system.space_bodies[0].ts.now()
+from skyfield.api import load
 
-    def set_date(self, new_date_str):
-        # Parse the new date string and update the current_date
-        # This is where you would use Skyfield to parse the date string and update self.current_date
-        pass
+class DateManager:
+    def __init__(self):
+        self.ts = load.timescale()
+        self.current_date = self.ts.now()
+
+    def set_date(self, year, month, day):
+        self.current_date = self.ts.utc(year, month, day)
 
     def get_current_date(self):
         return self.current_date

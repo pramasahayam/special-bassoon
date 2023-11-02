@@ -3,12 +3,12 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 class UserInteractions:
-    def __init__(self, window_manager, imgui_manager):
+    def __init__(self, window_manager, gui_manager):
         # Zooming and panning parameters
-        self.imgui_manager = imgui_manager
+        self.gui_manager = gui_manager
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
-        self.LINEAR_ZOOM_AMOUNT = 400.0
+        self.LINEAR_ZOOM_AMOUNT = 2400.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -40000
@@ -41,12 +41,12 @@ class UserInteractions:
                     mouse_x, mouse_y = event.pos
                     dx = mouse_x - self.last_mouse_x
                     dy = mouse_y - self.last_mouse_y
-                    glTranslatef(dx * 10, -dy * 10, 0)
+                    glTranslatef(dx * 15, -dy * 15, 0)
                     self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
             case pygame.VIDEORESIZE:
                 width, height = event.size
                 resize(width, height)
-                self.imgui_manager.handle_resize(width, height)
+                self.gui_manager.handle_resize(width, height)
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)

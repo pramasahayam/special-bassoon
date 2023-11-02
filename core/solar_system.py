@@ -7,9 +7,9 @@ from core.user_interactions import UserInteractions
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon
 
 class SolarSystem:
-    def __init__(self, window_manager, imgui_manager):
+    def __init__(self, window_manager, gui_manager):
         self.window_manager = window_manager
-        self.interactions = UserInteractions(self.window_manager, imgui_manager)
+        self.interactions = UserInteractions(self.window_manager, gui_manager)
         self.clicked_mouse_position = None
         
         # List of space bodies in our solar system
