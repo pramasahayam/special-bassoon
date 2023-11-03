@@ -10,11 +10,7 @@ class GuiManager:
         self.error_message = ""
         self.error_display_time = 0
         self.show_date_input = False
-        self.date_input = {
-            'day': '',
-            'month': '',
-            'year': ''
-        }
+        self.date_input = {'day': '', 'month': '', 'year': ''}
 
     def setup_imgui(self):
         imgui.create_context()
@@ -64,115 +60,135 @@ class GuiManager:
             
             imgui.end()
 
+    
     def render_date_selector(self, date_manager):
-        # Set the initial position for the date selector window
+        self.set_date_selector_window_position()
+        self.set_date_selector_style()
+        self.begin_date_selector_window()
+        self.render_input_date_toggle_button()
+        self.render_separator()
+        if self.show_date_input:
+            self.render_date_input_fields(date_manager)
+        self.end_date_selector_window()
+        self.reset_date_selector_style()
+
+    def set_date_selector_window_position(self):
         imgui.set_next_window_position(50, 0)
 
-        # Modify the style to have rounded corners
+    def set_date_selector_style(self):
         style = imgui.get_style()
         style.window_rounding = 5.0
-        style.frame_rounding = 5.0   
+        style.frame_rounding = 5.0
 
-        # Begin the date selector window with the appropriate flags
+    def begin_date_selector_window(self):
         window_flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE
-        imgui.begin("Date Selector", flags = window_flags)
+        imgui.begin("Date Selector", flags=window_flags)
 
+    def render_input_date_toggle_button(self):
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
-
-        # Button to toggle the visibility of the date input section
         if imgui.button("Input Date"):
             self.show_date_input = not self.show_date_input
         imgui.pop_style_color(1)
 
-        # Draw a white separator line
-        imgui.push_style_color(imgui.COLOR_SEPARATOR, 1.0, 1.0, 1.0, 1.0) 
+    def render_separator(self):
+        imgui.push_style_color(imgui.COLOR_SEPARATOR, 1.0, 1.0, 1.0, 1.0)
         imgui.separator()
         imgui.pop_style_color()
 
-        # If the button is pressed, show the input section
-        if self.show_date_input:
-            imgui.text("Enter date (MM/DD/YYYY):")
-        
-            small_input_width = 23.5
-            large_input_width = 37
+    def render_date_input_fields(self, date_manager):
+        imgui.text("Enter date (MM/DD/YYYY):")
+        self.render_date_inputs()
+        self.render_confirm_button(date_manager)
+        self.render_reset_button(date_manager)
+        self.display_error_message()
 
-            # Push the input box color
-            imgui.push_style_color(imgui.COLOR_TEXT, 1.0, 1.0, 1.0, 1.0) 
-            imgui.push_style_color(imgui.COLOR_FRAME_BACKGROUND, 0.2, 0.2, 0.2, 1.0)
-            imgui.push_item_width(small_input_width)
-            changed_month, self.date_input['month'] = imgui.input_text("##month", self.date_input['month'], 3)
-            imgui.pop_item_width()
+    def render_date_inputs(self):
+        small_input_width = 23.5
+        large_input_width = 37
+        imgui.push_style_color(imgui.COLOR_TEXT, 1.0, 1.0, 1.0, 1.0)
+        imgui.push_style_color(imgui.COLOR_FRAME_BACKGROUND, 0.2, 0.2, 0.2, 1.0)
+        self.render_input_field("##month", self.date_input['month'], small_input_width, 2, "/")
+        self.render_input_field("##day", self.date_input['day'], small_input_width, 2, "/")
+        self.render_input_field("##year", self.date_input['year'], large_input_width, 4)
+        imgui.pop_style_color(2)
+
+    def render_input_field(self, label, value, width, buffer_size, separator=None):
+        imgui.push_item_width(width)
+        changed, self.date_input[label.strip('#')] = imgui.input_text(label, value, buffer_size)
+        imgui.pop_item_width()
+        if separator:
             imgui.same_line(spacing=10)
-            imgui.text("/")
+            imgui.text(separator)
             imgui.same_line(spacing=10)
 
-            imgui.push_item_width(small_input_width)
-            changed_day, self.date_input['day'] = imgui.input_text("##day", self.date_input['day'], 3)
-            imgui.pop_item_width()
-            imgui.same_line(spacing=10)
-            imgui.text("/")
-            imgui.same_line(spacing=10)
+    def render_confirm_button(self, date_manager):
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
+        if imgui.button("Confirm"):
+            self.handle_date_confirmation(date_manager)
+        imgui.pop_style_color(1)
 
-            imgui.push_item_width(large_input_width)
-            changed_year, self.date_input['year'] = imgui.input_text("##year", self.date_input['year'], 5)
-            imgui.pop_item_width()
-            imgui.pop_style_color(2)
+    def render_reset_button(self, date_manager):
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
+        if imgui.button("Reset"):
+            self.reset_to_current_date(date_manager)
+        imgui.pop_style_color(1)
 
-            imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
-            # Confirm Date button
-            if imgui.button("Confirm"):
-                try:
+    def reset_to_current_date(self, date_manager):
+        """Reset the date to the current date."""
+        now = datetime.datetime.utcnow()
+        date_manager.set_date(now.month, now.day, now.year)
+        self.show_date_input = False
+        self.error_message = "" 
 
-                    if (self.date_input['day'] in ['', 'DD'] or
-                        self.date_input['month'] in ['', 'MM'] or
-                        self.date_input['year'] in ['', 'YYYY']):
-                        raise ValueError("Invalid date. Please enter a valid date.")
-                    day = int(self.date_input['day'])
-                    month = int(self.date_input['month'])
-                    year = int(self.date_input['year'])
+    def display_error_message(self):
+        if self.error_message:
+            current_time = time.time()
+            if current_time - self.error_display_time < 3:
+                imgui.same_line()
+                imgui.text_colored(self.error_message, 1.0, 0.0, 0.0)
+            else:
+                self.error_message = ""
 
-                    # Check if the year is within the valid range
-                    if year > 2050:
-                        raise ValueError("Year must be before 2050")
-                    if year < 1900:
-                        raise ValueError("Year must be after 1900")
-
-                    # Validate the date
-                    if not self.is_valid_date(year, month, day):
-                        raise ValueError("Invalid date. Please enter a valid date.")
-
-                    # If the date is valid, set it in the date manager
-                    date_manager.set_date(month, day, year)
-                    self.show_date_input = False  # Optionally hide the input fields after confirmation
-                    self.error_message = ""  # Clear any previous error message
-                except ValueError as e:
-                    # Display the error message
-                    self.error_message = str(e)
-                    self.error_display_time = time.time()  # Record the time when the error occurred
-            imgui.pop_style_color(1)
-
-            imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
-            if imgui.button("Reset"):
-                # Get the current date and time
-                now = datetime.datetime.utcnow()
-                # Set the date to the current date
-                date_manager.set_date(now.month, now.day, now.year)
-            imgui.pop_style_color(1)
-
-            # Display error message if present
-            if self.error_message:
-                current_time = time.time()
-                # Check if less than 3 second has passed since the error was recorded
-                if current_time - self.error_display_time < 3:
-                    imgui.same_line()
-                    imgui.text_colored(self.error_message, 1.0, 0.0, 0.0)  # Red text
-                else:
-                    self.error_message = ""  # Clear the error message after 3 second
-
+    def end_date_selector_window(self):
         imgui.end()
 
+    def reset_date_selector_style(self):
+        style = imgui.get_style()
         style.window_rounding = 0.0
         style.frame_rounding = 0.0
+
+    def handle_date_confirmation(self, date_manager):
+        try:
+            # Check if any of the date fields are empty or placeholders
+            if (self.date_input['day'] in ['', 'DD'] or
+                self.date_input['month'] in ['', 'MM'] or
+                self.date_input['year'] in ['', 'YYYY']):
+                raise ValueError("Invalid date. Please enter a valid date.")
+
+            # Convert the input strings to integers
+            day = int(self.date_input['day'])
+            month = int(self.date_input['month'])
+            year = int(self.date_input['year'])
+
+            # Check if the year is within the valid range
+            if year > 2050:
+                raise ValueError("Year must be before 2050.")
+            if year < 1900:
+                raise ValueError("Year must be after 1900.")
+
+            # Validate the date using a helper method
+            if not self.is_valid_date(year, month, day):
+                raise ValueError("Invalid date. Please enter a valid date.")
+
+            # If the date is valid, set it in the date manager
+            date_manager.set_date(month, day, year)
+            self.show_date_input = False 
+            self.error_message = ""  
+        except ValueError as e:
+            # Display the error message
+            self.error_message = str(e)
+            self.error_display_time = time.time()  # Record the time when the error occurred
+
 
     def is_valid_date(self, year, month, day):
         """Check if the date is valid."""
