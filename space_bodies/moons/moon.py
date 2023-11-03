@@ -12,5 +12,6 @@ class Moon(SpaceBody):
             diameter="3,474.8 km",
             gravity="1.6 m/s²",
             orbit_distance="384,400 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )

@@ -13,5 +13,6 @@ class Uranus(SpaceBody):
             gravity="8.7 m/s^2",
             avg_temperature="-195 °C",
             day="0.719 Earth Days",
-            year="84 Earth Years"
+            year="84 Earth Years",
+            texture_path="textures/planets/uranus_texture.png"
         )
