@@ -48,7 +48,7 @@ def main():
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
         
-        gui_manager.render_ui(solar_system, date_manager)
+        gui_manager.render_ui(solar_system, date_manager, user_interactions.get_camera_distance())
 
         gui_manager.end_frame()
 

@@ -1,4 +1,6 @@
 import pygame
+from pygame.locals import *
+from OpenGL.GL import *
 import imgui
 import time
 import datetime
@@ -34,10 +36,10 @@ class GuiManager:
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
 
-    def render_ui(self, solar_system, date_manager):
+    def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
-        self.render_center_button()
+        self.render_center_button(user_interactions)
 
     def process_event(self, event):
         """
@@ -70,13 +72,14 @@ class GuiManager:
         if self.show_date_input:
             self.render_date_input_fields(date_manager)
         self.end_date_selector_window()
-        self.reset_date_selector_style()
+        self.reset_style()
 
     def set_date_selector_window_position(self):
-        imgui.set_next_window_position(50, 0)
+        imgui.set_next_window_position(65, 0) 
 
     def set_date_selector_style(self):
         style = imgui.get_style()
+        style.window_border_size = 0.0
         style.window_rounding = 5.0
         style.frame_rounding = 5.0
         
@@ -152,7 +155,7 @@ class GuiManager:
     def end_date_selector_window(self):
         imgui.end()
 
-    def reset_date_selector_style(self):
+    def reset_style(self):
         style = imgui.get_style()
         style.window_rounding = 0.0
         style.frame_rounding = 0.0
@@ -161,22 +164,25 @@ class GuiManager:
         imgui.set_next_window_position(0, 0)
         
     def begin_center_button(self):
-        imgui.set_next_window_size(65, 40)
+        imgui.set_next_window_size(63.5, 0)
         imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         
-    def render_center_button(self):
+    def render_center_button(self, current_camera_distance):
         self.set_date_selector_style()
         self.set_center_button_window_position()
         self.begin_center_button()
-        
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
         if imgui.button("Center"):
             print('Center button pressed')
             glLoadIdentity()
-            glTranslatef(0, 0, -5000) 
+            glTranslatef(0, 0, current_camera_distance)
+        imgui.pop_style_color(1)
+
+        self.render_separator()
 
         imgui.end()
         
-        self.reset_date_selector_style()
+        self.reset_style()
 
     def handle_date_confirmation(self, date_manager):
         try:
@@ -279,4 +285,7 @@ class GuiManager:
     def handle_resize(self, width, height):
         """Update the display size for ImGui."""
         imgui.get_io().display_size = width, height
+
+
+
 

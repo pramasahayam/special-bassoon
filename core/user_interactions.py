@@ -53,10 +53,6 @@ class UserInteractions:
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
         camera_position = [-modelview_matrix[3][i] for i in range(3)]
         return camera_position
-                
-            case pygame.KEYDOWN:
-                if event.key == pygame.K_w:
-                    # Check if the "w" key is pressed
-                    self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
-                    glLoadIdentity()  # Reset the modelview matrix to identity
-                    glTranslatef(0, 0, self.CAMERA_DISTANCE)                
+    
+    def get_camera_distance(self):
+        return self.CAMERA_DISTANCE
