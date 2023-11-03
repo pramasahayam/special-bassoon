@@ -4,17 +4,15 @@ from OpenGL.GLU import *
 import imgui
 from core.user_interactions import UserInteractions
 from core.window_management import WindowManager
-from core.imgui_manager import ImGuiManager
+from core.gui_manager import GuiManager
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Rhea, Oberon, Titania, Umbriel, Ariel
 
-from core.buttons import CenterButton
 
 class SolarSystem:
-    def __init__(self, imgui_manager=None):
-        self.imgui_manager = imgui_manager
+    def __init__(self, gui_manager=None):
+        self.gui_manager = gui_manager
         self.window = WindowManager()
-        self.center_button = CenterButton()
-        self.interactions = UserInteractions(self.window, self.imgui_manager, self.center_button)
+        self.interactions = UserInteractions(self.window, self.gui_manager)
         self.clicked_mouse_position = None
         
         # List of space bodies in our solar system
@@ -182,6 +180,6 @@ class SolarSystem:
 
             imgui.end()
 
-    def set_imgui_manager(self, imgui_manager):
-        self.imgui_manager = imgui_manager
-        self.interactions.imgui_manager = imgui_manager
+    def set_imgui_manager(self, gui_manager):
+        self.gui_manager = gui_manager
+        self.interactions.gui_manager = gui_manager

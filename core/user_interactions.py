@@ -3,11 +3,10 @@ from pygame.locals import *
 from OpenGL.GL import *
 
 class UserInteractions:
-    def __init__(self, window_manager, imgui_manager, center_button):
+    def __init__(self, window_manager, gui_manager):
         # Zooming and panning parameters
-        self.imgui_manager = imgui_manager
+        self.gui_manager = gui_manager
         self.window_manager = window_manager
-        self.center_button = center_button
         self.screen = self.window_manager.screen
         self.LINEAR_ZOOM_AMOUNT = 400.0
         self.dragging = False
@@ -22,11 +21,8 @@ class UserInteractions:
             case pygame.MOUSEBUTTONDOWN:
                 match event.button:
                     case 1:
-                        if self.center_button.mouse_on_button(event.pos):
-                            self.center_button.handle_click()
-                        else:
-                            self.dragging = True
-                            self.last_mouse_x, self.last_mouse_y = event.pos
+                        self.dragging = True
+                        self.last_mouse_x, self.last_mouse_y = event.pos
                     case 4:  # Zooming in
                         new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
                         if new_distance <= self.MIN_ZOOM_IN:
@@ -51,8 +47,6 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
                 width, height = self.screen.get_size()
-                dimensions = self.window_manager.get_current_dimensions()
-                self.center_button.update_window_size(dimensions[0], dimensions[1])
 
                 
             case pygame.KEYDOWN:

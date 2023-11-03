@@ -1,13 +1,11 @@
 import pygame
 import imgui
 from imgui.integrations.pygame import PygameRenderer
-from core.buttons import CenterButton
 from OpenGL.GL import *
        
-class ImGuiManager:
+class GuiManager:
     def __init__(self):
         self.renderer = self.setup_imgui()
-        self.center_button = CenterButton
 
     def setup_imgui(self):
         # Initialize ImGui
@@ -39,20 +37,49 @@ class ImGuiManager:
         """Cleanup resources when the application exits."""
         imgui.end_frame()
         imgui.shutdown()
+        
+    def process_event(self, event):
+        """
+        Process a single Pygame event and pass it to ImGui.
+        """
+        if self.renderer is not None:
+            self.renderer.process_event(event)
 
     def handle_resize(self, width, height):
         """Update the display size for ImGui."""
         imgui.get_io().display_size = width, height
         
-    def render_center_button(self, center_button):
-        imgui.set_next_window_position(*center_button.button_position)  # Use the stored button position
-        imgui.set_next_window_size(center_button.button_width, center_button.button_height) #
-        imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE)
-
+    def render_ui(self):
+        self.render_center_button()
+    
+    def set_date_selector_style(self):
+        style = imgui.get_style()
+        style.window_rounding = 5.0
+        style.frame_rounding = 5.0
+    
+    def reset_date_selector_style(self):
+        style = imgui.get_style()
+        style.window_rounding = 0.0
+        style.frame_rounding = 0.0
+        
+    def set_center_button_window_position(self):
+        imgui.set_next_window_position(0, 0)
+        
+    def begin_center_button(self):
+        imgui.set_next_window_size(65, 40)
+        imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+        
+    def render_center_button(self):
+        self.set_date_selector_style()
+        self.set_center_button_window_position()
+        self.begin_center_button()
+        
         if imgui.button("Center"):
-            """glLoadIdentity()  # Reset the modelview matrix to identity
-            glTranslatef(0, 0, -5000)"""
-            print("Button clicked!")  # Add a debug message
+            print('Center button pressed')
+            glLoadIdentity()
+            glTranslatef(0, 0, -5000) 
 
         imgui.end()
+        
+        self.reset_date_selector_style()
         
