@@ -71,6 +71,26 @@ class SolarSystem:
         # Convert NDC to clip space
         clip_coords = [ndc_x, ndc_y, -1.0, 1.0]  # -1.0 for forward direction, 1.0 for homogeneous coordinate
 
+        print(f"Planet index: {planet_idx}")  # Debug
+        
+        if 0 <= planet_idx < len(self.space_bodies):
+            return self.space_bodies[planet_idx]
+        return None
+
+    def draw_body(self, body, t, color=None):
+        if color is None:
+            glColor3fv(body.color)
+        else:
+            glColor3fv((color[0]/255.0, color[1]/255.0, color[2]/255.0))
+        
+        quad = gluNewQuadric()
+        glPushMatrix()
+        x, y, z = body.compute_position(t)
+        # print(f"{body}: ({x}. {y}, {z})") # Debug
+        glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
+        gluSphere(quad, body.radius, 100, 100)
+        glPopMatrix()
+
         # Multiply clip coordinates by the inverse projection matrix to get eye coordinates
         inv_projection = np.linalg.inv(glGetDoublev(GL_PROJECTION_MATRIX))
         eye_coords = np.dot(inv_projection, clip_coords)

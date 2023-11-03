@@ -24,7 +24,7 @@ class GuiManager:
         renderer = PygameRenderer()
 
         return renderer
-
+            
     def start_frame(self):
         """Start a new ImGui frame."""
         imgui.new_frame()
@@ -37,6 +37,7 @@ class GuiManager:
     def render_ui(self, solar_system, date_manager):
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
+        self.render_center_button()
 
     def process_event(self, event):
         """
@@ -59,8 +60,7 @@ class GuiManager:
             self.render_infobox_content(attributes)
             
             imgui.end()
-
-    
+  
     def render_date_selector(self, date_manager):
         self.set_date_selector_window_position()
         self.set_date_selector_style()
@@ -79,7 +79,7 @@ class GuiManager:
         style = imgui.get_style()
         style.window_rounding = 5.0
         style.frame_rounding = 5.0
-
+        
     def begin_date_selector_window(self):
         window_flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE
         imgui.begin("Date Selector", flags=window_flags)
@@ -156,6 +156,27 @@ class GuiManager:
         style = imgui.get_style()
         style.window_rounding = 0.0
         style.frame_rounding = 0.0
+        
+    def set_center_button_window_position(self):
+        imgui.set_next_window_position(0, 0)
+        
+    def begin_center_button(self):
+        imgui.set_next_window_size(65, 40)
+        imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+        
+    def render_center_button(self):
+        self.set_date_selector_style()
+        self.set_center_button_window_position()
+        self.begin_center_button()
+        
+        if imgui.button("Center"):
+            print('Center button pressed')
+            glLoadIdentity()
+            glTranslatef(0, 0, -5000) 
+
+        imgui.end()
+        
+        self.reset_date_selector_style()
 
     def handle_date_confirmation(self, date_manager):
         try:
@@ -188,7 +209,6 @@ class GuiManager:
             # Display the error message
             self.error_message = str(e)
             self.error_display_time = time.time()  # Record the time when the error occurred
-
 
     def is_valid_date(self, year, month, day):
         """Check if the date is valid."""
@@ -259,3 +279,4 @@ class GuiManager:
     def handle_resize(self, width, height):
         """Update the display size for ImGui."""
         imgui.get_io().display_size = width, height
+

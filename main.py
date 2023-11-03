@@ -1,4 +1,5 @@
 import pygame
+import imgui
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -7,6 +8,7 @@ from core.gui_manager import GuiManager
 from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
+
 
 def main():
     window_manager = WindowManager()
@@ -19,7 +21,7 @@ def main():
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     glEnable(GL_DEPTH_TEST)
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
-        
+  
     date_manager = DateManager()
     
     while True:
@@ -36,7 +38,7 @@ def main():
             
             # Handle picking a planet and displaying its info box
             solar_system.handle_event(event, t)
-
+              
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
         # Start ImGui frame

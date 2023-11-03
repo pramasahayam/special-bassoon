@@ -13,9 +13,10 @@ class UserInteractions:
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -50000
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
+
         self.MIN_ZOOM_IN = 400
         self.MAX_ZOOM_OUT = -50000
-
+        
     def handle_event(self, event, resize):
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
@@ -53,3 +54,9 @@ class UserInteractions:
         camera_position = [-modelview_matrix[3][i] for i in range(3)]
         return camera_position
                 
+            case pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    # Check if the "w" key is pressed
+                    self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
+                    glLoadIdentity()  # Reset the modelview matrix to identity
+                    glTranslatef(0, 0, self.CAMERA_DISTANCE)                
