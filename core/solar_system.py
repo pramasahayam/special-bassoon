@@ -185,16 +185,3 @@ class SolarSystem:
     def set_imgui_manager(self, imgui_manager):
         self.imgui_manager = imgui_manager
         self.interactions.imgui_manager = imgui_manager
-
-
-
-
-
-
-
-
-
-
-
-
-

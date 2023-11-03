@@ -22,8 +22,11 @@ class UserInteractions:
             case pygame.MOUSEBUTTONDOWN:
                 match event.button:
                     case 1:
-                        self.dragging = True
-                        self.last_mouse_x, self.last_mouse_y = event.pos
+                        if self.center_button.mouse_on_button(event.pos):
+                            self.center_button.handle_click()
+                        else:
+                            self.dragging = True
+                            self.last_mouse_x, self.last_mouse_y = event.pos
                     case 4:  # Zooming in
                         new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
                         if new_distance <= self.MIN_ZOOM_IN:
@@ -57,7 +60,4 @@ class UserInteractions:
                     # Check if the "w" key is pressed
                     self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
                     glLoadIdentity()  # Reset the modelview matrix to identity
-                    glTranslatef(0, 0, self.CAMERA_DISTANCE)
-                
-                
-                
+                    glTranslatef(0, 0, self.CAMERA_DISTANCE)                

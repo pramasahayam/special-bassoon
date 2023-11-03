@@ -13,7 +13,7 @@ def main():
     imgui_manager = ImGuiManager()
     center_button = CenterButton()
     solar_system.set_imgui_manager(imgui_manager)
-        
+    
     while True:
         t = solar_system.space_bodies[0].ts.now()
 
@@ -36,13 +36,14 @@ def main():
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
-            
-        center_button.calculate_button_position(0, 600)    
-        
-        # Render the ImGui UI
-        imgui_manager.render_center_button(center_button)
-        
+
+        # Render the info boxes for celestial bodies
         solar_system.render_ui()
+
+        # Render the button on top of everything
+        center_button.calculate_button_position(0, 600)    
+        imgui_manager.render_center_button(center_button)
+
         
         imgui_manager.end_frame()
 
