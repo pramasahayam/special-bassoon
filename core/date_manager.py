@@ -5,7 +5,7 @@ class DateManager:
         self.ts = load.timescale()
         self.current_date = self.ts.now()
 
-    def set_date(self, year, month, day):
+    def set_date(self, month, day, year):
         self.current_date = self.ts.utc(year, month, day)
 
     def get_current_date(self):

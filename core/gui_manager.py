@@ -1,11 +1,20 @@
 import pygame
 import imgui
+import time
+import datetime
 from imgui.integrations.pygame import PygameRenderer
 
 class GuiManager:
     def __init__(self):
         self.renderer = self.setup_imgui()
-        self.calender_widget = None
+        self.error_message = ""
+        self.error_display_time = 0
+        self.show_date_input = False
+        self.date_input = {
+            'day': 'DD',
+            'month': 'MM',
+            'year': 'YYYY'
+        }
 
     def setup_imgui(self):
         imgui.create_context()
@@ -30,7 +39,15 @@ class GuiManager:
         self.renderer.render(imgui.get_draw_data())
 
     def render_ui(self, solar_system, date_manager):
+        self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
+
+    def process_event(self, event):
+        """
+        Process a single Pygame event and pass it to ImGui.
+        """
+        if self.renderer is not None:
+            self.renderer.process_event(event)
 
     def render_infobox(self, solar_system):
         if solar_system.is_infobox_visible() and solar_system.get_selected_planet() and solar_system.get_clicked_mouse_position():
@@ -47,6 +64,78 @@ class GuiManager:
             self.render_infobox_content(attributes)
             
             imgui.end()
+
+    def render_date_selector(self, date_manager):
+        # Set the initial position for the date selector window
+        imgui.set_next_window_position(50, 0)
+
+        # Begin the date selector window with the appropriate flags
+        window_flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE
+        imgui.begin("Date Selector", flags=window_flags)
+
+        # Button to toggle the visibility of the date input section
+        if imgui.button("Input Date"):
+            self.show_date_input = not self.show_date_input
+
+        # If the button is pressed, show the input section
+        if self.show_date_input:
+            imgui.text("Enter date (MM/DD/YYYY):")
+            imgui.push_item_width(50)
+            changed_month, self.date_input['month'] = imgui.input_text("##month", self.date_input['month'], 3)
+            imgui.same_line(spacing=10)
+            imgui.text("/")
+            imgui.same_line(spacing=10)
+            changed_day, self.date_input['day'] = imgui.input_text("##day", self.date_input['day'], 3)
+            imgui.same_line(spacing=10)
+            imgui.text("/")
+            imgui.same_line(spacing=10)
+            changed_year, self.date_input['year'] = imgui.input_text("##year", self.date_input['year'], 5)
+            imgui.pop_item_width()
+
+            # Confirm Date button
+            if imgui.button("Confirm Date"):
+                try:
+                    day = int(self.date_input['day'])
+                    month = int(self.date_input['month'])
+                    year = int(self.date_input['year'])
+
+                    # Check if the year is within the valid range
+                    if year > 2050:
+                        raise ValueError("Year must be 2050 or earlier.")
+
+                    # Validate the date
+                    if not self.is_valid_date(year, month, day):
+                        raise ValueError("Invalid date. Please enter a valid date.")
+
+                    # If the date is valid, set it in the date manager
+                    date_manager.set_date(month, day, year)
+                    self.show_date_input = False  # Optionally hide the input fields after confirmation
+                    self.error_message = ""  # Clear any previous error message
+                except ValueError as e:
+                    # Display the error message
+                    self.error_message = str(e)
+                    self.error_display_time = time.time()  # Record the time when the error occurred
+
+            # Display error message if present
+            if self.error_message:
+                current_time = time.time()
+                # Check if less than 1 second has passed since the error was recorded
+                if current_time - self.error_display_time < 3:
+                    imgui.same_line()
+                    imgui.text_colored(self.error_message, 1.0, 0.0, 0.0)  # Red text
+                else:
+                    self.error_message = ""  # Clear the error message after 1 second
+
+        # End the date selector window
+        imgui.end()
+
+    def is_valid_date(self, year, month, day):
+        """Check if the date is valid."""
+        try:
+            datetime.datetime(year, month, day)
+            return True
+        except ValueError:
+            return False
 
     def setup_infobox_position(self, solar_system):
         mouse_x, mouse_y = solar_system.get_clicked_mouse_position()

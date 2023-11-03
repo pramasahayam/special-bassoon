@@ -29,6 +29,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+            gui_manager.process_event(event)
 
             # Handle zooming, panning, and other user interactions
             user_interactions.handle_event(event, window_manager.resize)
