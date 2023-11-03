@@ -61,7 +61,7 @@ class SpaceBody:
         astrometric = self.body.at(t)
         x, y, z = astrometric.position.au
 
-        return x, y, z
+        return -x, -y, z
 
 
     

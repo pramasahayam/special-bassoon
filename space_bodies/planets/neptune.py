@@ -13,5 +13,6 @@ class Neptune(SpaceBody):
             gravity="11 m/s^2",
             avg_temperature="-200 °C",
             day="0.667 Earth Days",
-            year="165 Earth Years"
+            year="165 Earth Years",
+            texture_path="textures/planets/neptune_texture.png"
         )

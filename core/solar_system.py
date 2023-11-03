@@ -7,9 +7,9 @@ from core.user_interactions import UserInteractions
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon
 
 class SolarSystem:
-    def __init__(self, window_manager, imgui_manager):
+    def __init__(self, window_manager, gui_manager):
         self.window_manager = window_manager
-        self.interactions = UserInteractions(self.window_manager, imgui_manager)
+        self.interactions = UserInteractions(self.window_manager, gui_manager)
         self.clicked_mouse_position = None
         
         # List of space bodies in our solar system
@@ -43,7 +43,7 @@ class SolarSystem:
                         # First, check for intersections with celestial bodies
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
-                            scaled_body_position = body_position * 1000
+                            scaled_body_position = body_position * 1500
                             if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "body":
                                 self.selected_planet = body
                                 self.infobox_visible = True
@@ -54,7 +54,7 @@ class SolarSystem:
                         # If no celestial body is intersected, then check for intersections with the rings
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
-                            scaled_body_position = body_position * 1000
+                            scaled_body_position = body_position * 1500
                             if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
                                 print(f"Ring of {body.name} was clicked!")
                                 # Here, you can add the logic to zoom the camera into the celestial body
@@ -103,9 +103,9 @@ class SolarSystem:
 
         # Check for intersection with the ring
         if sphere_radius <= 3:
-            ring_radius = sphere_radius * 200
+            ring_radius = sphere_radius * 400
         elif sphere_radius <= 11:
-            ring_radius = sphere_radius * 30
+            ring_radius = sphere_radius * 60
         elif sphere_radius >= 3:
             ring_radius = sphere_radius * 8
 
@@ -127,7 +127,7 @@ class SolarSystem:
 
         # Compute the position of the celestial body
         x, y, z = body.compute_position(t)
-        glTranslatef(x * 1000, y * 1000, z * 1000)  # Scaling factor for visualization
+        glTranslatef(x * 1500, y * 1500, z * 1500)  # Scaling factor for visualization
 
         # Draw the ring around the celestial body if it's not selected
         if body != self.selected_planet and not body.orbital_center:
@@ -154,11 +154,11 @@ class SolarSystem:
 
     def draw_ring(self, body_radius):
         if body_radius <= 3:
-            ring_radius = body_radius * 200
+            ring_radius = body_radius * 400
         elif body_radius <= 11:
-            ring_radius = body_radius * 30
+            ring_radius = body_radius * 60
         elif body_radius >= 3:
-            ring_radius = body_radius * 7
+            ring_radius = body_radius * 8
         num_segments = 100  # Adjust for smoother circle
 
         glBegin(GL_LINE_LOOP)
