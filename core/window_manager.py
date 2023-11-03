@@ -1,0 +1,26 @@
+import pygame
+from pygame.locals import *
+from OpenGL.GL import *
+from OpenGL.GLU import *
+
+class WindowManager:
+    def __init__(self):
+        pygame.init()
+        self.WIDTH, self.HEIGHT = 800, 600
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), DOUBLEBUF | OPENGL | pygame.RESIZABLE)
+        pygame.display.set_caption('Solar System Simulation')
+        self.resize(self.WIDTH, self.HEIGHT)
+
+    def resize(self, width, height):
+        """Handles the window resize."""
+        self.WIDTH = width
+        self.HEIGHT = height
+        glViewport(0, 0, width, height)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(45, (width / height), 0.1, 70000.0)
+        glMatrixMode(GL_MODELVIEW)
+
+    def get_current_dimensions(self):
+        return self.WIDTH, self.HEIGHT
+
