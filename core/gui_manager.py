@@ -54,7 +54,6 @@ class GuiManager:
             infobox_x, infobox_y, total_height = self.setup_infobox_position(solar_system)
             attributes = self.get_infobox_attributes(solar_system)
             
-            # Set the position and size of the ImGui window
             imgui.set_next_window_position(infobox_x, infobox_y)
             imgui.set_next_window_size(300, total_height)
             
@@ -71,8 +70,8 @@ class GuiManager:
 
         # Modify the style to have rounded corners
         style = imgui.get_style()
-        style.window_rounding = 5.0  # Adjust the rounding radius as needed
-        style.frame_rounding = 5.0   # Adjust the rounding radius as needed
+        style.window_rounding = 5.0
+        style.frame_rounding = 5.0   
 
         # Begin the date selector window with the appropriate flags
         window_flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE
@@ -86,22 +85,20 @@ class GuiManager:
         imgui.pop_style_color(1)
 
         # Draw a white separator line
-        imgui.push_style_color(imgui.COLOR_SEPARATOR, 1.0, 1.0, 1.0, 1.0)  # RGBA for white color
+        imgui.push_style_color(imgui.COLOR_SEPARATOR, 1.0, 1.0, 1.0, 1.0) 
         imgui.separator()
         imgui.pop_style_color()
 
         # If the button is pressed, show the input section
         if self.show_date_input:
             imgui.text("Enter date (MM/DD/YYYY):")
-            
-            # Set the width for the month and day input to be half of the year input
-            small_input_width = 23
+        
+            small_input_width = 23.5
             large_input_width = 37
 
             # Push the input box color
-            imgui.push_style_color(imgui.COLOR_TEXT, 0.5, 0.5, 0.5, 1.0)  # Gray color for text
-            imgui.push_style_color(imgui.COLOR_FRAME_BACKGROUND, 0.2, 0.2, 0.2, 1.0)  # Darker gray for input box background
-
+            imgui.push_style_color(imgui.COLOR_TEXT, 1.0, 1.0, 1.0, 1.0) 
+            imgui.push_style_color(imgui.COLOR_FRAME_BACKGROUND, 0.2, 0.2, 0.2, 1.0)
             imgui.push_item_width(small_input_width)
             changed_month, self.date_input['month'] = imgui.input_text("##month", self.date_input['month'], 3)
             imgui.pop_item_width()
