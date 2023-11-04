@@ -40,10 +40,12 @@ def main():
             solar_system.handle_event(event, t)
               
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        
-        # Start ImGui frame
+
         gui_manager.start_frame()
         
+        # Drawing the skybox
+        solar_system.draw_skybox(solar_system.skybox_texture_id)
+
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)

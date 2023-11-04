@@ -11,6 +11,7 @@ class SolarSystem:
         self.window_manager = window_manager
         self.interactions = UserInteractions(self.window_manager, gui_manager)
         self.clicked_mouse_position = None
+        self.skybox_texture_id = self.load_skybox_texture("textures/misc/skybox_texture1.png")
         
         # List of space bodies in our solar system
         self.space_bodies = [
@@ -131,13 +132,11 @@ class SolarSystem:
 
         # Draw the ring around the celestial body if it's not selected
         if body != self.selected_planet and not body.orbital_center:
-            glDisable(GL_TEXTURE_2D)  # Ensure textures are disabled for the ring
+            glDisable(GL_TEXTURE_2D)  
             self.draw_ring(body.radius)
 
-        # Now, apply the rotation for the celestial body
-        glRotatef(30, 0, 1, 0)  # Rotate for visualization
+        glRotatef(30, 0, 1, 0)  
 
-        # Existing code to draw the celestial body
         quad = gluNewQuadric()
 
         # If the body has a texture, bind it
@@ -169,6 +168,80 @@ class SolarSystem:
             glVertex2f(dx, dy)
         glEnd()
         
+    def load_skybox_texture(self, texture_path):
+        # Load the texture from the file and get the texture ID
+        texture_surface = pygame.image.load(texture_path)
+        texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
+        width = texture_surface.get_width()
+        height = texture_surface.get_height()
+
+        texture_id = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, texture_id)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+
+        return texture_id
+
+    def draw_skybox(self, texture_id):
+        # Size of the skybox
+        size = 300000
+
+        # Vertices of the cube
+        vertices = [
+            [-size, -size, -size],
+            [size, -size, -size],
+            [size, size, -size],
+            [-size, size, -size],
+            [-size, -size, size],
+            [size, -size, size],
+            [size, size, size],
+            [-size, size, size]
+        ]
+
+        tex_coords = [
+            [0.25, 0.333],
+            [0.5, 0.333],
+            [0.5, 0.666],
+            [0.25, 0.666],
+            [0.0, 0.333],
+            [0.75, 0.333],
+            [0.75, 0.666],
+            [1.0, 0.666]
+        ]
+
+        # Six faces of the Skybox
+        indices = [
+            [1, 2, 3, 0],  # Back
+            [2, 6, 7, 3],  # Top
+            [7, 4, 0, 3],  # Left
+            [4, 5, 1, 0],  # Bottom
+            [5, 6, 2, 1],  # Front
+            [6, 5, 4, 7]   # Right
+        ]
+      
+        glDepthMask(GL_FALSE)
+
+        # Bind the texture
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, texture_id)
+
+        # Draw the cube faces
+        for face in indices:
+            glBegin(GL_QUADS)
+            for i, vertex in enumerate(face):
+                glTexCoord2f(tex_coords[vertex][0], tex_coords[vertex][1])
+                glVertex3fv(vertices[vertex])
+            glEnd()
+
+        # Unbind the texture
+        glBindTexture(GL_TEXTURE_2D, 0)
+
+        glDepthMask(GL_TRUE)
+    
     def get_selected_planet(self):
         return self.selected_planet
 
