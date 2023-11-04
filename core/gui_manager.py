@@ -167,7 +167,7 @@ class GuiManager:
         imgui.set_next_window_size(63.5, 0)
         imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         
-    def render_center_button(self, current_camera_distance):
+    def render_center_button(self, user_interactions):
         self.set_date_selector_style()
         self.set_center_button_window_position()
         self.begin_center_button()
@@ -175,7 +175,8 @@ class GuiManager:
         if imgui.button("Center"):
             print('Center button pressed')
             glLoadIdentity()
-            glTranslatef(0, 0, current_camera_distance)
+            user_interactions.center_camera()
+
         imgui.pop_style_color(1)
 
         self.render_separator()

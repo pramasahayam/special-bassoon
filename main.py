@@ -9,7 +9,6 @@ from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 
-
 def main():
     window_manager = WindowManager()
     gui_manager = GuiManager()
@@ -50,7 +49,7 @@ def main():
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
         
-        gui_manager.render_ui(solar_system, date_manager, user_interactions.get_camera_distance())
+        gui_manager.render_ui(solar_system, date_manager, user_interactions)
 
         gui_manager.end_frame()
 
