@@ -126,7 +126,7 @@ class GuiManager:
         imgui.end()
 
     def render_label_toggle_button(self):
-        imgui.set_next_window_position(153, 0)
+        imgui.set_next_window_position(65, 0)
         self.set_date_selector_style()
         imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
@@ -153,7 +153,7 @@ class GuiManager:
         self.reset_style()
 
     def set_date_selector_window_position(self):
-        imgui.set_next_window_position(65, 0) 
+        imgui.set_next_window_position(175, 0) 
 
     def set_date_selector_style(self):
         style = imgui.get_style()
