@@ -201,7 +201,7 @@ class GuiManager:
             # Check if the year is within the valid range
             if year > 2050:
                 raise ValueError("Year must be before 2050.")
-            if year < 1900:
+            if year < 2000:
                 raise ValueError("Year must be after 1900.")
 
             # Validate the date using a helper method

@@ -12,5 +12,6 @@ class Callisto(SpaceBody):
             diameter="4,820.6 km",
             gravity="1.236 m/s²",
             orbit_distance="1,882,700 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )

@@ -4,7 +4,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from core.user_interactions import UserInteractions
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel, Ganymede
 
 class SolarSystem:
     def __init__(self, window_manager, gui_manager):
@@ -16,9 +16,10 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon(Earth())#, Europa(Jupiter()), Titan(Saturn()), Deimos(Mars()),
-            # Phobos(Mars()), Callisto(Jupiter()), Io(Jupiter()), Iapetus(Saturn()), Oberon(Uranus()), Titania(Uranus()), Umbriel(Uranus()), Ariel(Uranus()), 
-            # Ganymede(Jupiter())
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), # Titan("Saturn"), #Iapetus("Saturn")
+            Deimos("Mars"),
+            Phobos("Mars"), Callisto("Jupiter"), Io("Jupiter"), Oberon("Uranus"), Titania("Uranus"), Umbriel("Uranus"), Ariel("Uranus"), 
+            Ganymede("Jupiter")
         ]
 
         self.selected_planet = None
@@ -58,7 +59,7 @@ class SolarSystem:
                             scaled_body_position = body_position * 1500
                             if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
                                 print(f"Ring of {body.name} was clicked!")
-                                # Here, you can add the logic to zoom the camera into the celestial body
+
                                 break
 
     def compute_ray_from_mouse(self, mouse_pos):
