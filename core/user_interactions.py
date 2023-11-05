@@ -1,5 +1,4 @@
 import pygame
-import numpy as np
 from pygame.locals import *
 from OpenGL.GL import *
 
@@ -75,28 +74,6 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
                 self.gui_manager.handle_resize(width, height)
-
-    def position_camera_close_to(self, target_position):
-        # Calculate the direction vector from the camera to the target
-        direction_vector = np.array(target_position) - np.array(self.get_camera_position())
-        
-        # Normalize the direction vector
-        direction_vector /= np.linalg.norm(direction_vector)
-        
-        # Decide how close you want the camera to be to the target
-        desired_distance = 1000  # This is an arbitrary value; adjust as needed
-        
-        # Calculate the new camera position
-        new_camera_position = np.array(target_position) - direction_vector * desired_distance
-        
-        # Apply the translation to move the camera
-        # Note: OpenGL transformations are applied in reverse order
-        glLoadIdentity()  # Reset the current modelview matrix
-        glTranslatef(0, 0, self.INITIAL_CAMERA_DISTANCE)  # Move the camera to the initial distance
-        glTranslatef(-new_camera_position[0], -new_camera_position[1], -new_camera_position[2])  # Move the camera to the new position
-        
-        # Update the internal camera position state
-        self.camera_position = new_camera_position.tolist()
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
