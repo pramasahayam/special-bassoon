@@ -55,11 +55,15 @@ class SolarSystem:
                         # If no celestial body is intersected, then check for intersections with the rings
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
-                            scaled_body_position = body_position * 1500
-                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
-                                print(f"Ring of {body.name} was clicked!")
-
-                                break
+                            scaled_body_position = body_position * 1500  # Adjust the scale as needed
+                            intersection_result = self.intersects_sphere(self.interactions.get_camera_position(), self.compute_ray_from_mouse(event.pos), scaled_body_position, body.radius)
+                            if intersection_result:
+                                hit_type, hit_position = intersection_result
+                                if hit_type == "ring":
+                                    print(f"Ring of {body.name} was clicked!")
+                                    # Call a method to position the camera close to the ring
+                                    self.interactions.position_camera_close_to(scaled_body_position)
+                                    break
 
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
@@ -100,7 +104,8 @@ class SolarSystem:
         discriminant = b * b - 4 * a * c
 
         if discriminant > 0:
-            return "body"
+            intersection_point = sphere_center
+            return "body", intersection_point
 
         # Check for intersection with the ring
         if sphere_radius <= 3:
@@ -119,7 +124,8 @@ class SolarSystem:
         discriminant_ring = b_ring * b_ring - 4 * a_ring * c_ring
 
         if discriminant_ring > 0:
-            return "ring"
+            intersection_point = sphere_center
+            return "ring", intersection_point
 
         return None
 
