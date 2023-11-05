@@ -12,7 +12,7 @@ class UserInteractions:
         self.LINEAR_ZOOM_AMOUNT = 450.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
-        self.INITIAL_CAMERA_DISTANCE = -50000
+        self.INITIAL_CAMERA_DISTANCE = -15000
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
 
         self.MIN_ZOOM_IN = 400
