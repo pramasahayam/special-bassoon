@@ -14,6 +14,7 @@ class GuiManager:
         self.error_display_time = 0
         self.show_date_input = False
         self.date_input = {'day': '', 'month': '', 'year': ''}
+        self.show_labels = False
 
     def setup_imgui(self):
         imgui.create_context()
@@ -41,6 +42,7 @@ class GuiManager:
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
         self.render_center_button(user_interactions)
+        self.render_label_toggle_button()
 
     def process_event(self, event):
         """
@@ -88,9 +90,10 @@ class GuiManager:
         return infobox_x, infobox_y, total_height
   
     def render_labels(self, body, t):
-        label_x, label_y = self.calculate_label_position(body, t)
-        if label_x is not None and label_y is not None:
-            self.render_label_for_body(body, label_x, label_y)
+        if self.show_labels:
+            label_x, label_y = self.calculate_label_position(body, t)
+            if label_x is not None and label_y is not None:
+                self.render_label_for_body(body, label_x, label_y)
 
     def calculate_label_position(self, body, t):
         modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
@@ -122,6 +125,22 @@ class GuiManager:
         # End the window
         imgui.end()
 
+    def render_label_toggle_button(self):
+        imgui.set_next_window_position(153, 0)
+        self.set_date_selector_style()
+        imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
+        if imgui.button("Toggle Labels"):
+            self.show_labels = not self.show_labels
+
+        imgui.pop_style_color(1)
+
+        self.render_separator()
+
+        imgui.end()
+        self.reset_style()
+
     def render_date_selector(self, date_manager):
         self.set_date_selector_window_position()
         self.set_date_selector_style()
@@ -138,7 +157,7 @@ class GuiManager:
 
     def set_date_selector_style(self):
         style = imgui.get_style()
-        style.window_border_size = 0.0
+        style.window_border_size = 1.0
         style.window_rounding = 5.0
         style.frame_rounding = 5.0
         
