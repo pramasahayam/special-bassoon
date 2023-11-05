@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
+from OpenGL.GLU import *
 import imgui
 import time
 import datetime
@@ -62,7 +63,65 @@ class GuiManager:
             self.render_infobox_content(attributes)
             
             imgui.end()
+
+    def setup_infobox_position(self, solar_system):
+        mouse_x, mouse_y = solar_system.get_clicked_mouse_position()
+        offset_x = -350 
+        offset_y = -150   
+        infobox_x = mouse_x + offset_x
+        infobox_y = mouse_y + offset_y
+        
+        text_height = imgui.get_text_line_height()
+        separator_height = imgui.get_frame_height_with_spacing()
+        
+        selected_planet = solar_system.get_selected_planet()
+        attributes = self.get_infobox_attributes(solar_system)
+        
+        total_height = sum(text_height for _, value in attributes if value)
+        total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
+        if selected_planet.description:
+            description_width = 280
+            total_height += imgui.calc_text_size(f"Description: {selected_planet.description}", wrap_width=description_width)[1] - text_height
+        padding = 10
+        total_height += 2 * padding
+        
+        return infobox_x, infobox_y, total_height
   
+    def render_labels(self, body, t):
+        label_x, label_y = self.calculate_label_position(body, t)
+        if label_x is not None and label_y is not None:
+            self.render_label_for_body(body, label_x, label_y)
+
+    def calculate_label_position(self, body, t):
+        modelview = glGetDoublev(GL_MODELVIEW_MATRIX)
+        projection = glGetDoublev(GL_PROJECTION_MATRIX)
+        viewport = glGetIntegerv(GL_VIEWPORT)
+
+        x, y, z = body.compute_position(t)
+
+        screen_coords = gluProject(x*1500, y*1500, z*1500, modelview, projection, viewport)
+        if screen_coords is None:
+            return None, None
+
+        screen_x, screen_y, _ = screen_coords
+        return (screen_x, viewport[3] - screen_y)  # Adjust for OpenGL's y-coordinate starting from the bottom.
+
+    def render_label_for_body(self, body, label_x, label_y):
+        # Set the next window position here
+        imgui.set_next_window_position(label_x, label_y)
+
+        # Set the window to be always on top, no title bar, no resize, etc.
+        flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_ALWAYS_AUTO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_SCROLLBAR
+
+        # Begin the window and give it a unique name based on the celestial body's name
+        imgui.begin(f"Label {body.name}", flags=flags)
+
+        # Render the celestial body's name inside the window
+        imgui.text(body.name)
+
+        # End the window
+        imgui.end()
+
     def render_date_selector(self, date_manager):
         self.set_date_selector_window_position()
         self.set_date_selector_style()
@@ -224,29 +283,6 @@ class GuiManager:
             return True
         except ValueError:
             return False
-
-    def setup_infobox_position(self, solar_system):
-        mouse_x, mouse_y = solar_system.get_clicked_mouse_position()
-        offset_x = -350 
-        offset_y = -150   
-        infobox_x = mouse_x + offset_x
-        infobox_y = mouse_y + offset_y
-        
-        text_height = imgui.get_text_line_height()
-        separator_height = imgui.get_frame_height_with_spacing()
-        
-        selected_planet = solar_system.get_selected_planet()
-        attributes = self.get_infobox_attributes(solar_system)
-        
-        total_height = sum(text_height for _, value in attributes if value)
-        total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
-        if selected_planet.description:
-            description_width = 280
-            total_height += imgui.calc_text_size(f"Description: {selected_planet.description}", wrap_width=description_width)[1] - text_height
-        padding = 10
-        total_height += 2 * padding
-        
-        return infobox_x, infobox_y, total_height
 
     def get_infobox_attributes(self, solar_system):
         selected_planet = solar_system.get_selected_planet()

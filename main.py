@@ -48,6 +48,8 @@ def main():
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
+            if not body.orbital_center:
+                gui_manager.render_labels(body, t)
         
         gui_manager.render_ui(solar_system, date_manager, user_interactions)
 
