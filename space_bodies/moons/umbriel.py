@@ -12,5 +12,6 @@ class Umbriel(SpaceBody):
             diameter="1,169.4 km",
             gravity="0.238 m/s²",
             orbit_distance="266,000 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )

@@ -12,5 +12,6 @@ class Titania(SpaceBody):
             diameter="1,577.8 km",
             gravity="0.367 m/s²",
             orbit_distance="436,300 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )

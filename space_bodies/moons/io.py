@@ -12,5 +12,6 @@ class Io(SpaceBody):
             diameter="3,643.2 km",
             gravity="1.796 m/s²",
             orbit_distance="421,800 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )

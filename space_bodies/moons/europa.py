@@ -12,5 +12,6 @@ class Europa(SpaceBody):
             diameter="3,121.6 km",
             gravity="1.315 m/s²",
             orbit_distance="671,100 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )

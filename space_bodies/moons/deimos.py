@@ -12,5 +12,6 @@ class Deimos(SpaceBody):
             diameter="12.4 km",
             gravity="0.003 m/s²",
             orbit_distance="23,458 km",
-            orbital_center=orbital_center
+            orbital_center=orbital_center,
+            texture_path="textures/moons/moon_texture1.png"
         )
