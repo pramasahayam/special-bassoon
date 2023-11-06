@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 from pygame.locals import *
 from OpenGL.GL import *
 
@@ -39,12 +40,15 @@ class UserInteractions:
                         self.last_mouse_x, self.last_mouse_y = event.pos
                     case 4:  # Zooming in
                         new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
-                        if new_distance <= self.MIN_ZOOM_IN:
+                        # Ensure the new distance does not exceed the minimum zoom in limit
+                        if new_distance < self.MIN_ZOOM_IN:
                             self.CAMERA_DISTANCE = new_distance
                             glTranslatef(0, 0, self.LINEAR_ZOOM_AMOUNT)
+
                     case 5:  # Zooming out
                         new_distance = self.CAMERA_DISTANCE - self.LINEAR_ZOOM_AMOUNT
-                        if new_distance >= self.MAX_ZOOM_OUT:
+                        # Ensure the new distance does not exceed the maximum zoom out limit
+                        if new_distance > self.MAX_ZOOM_OUT:
                             self.CAMERA_DISTANCE = new_distance
                             glTranslatef(0, 0, -self.LINEAR_ZOOM_AMOUNT)
             case pygame.MOUSEBUTTONUP:
@@ -75,6 +79,26 @@ class UserInteractions:
                 resize(width, height)
                 self.gui_manager.handle_resize(width, height)
 
+    def move_camera_to_body(self, body_position, body_radius):
+        # Calculate the target position for the camera
+        target_position = [body_position[0] * -1500, body_position[1] * -1500, body_position[2] * 1500]
+
+        camera_offset = body_radius * 10
+
+        new_camera_distance = -np.sqrt(target_position[0]**2 + target_position[1]**2 + (target_position[2] + camera_offset)**2)
+
+        self.camera_position = [target_position[0], target_position[1], new_camera_distance]
+
+        # Move the camera to the target position
+        glLoadIdentity()
+        glTranslatef(self.camera_position[0], self.camera_position[1], self.camera_position[2])
+
+        # Update the CAMERA_DISTANCE to reflect the new position
+        self.CAMERA_DISTANCE = new_camera_distance
+
+        # Ensure the new distance respects the zoom limits
+        self.CAMERA_DISTANCE = max(min(self.CAMERA_DISTANCE, self.MIN_ZOOM_IN), self.MAX_ZOOM_OUT)
+
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
         camera_position = [-modelview_matrix[3][i] for i in range(3)]
@@ -88,3 +112,6 @@ class UserInteractions:
         glTranslatef(0, 0, self.CAMERA_DISTANCE)
         # Update the internal camera position state
         self.camera_position = [0, 0, self.CAMERA_DISTANCE]
+
+    def set_camera_distance(self, distance):
+        self.CAMERA_DISTANCE = distance
