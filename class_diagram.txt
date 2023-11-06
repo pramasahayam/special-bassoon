@@ -1,133 +1,137 @@
 @startuml
 class SolarSystem {
-    handle_event()
-    world_to_screen()
-    pick_planet()
-    draw_body()
-    render_ui()
-    set_imgui_manager()
-        imgui_manager
-    window
-    interactions
-    clicked_mouse_position
-    selected_planet
-    infobox_visible
-    infobox_visible
-    selected_planet
-    clicked_mouse_position
-    selected_planet
-    infobox_visible
-    clicked_mouse_position
-    imgui_manager
-    __init__()
+    +__init__(imgui_manager: Any)
+    +set_imgui_manager(): void
+    +handle_event(event: Any, t: Any): void
+    +world_to_screen(x: Any, y: Any, z: Any): Any
+    +pick_planet(mouse_pos: Any, t: Any): None
+    +draw_body(body: Any, t: Any, color: Any): void
+    +render_ui(): void
+    +window: WindowManager
+    +interactions: UserInteractions
+    +clicked_mouse_position: Any
+    +selected_planet: Any
+    +infobox_visible: Literal[]
+    +imgui_manager: Any
 }
-WindowManager <.. SolarSystem
-UserInteractions <.. SolarSystem
-ImGuiManager <.. SolarSystem
+WindowManager "1 " --o SolarSystem
+UserInteractions "1 " --o SolarSystem
+ImGuiManager "1" --o SolarSystem
 
 class UserInteractions {
-    handle_event()
-        imgui_manager
-    window_manager
-    screen
-    LINEAR_ZOOM_AMOUNT
-    dragging
-    CAMERA_DISTANCE
-    dragging
-    CAMERA_DISTANCE
-    CAMERA_DISTANCE
-    dragging
-    __init__()
+    +__init__(window_manager: Any, imgui_manager: Any)
+    +handle_event(event: Any, resize: Any): void
+    +imgui_manager: Any
+    +window_manager: Any
+    +screen: Surface
+    +LINEAR_ZOOM_AMOUNT: float
+    +dragging: Literal[]
+    +CAMERA_DISTANCE: Literal[]
+    
 }
 
 class ImGuiManager {
-    setup_imgui()
-    start_frame()
-    end_frame()
-    cleanup()
-    handle_resize()
-        renderer
-    __init__()
+    +__init__()
+    +setup_imgui(): PyGameRenderer
+    +start_frame(screen: Any): void
+    +end_frame(): void
+    +cleanup(): void
+    +handle_resize(width: Any, height: Any): void
+    +renderer: PyGameRenderer
+    
 }
 
 class WindowManager {
-    resize()
-    get_current_dimensions()
-        screen
-    WIDTH
-    HEIGHT
-    __init__()
+    +__init__()
+    +resize(self, width: Any, height: Any): void
+    +screen: Surface
+    +get_current_dimensions(): Literal[]
+    +WIDTH: Literal[]
+    +HEIGHT: Literal[]
+
 }
 
 class SpaceBody {
-    compute_position()
-        radius
-    color
-    name
-    mass
-    diameter
-    avg_temperature
-    gravity
-    description
-    age
-    skyfield_name
-    data_url
-    orbital_center
-    orbital_period
-    distance_from_sun
-    orbit_distance
-    ts
-    ephemeris
-    body
-    __init__()
+    +__init__(radius: Any, color: Any, skyfield_name: Any, data_url: Any, orbital_center: None, 
+    {method} name: str, description: str, orbital_period: str, distance_from_sun: str, 
+    {method} mass: str, diameter: str, gravity: str, avg_temperature: str, age: str, orbit_distance: str)
+    +compute_position(t: Any): Any[]
+    +radius: Any
+    +color: Any
+    +skyfield_name: Any
+    +data_url: Any
+    +name: str
+    +mass: str
+    +diameter: str
+    +avg_temperature: str
+    +gravity: str
+    +description: str
+    +age: str
+    +orbital_center: str
+    +orbital_period: str
+    +distance_from_sun: str
+    +orbit_distance: str
+    +ts: Timescale
+    +ephemeris: NDArray[]
+    +body: NDArray[]
+    
 }
-SolarSystem o-- SpaceBody
+SolarSystem o-- "1 of each   " Bodies 
+SolarSystem -[hidden]-> Bodies
 
 package "Bodies" {
 
-    class Earth {
-        __init__()
-    }
+    class Earth {}
 
-    class Jupiter {
-            __init__()
-    }
+    class Jupiter {}
 
-    class Mars {
-            __init__()
-    }
+    class Mars {}
 
-    class Mercury {
-            __init__()
-    }
+    class Mercury {}
 
-    class Moon {
-            __init__()
-    }
+    class Moon {}
 
-    class Neptune {
-            __init__()
-    }
+    class Neptune {}
 
-    class Pluto {
-            __init__()
-    }
+    class Pluto {}
 
-    class Saturn {
-            __init__()
-    }
+    class Saturn {}
 
-    class Sun {
-            __init__()
-    }
+    class Sun {}
 
-    class Uranus {
-            __init__()
-    }
+    class Uranus {}
 
-    class Venus {
-            __init__()
-    }
+    class Venus {}
+
+    class Pluto {}
+
+    class Ariel {}
+
+    class Callisto {}
+
+    class Deimos {}
+
+    class Europa {}
+
+    class Ganymede {}
+
+    class Iapetus {}
+
+    class Io {}
+
+    class Moon {}
+
+    class Oberon {}
+
+    class Phobos {}
+
+    class Rhea {}
+
+    class Titan {}
+
+    class Titania {}
+
+    class Umbriel {}
 }
 
 SpaceBody <|-- Bodies
