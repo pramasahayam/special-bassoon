@@ -64,7 +64,7 @@ class SpaceBody:
         if self.orbital_center:
             return -x*1.005, -y*1.005, z*1.005
         else:
-            return -x, -y, -z
+            return -x, -y, z
 
 
     

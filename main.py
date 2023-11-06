@@ -12,8 +12,8 @@ from core.date_manager import DateManager
 def main():
     window_manager = WindowManager()
     gui_manager = GuiManager()
+    solar_system = SolarSystem(window_manager, gui_manager)
     user_interactions = UserInteractions(window_manager, gui_manager)
-    solar_system = SolarSystem(window_manager, user_interactions)
     
     glEnable(GL_TEXTURE_2D)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)

@@ -1,5 +1,4 @@
 import pygame
-import numpy as np
 from pygame.locals import *
 from OpenGL.GL import *
 
@@ -10,7 +9,7 @@ class UserInteractions:
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
         self.skybox_eigth_size = 300000/10 # Same size as in solar_system.py
-        self.LINEAR_ZOOM_AMOUNT = 50.0
+        self.LINEAR_ZOOM_AMOUNT = 450.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -15000
@@ -40,15 +39,12 @@ class UserInteractions:
                         self.last_mouse_x, self.last_mouse_y = event.pos
                     case 4:  # Zooming in
                         new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
-                        # Ensure the new distance does not exceed the minimum zoom in limit
-                        if new_distance < self.MIN_ZOOM_IN:
+                        if new_distance <= self.MIN_ZOOM_IN:
                             self.CAMERA_DISTANCE = new_distance
                             glTranslatef(0, 0, self.LINEAR_ZOOM_AMOUNT)
-
                     case 5:  # Zooming out
                         new_distance = self.CAMERA_DISTANCE - self.LINEAR_ZOOM_AMOUNT
-                        # Ensure the new distance does not exceed the maximum zoom out limit
-                        if new_distance > self.MAX_ZOOM_OUT:
+                        if new_distance >= self.MAX_ZOOM_OUT:
                             self.CAMERA_DISTANCE = new_distance
                             glTranslatef(0, 0, -self.LINEAR_ZOOM_AMOUNT)
             case pygame.MOUSEBUTTONUP:
@@ -79,38 +75,6 @@ class UserInteractions:
                 resize(width, height)
                 self.gui_manager.handle_resize(width, height)
 
-    def move_camera_to_body(self, body_position, body_radius):
-        # Calculate the target position for the camera
-        # Assuming body_position is already scaled appropriately
-        target_position = np.array(body_position) * 1500  # Adjust the scale if necessary
-
-        # Calculate the offset for the camera to be placed at a distance from the body
-        # The offset is along the line from the camera to the body's position
-        camera_direction = target_position - np.array(self.camera_position)
-        camera_direction = camera_direction / np.linalg.norm(camera_direction)  # Normalize the direction
-
-        # Set the camera distance based on the body's radius and a chosen factor
-        # This factor can be adjusted to ensure the camera doesn't get too close or too far
-        camera_distance_from_body = body_radius * -100  # Adjust the factor as needed
-
-        # Calculate the new camera position
-        # It's the target position minus the direction times the desired distance
-        new_camera_position = target_position - camera_direction * camera_distance_from_body
-
-        # Move the camera to the new position
-        glLoadIdentity()
-        glTranslatef(*(-new_camera_position))  # Negate because OpenGL uses a right-handed coordinate system
-
-        # Update the internal camera position state
-        self.camera_position = new_camera_position.tolist()
-
-        # Update the CAMERA_DISTANCE to reflect the new position
-        self.CAMERA_DISTANCE = -np.linalg.norm(new_camera_position)
-
-        # Ensure the new distance respects the zoom limits
-        self.CAMERA_DISTANCE = max(min(self.CAMERA_DISTANCE, self.MIN_ZOOM_IN), self.MAX_ZOOM_OUT)
-
-
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
         camera_position = [-modelview_matrix[3][i] for i in range(3)]
@@ -124,17 +88,3 @@ class UserInteractions:
         glTranslatef(0, 0, self.CAMERA_DISTANCE)
         # Update the internal camera position state
         self.camera_position = [0, 0, self.CAMERA_DISTANCE]
-
-    def set_camera_distance(self, distance):
-        self.CAMERA_DISTANCE = distance
-
-    def reset_camera_distance(self):
-        # Reset the camera to its initial position
-        self.camera_position = [0, 0, self.INITIAL_CAMERA_DISTANCE]
-
-        # Reset the camera distance to its initial value
-        self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
-
-        # Apply the transformation to reset the camera
-        glLoadIdentity()
-        glTranslatef(0, 0, self.INITIAL_CAMERA_DISTANCE)

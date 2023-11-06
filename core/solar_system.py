@@ -3,14 +3,14 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+from core.user_interactions import UserInteractions
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel, Ganymede
 
 class SolarSystem:
-    def __init__(self, window_manager, user_interactions):
+    def __init__(self, window_manager, gui_manager):
         self.window_manager = window_manager
-        self.interactions = user_interactions
+        self.interactions = UserInteractions(self.window_manager, gui_manager)
         self.clicked_mouse_position = None
-        self.selected_ring = None
         self.skybox_texture_id = self.load_skybox_texture("textures/misc/skybox_texture1.png")
         
         # List of space bodies in our solar system
@@ -52,18 +52,13 @@ class SolarSystem:
                                 print(f"Clicked on: {self.selected_planet.name}")
                                 return  # Exit the function as soon as we find an intersection with a celestial body
 
+                        # If no celestial body is intersected, then check for intersections with the rings
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
                             scaled_body_position = body_position * 1500
-                            intersection_result = self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius)
-                            if intersection_result == "ring":
-                                if self.selected_ring != body:
-                                    print(f"Ring of {body.name} was clicked!")
-                                    self.selected_ring = body  # Remember the selected ring
-                                    # Here you would call the function to move the camera
-                                    self.interactions.move_camera_to_body(body_position, body.radius)
-                                else:
-                                    print(f"Ring of {body.name} is already selected.")
+                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
+                                print(f"Ring of {body.name} was clicked!")
+
                                 break
 
     def compute_ray_from_mouse(self, mouse_pos):
