@@ -10,6 +10,7 @@ class SolarSystem:
         self.window_manager = window_manager
         self.interactions = user_interactions
         self.clicked_mouse_position = None
+        self.selected_ring = None
         self.skybox_texture_id = self.load_skybox_texture("textures/misc/skybox_texture1.png")
         
         # List of space bodies in our solar system
@@ -51,14 +52,21 @@ class SolarSystem:
                                 print(f"Clicked on: {self.selected_planet.name}")
                                 return  # Exit the function as soon as we find an intersection with a celestial body
 
-                        # If no celestial body is intersected, then check for intersections with the rings
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
                             scaled_body_position = body_position * 1500
-                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
-                                print(f"Ring of {body.name} was clicked!")
-                                self.interactions.move_camera_to_body(body.compute_position(t), body.radius)
+                            intersection_result = self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius)
+                            if intersection_result == "ring":
+                                if self.selected_ring != body:
+                                    print(f"Ring of {body.name} was clicked!")
+                                    self.selected_ring = body  # Remember the selected ring
+                                    # Here you would call the function to move the camera
+                                    self.interactions.move_camera_to_body(body_position, body.radius)
+                                else:
+                                    print(f"Ring of {body.name} is already selected.")
                                 break
+                            elif intersection_result == "body":
+                                self.selected_ring = None  # Clear the selected ring if a body is clicked
 
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
