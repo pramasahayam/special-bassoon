@@ -18,7 +18,7 @@ class WindowManager:
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        gluPerspective(45, (width / height), 0.1, 10000.0)
+        gluPerspective(45, (width / height), 0.1, 600000.0)
         glMatrixMode(GL_MODELVIEW)
 
     def get_current_dimensions(self):
