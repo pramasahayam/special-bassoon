@@ -90,7 +90,8 @@ class UserInteractions:
         camera_direction = camera_direction / np.linalg.norm(camera_direction)  # Normalize the direction
 
         # Set the camera distance based on the body's radius and a chosen factor
-        camera_distance_from_body = body_radius * -50  # Adjust the factor as needed
+        # This factor can be adjusted to ensure the camera doesn't get too close or too far
+        camera_distance_from_body = body_radius * -100  # Adjust the factor as needed
 
         # Calculate the new camera position
         # It's the target position minus the direction times the desired distance
@@ -109,6 +110,7 @@ class UserInteractions:
         # Ensure the new distance respects the zoom limits
         self.CAMERA_DISTANCE = max(min(self.CAMERA_DISTANCE, self.MIN_ZOOM_IN), self.MAX_ZOOM_OUT)
 
+
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
         camera_position = [-modelview_matrix[3][i] for i in range(3)]
@@ -125,3 +127,14 @@ class UserInteractions:
 
     def set_camera_distance(self, distance):
         self.CAMERA_DISTANCE = distance
+
+    def reset_camera_distance(self):
+        # Reset the camera to its initial position
+        self.camera_position = [0, 0, self.INITIAL_CAMERA_DISTANCE]
+
+        # Reset the camera distance to its initial value
+        self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
+
+        # Apply the transformation to reset the camera
+        glLoadIdentity()
+        glTranslatef(0, 0, self.INITIAL_CAMERA_DISTANCE)

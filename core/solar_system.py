@@ -65,8 +65,6 @@ class SolarSystem:
                                 else:
                                     print(f"Ring of {body.name} is already selected.")
                                 break
-                            elif intersection_result == "body":
-                                self.selected_ring = None  # Clear the selected ring if a body is clicked
 
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
