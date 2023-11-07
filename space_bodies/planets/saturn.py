@@ -14,5 +14,6 @@ class Saturn(SpaceBody):
             avg_temperature="-140 °C",
             day="0.446 Earth Days",
             year="29 Earth Years",
+            category="Planet",
             texture_path="textures/planets/saturn_texture.png"
         )

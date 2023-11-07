@@ -8,7 +8,7 @@ class SpaceBody:
     BASE_SCALING_FACTOR = 2.5
 
     def __init__(self, radius, skyfield_name, data_url, 
-                 orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
+                 orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", category="", 
                  mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="",
                 texture_path=None):
         self.radius = radius
@@ -27,6 +27,7 @@ class SpaceBody:
         self.orbital_period = orbital_period
         self.distance_from_sun = distance_from_sun
         self.orbit_distance = orbit_distance
+        self.category = category
 
         self.texture_path = texture_path
         self.texture_id = None

@@ -13,5 +13,6 @@ class Phobos(SpaceBody):
             gravity="0.0057 m/s²",
             orbit_distance="9,376 km",
             orbital_center=orbital_center,
+            category="Moon",
             texture_path="textures/moons/moon_texture1.png"
         )
