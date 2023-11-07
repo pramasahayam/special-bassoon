@@ -81,28 +81,28 @@ class UserInteractions:
         :param body_position: The position of the celestial body to focus on (x, y, z).
         :param body_radius: The radius of the celestial body, used to determine the zoom level.
         """
-        # Calculate the desired camera distance as a multiple of the body's radius
-        # The factor should be adjusted to a value that makes the body appear clearly
-        view_distance_factor = 10  # Example factor, adjust based on your simulation scale
+        # Calculate the desired camera distance based on the body's radius
+        view_distance_factor = 10  # Adjust the factor based on the scale of your simulation
         target_distance = -(body_radius * view_distance_factor)
 
-        # Clamp the distance within the allowed zoom range
-        target_distance = max(min(target_distance, self.camera_limits['forward']), self.camera_limits['backward'])
+        # Update the internal camera distance with clamping
+        self.CAMERA_DISTANCE = max(min(target_distance, self.camera_limits['forward']), self.camera_limits['backward'])
 
-        # Calculate the translation required to center the camera on the body
-        # The target position for the camera is the negative of the body's position
-        dx = -body_position[0]
-        dy = -body_position[1]
-        dz = -body_position[2] + target_distance
+        # Calculate the new camera position, assuming the celestial body's position is relative to the origin
+        new_camera_x = -body_position[0]
+        new_camera_y = -body_position[1]
+        new_camera_z = self.CAMERA_DISTANCE
 
-        # Update the internal camera position state
-        self.camera_position[0] += dx
-        self.camera_position[1] += dy
-        self.camera_position[2] = target_distance
+        # Determine the translation needed from the current position
+        dx = new_camera_x - self.camera_position[0]
+        dy = new_camera_y - self.camera_position[1]
+        dz = new_camera_z - self.camera_position[2]
 
-        # Apply the translation
-        glLoadIdentity()
-        glTranslatef(self.camera_position[0], self.camera_position[1], self.camera_position[2])
+        # Translate the camera by the determined amount
+        glTranslatef(dx, dy, dz)
+
+        # Update the internal camera position state to the new position
+        self.camera_position = [new_camera_x, new_camera_y, new_camera_z]
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
