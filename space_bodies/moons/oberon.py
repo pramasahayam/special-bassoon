@@ -13,6 +13,6 @@ class Oberon(SpaceBody):
             gravity="0.332 m/s²",
             orbit_distance="583,500 km",
             orbital_center=orbital_center,
-            category="Moon",
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )

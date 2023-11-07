@@ -14,6 +14,6 @@ class Neptune(SpaceBody):
             avg_temperature="-200 °C",
             day="0.667 Earth Days",
             year="165 Earth Years",
-            category="Planet",
+            category="Planets",
             texture_path="textures/planets/neptune_texture.png"
         )

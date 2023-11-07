@@ -14,6 +14,6 @@ class Uranus(SpaceBody):
             avg_temperature="-195 °C",
             day="0.719 Earth Days",
             year="84 Earth Years",
-            category="Planet",
+            category="Planets",
             texture_path="textures/planets/uranus_texture.png"
         )

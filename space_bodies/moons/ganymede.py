@@ -13,6 +13,6 @@ class Ganymede(SpaceBody):
             gravity="1.428 m/s²",
             orbit_distance="1,070,400 km",
             orbital_center=orbital_center,
-            category="Moon",
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )

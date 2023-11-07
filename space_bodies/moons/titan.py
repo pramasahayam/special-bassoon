@@ -13,6 +13,6 @@ class Titan(SpaceBody):
             gravity="1.354 m/s²",
             orbit_distance="1,221,865 km",
             orbital_center=orbital_center,
-            category="Moon",
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )

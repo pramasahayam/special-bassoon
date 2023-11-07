@@ -51,7 +51,7 @@ def main():
             if not body.orbital_center:
                 gui_manager.render_labels(body, t)
         
-        gui_manager.render_ui(solar_system, date_manager, user_interactions)
+        gui_manager.render_ui(solar_system, date_manager, user_interactions, window_manager)
 
         gui_manager.end_frame()
 

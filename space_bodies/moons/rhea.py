@@ -13,6 +13,6 @@ class Rhea(SpaceBody):
             gravity="0.264 m/s²",
             orbit_distance="527,068 km",
             orbital_center=orbital_center,
-            category="Moon",
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )

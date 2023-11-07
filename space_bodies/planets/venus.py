@@ -14,6 +14,6 @@ class Venus(SpaceBody):
             avg_temperature="464 °C",
             day="243 Earth Days",
             year="0.616 Earth Years",
-            category="Planet",
+            category="Planets",
             texture_path="textures/planets/venus_texture.png"
         )

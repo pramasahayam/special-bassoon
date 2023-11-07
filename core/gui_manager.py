@@ -39,10 +39,10 @@ class GuiManager:
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
 
-    def render_ui(self, solar_system, date_manager, user_interactions):
+    def render_ui(self, solar_system, date_manager, user_interactions, window_manager):
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
-        self.render_celestial_body_selector(solar_system)
+        self.render_celestial_body_selector(solar_system, window_manager)
         self.render_center_button(user_interactions)
         self.render_label_toggle_button()
 
@@ -53,7 +53,7 @@ class GuiManager:
         if self.renderer is not None:
             self.renderer.process_event(event)
 
-    def render_celestial_body_selector(self, solar_system):
+    def render_celestial_body_selector(self, solar_system, window_manager):
         """
         Renders a button and dropdown menu to select a celestial body, with bodies categorized by their 'category' attribute.
         :param solar_system: An instance of the SolarSystem class
@@ -75,28 +75,35 @@ class GuiManager:
                     categories[category] = []
                 categories[category].append(body.name)
 
-            # Get the currently selected body's name, or a default string if none is selected
-            current_selection = solar_system.selected_planet.name if solar_system.selected_planet else "Select a Body"
-            
+            # The label of the combo box button should be the name of the currently selected body or "Select a Body" if none is selected
+            current_selection_label = solar_system.selected_planet.name if solar_system.selected_planet else "Select a Body"
+
             # Start the combo box
-            if imgui.begin_combo("##celestial_body_combo", current_selection):
+            if imgui.begin_combo("##celestial_body_combo", current_selection_label):
                 for category, bodies in categories.items():
+                    # Create a tree node for each category
                     if imgui.tree_node(category):
                         for body_name in bodies:
                             # When a selectable item is clicked, update the selected planet in the solar_system
-                            _, selected = imgui.selectable(body_name, current_selection == body_name)
+                            _, selected = imgui.selectable(body_name, solar_system.selected_planet and solar_system.selected_planet.name == body_name)
                             if selected:
-                                # Find and set the selected celestial body
+                                # When a celestial body is selected...
                                 for body in solar_system.space_bodies:
                                     if body.name == body_name:
                                         solar_system.selected_planet = body
+                                        # Set the infobox to be visible
+                                        solar_system.infobox_visible = True
+                                        # Calculate the position for the infobox to appear slightly up and to the left of the center
+                                        width, height = window_manager.get_current_dimensions()
+                                        center_x, center_y = width // 2, height // 2
+                                        infobox_position = (center_x - 150, center_y + 100)  # You can adjust these offsets
+                                        solar_system.clicked_mouse_position = infobox_position
                                         break
-                                self.show_celestial_body_selector = False  # Optionally hide the selector after a selection
-                                # Additional logic can be added here if needed
                         imgui.tree_pop()
                 imgui.end_combo()
 
         imgui.end()
+
 
     def render_infobox(self, solar_system):
         if solar_system.is_infobox_visible() and solar_system.get_selected_planet() and solar_system.get_clicked_mouse_position():
@@ -107,6 +114,7 @@ class GuiManager:
             imgui.set_next_window_size(300, total_height)
             
             flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
+            self.set_date_selector_style()
             imgui.begin("Info Box", solar_system.is_infobox_visible(), flags)
             
             self.render_infobox_content(attributes)
@@ -164,6 +172,7 @@ class GuiManager:
         flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_ALWAYS_AUTO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_SCROLLBAR
 
         # Begin the window and give it a unique name based on the celestial body's name
+        self.set_date_selector_style()
         imgui.begin(f"Label {body.name}", flags=flags)
 
         # Render the celestial body's name inside the window

@@ -13,6 +13,6 @@ class Iapetus(SpaceBody):
             gravity="0.223 m/s²",
             orbit_distance="3,560,851 km",
             orbital_center=orbital_center,
-            category="Moon",
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )

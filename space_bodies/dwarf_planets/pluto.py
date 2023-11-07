@@ -13,6 +13,6 @@ class Pluto(SpaceBody):
             gravity="0.66 m/s^2",
             avg_temperature="-232 °C",
             day="27 Earth Days",
-            category="Dwarf Planet",
+            category="Dwarf Planets",
             year="2.30E+08 Earth Years"
         )
