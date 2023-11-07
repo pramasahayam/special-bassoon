@@ -39,10 +39,10 @@ class GuiManager:
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
 
-    def render_ui(self, solar_system, date_manager, user_interactions, window_manager):
+    def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
-        self.render_celestial_body_selector(solar_system, window_manager)
+        self.render_celestial_body_selector(solar_system)
         self.render_center_button(user_interactions)
         self.render_label_toggle_button()
 
@@ -53,9 +53,9 @@ class GuiManager:
         if self.renderer is not None:
             self.renderer.process_event(event)
 
-    def render_celestial_body_selector(self, solar_system, window_manager):
+    def render_celestial_body_selector(self, solar_system):
         """
-        Renders a button and dropdown menu to select a celestial body, with bodies categorized by their 'category' attribute.
+        Renders a button and dropdown menu to select and deselect a celestial body, with bodies categorized by their 'category' attribute.
         :param solar_system: An instance of the SolarSystem class
         """
         imgui.set_next_window_position(65, 40)  # Adjust the position as needed
@@ -87,18 +87,8 @@ class GuiManager:
                             # When a selectable item is clicked, update the selected planet in the solar_system
                             _, selected = imgui.selectable(body_name, solar_system.selected_planet and solar_system.selected_planet.name == body_name)
                             if selected:
-                                # When a celestial body is selected...
-                                for body in solar_system.space_bodies:
-                                    if body.name == body_name:
-                                        solar_system.selected_planet = body
-                                        # Set the infobox to be visible
-                                        solar_system.infobox_visible = True
-                                        # Calculate the position for the infobox to appear slightly up and to the left of the center
-                                        width, height = window_manager.get_current_dimensions()
-                                        center_x, center_y = width // 2, height // 2
-                                        infobox_position = (center_x - 150, center_y + 100)  # You can adjust these offsets
-                                        solar_system.clicked_mouse_position = infobox_position
-                                        break
+                                # Reset the selected celestial body to None
+                                solar_system.selected_planet = None
                         imgui.tree_pop()
                 imgui.end_combo()
 
