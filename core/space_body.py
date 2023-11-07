@@ -3,9 +3,7 @@ import pygame
 from OpenGL.GL import glGenTextures, glBindTexture, glTexImage2D, GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE, glTexParameterf, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_REPEAT, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR
 import numpy as np
 
-class SpaceBody:  
-
-    BASE_SCALING_FACTOR = 2.5
+class SpaceBody:
 
     def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", category="", 

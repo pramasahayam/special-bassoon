@@ -75,6 +75,35 @@ class UserInteractions:
                 resize(width, height)
                 self.gui_manager.handle_resize(width, height)
 
+    def focus_on_body(self, body_position, body_radius):
+        """
+        Adjusts the camera to center on the given celestial body.
+        :param body_position: The position of the celestial body to focus on (x, y, z).
+        :param body_radius: The radius of the celestial body, used to determine the zoom level.
+        """
+        # Calculate the desired camera distance as a multiple of the body's radius
+        # The factor should be adjusted to a value that makes the body appear clearly
+        view_distance_factor = 10  # Example factor, adjust based on your simulation scale
+        target_distance = -(body_radius * view_distance_factor)
+
+        # Clamp the distance within the allowed zoom range
+        target_distance = max(min(target_distance, self.camera_limits['forward']), self.camera_limits['backward'])
+
+        # Calculate the translation required to center the camera on the body
+        # The target position for the camera is the negative of the body's position
+        dx = -body_position[0]
+        dy = -body_position[1]
+        dz = -body_position[2] + target_distance
+
+        # Update the internal camera position state
+        self.camera_position[0] += dx
+        self.camera_position[1] += dy
+        self.camera_position[2] = target_distance
+
+        # Apply the translation
+        glLoadIdentity()
+        glTranslatef(self.camera_position[0], self.camera_position[1], self.camera_position[2])
+
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
         camera_position = [-modelview_matrix[3][i] for i in range(3)]

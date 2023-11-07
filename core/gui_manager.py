@@ -42,7 +42,7 @@ class GuiManager:
     def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
-        self.render_celestial_body_selector(solar_system)
+        self.render_celestial_body_selector(solar_system, user_interactions, date_manager)
         self.render_center_button(user_interactions)
         self.render_label_toggle_button()
 
@@ -53,7 +53,7 @@ class GuiManager:
         if self.renderer is not None:
             self.renderer.process_event(event)
 
-    def render_celestial_body_selector(self, solar_system):
+    def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         """
         Renders a button and dropdown menu to select and deselect a celestial body, with bodies categorized by their 'category' attribute.
         :param solar_system: An instance of the SolarSystem class
@@ -87,8 +87,17 @@ class GuiManager:
                             # When a selectable item is clicked, update the selected planet in the solar_system
                             _, selected = imgui.selectable(body_name, solar_system.selected_planet and solar_system.selected_planet.name == body_name)
                             if selected:
-                                # Reset the selected celestial body to None
-                                solar_system.selected_planet = None
+                                # When a celestial body is selected...
+                                for body in solar_system.space_bodies:
+                                    if body.name == body_name:
+                                        # Get the position and radius of the celestial body
+                                        body_position = body.compute_position(date_manager.get_current_date())
+                                        body_radius = body.radius
+                                        # Focus the camera on the celestial body
+                                        user_interactions.focus_on_body(body_position, body_radius)
+                                        # Then set the selected celestial body to None
+                                        solar_system.selected_planet = None
+                                        break
                         imgui.tree_pop()
                 imgui.end_combo()
 
