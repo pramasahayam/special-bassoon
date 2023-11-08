@@ -247,3 +247,17 @@ class SolarSystem:
 
     def get_clicked_mouse_position(self):
         return self.clicked_mouse_position
+    
+    def get_ring_radius(self, body_radius):
+        """
+        Calculates the ring's radius based on the celestial body's radius.
+        :param body_radius: The radius of the celestial body.
+        :return: The radius of the ring.
+        """
+        if body_radius <= 3:
+            ring_radius = body_radius * 400
+        elif body_radius <= 11:
+            ring_radius = body_radius * 60
+        elif body_radius >= 3:
+            ring_radius = body_radius * 8
+        return ring_radius

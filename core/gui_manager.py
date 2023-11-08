@@ -94,7 +94,7 @@ class GuiManager:
                                         body_position = body.compute_position(date_manager.get_current_date())
                                         body_radius = body.radius
                                         # Focus the camera on the celestial body
-                                        user_interactions.focus_on_body(body_position, body_radius)
+                                        user_interactions.focus_on_body(solar_system, body_position, body_radius)
                                         # Then set the selected celestial body to None
                                         solar_system.selected_planet = None
                                         break

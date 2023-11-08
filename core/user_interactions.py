@@ -9,7 +9,7 @@ class UserInteractions:
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
         self.skybox_tenth_size = 300000/10 # Same size as in solar_system.py
-        self.LINEAR_ZOOM_AMOUNT = 450.0
+        self.LINEAR_ZOOM_AMOUNT = 50.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -15000
@@ -75,27 +75,25 @@ class UserInteractions:
                 resize(width, height)
                 self.gui_manager.handle_resize(width, height)
 
-    def focus_on_body(self, body_position, body_radius):
-        # Calculate the desired camera distance based on the body's radius
-        view_distance_factor = 10  # Adjust the factor based on the scale of your simulation
-        target_distance = -(body_radius * view_distance_factor)
+    def focus_on_body(self, solar_system, body_position, body_radius):
+        # Calculate the ring radius and the desired distance based on the celestial body's size and a FOV factor
+        ring_radius = solar_system.get_ring_radius(body_radius)
+        desired_distance = -(ring_radius * 2)
 
-        # Clamp the new camera distance within set bounds
-        self.CAMERA_DISTANCE = max(min(target_distance, self.camera_limits['forward']), self.camera_limits['backward'])
-
-        # Calculate the new camera position
+        # Calculate camera position to center on the celestial body
         new_camera_x = -body_position[0]
         new_camera_y = -body_position[1]
-        new_camera_z = self.CAMERA_DISTANCE
+        new_camera_z = desired_distance if body_position[2] == 0 else -body_position[2]
 
-        # Reset the camera to the origin before applying the new translation
+        # You could add a transition effect here to move from the current camera position to the new position smoothly
+        # For now, we set the position directly
         glLoadIdentity()
-        glTranslatef(new_camera_x, new_camera_y, new_camera_z)
 
-        # Update the internal camera position state
-        self.camera_position = [new_camera_x, new_camera_y, new_camera_z]
+        
+        glTranslatef(new_camera_x, new_camera_y, new_camera_z-ring_radius)
+        self.camera_position = [new_camera_x, new_camera_y, new_camera_z-ring_radius]
 
-        print(f"Camera repositioned to: x={self.camera_position[0]}, \t y={self.camera_position[1]}, \t z={self.camera_position[2]}")
+        print(f"Camera repositioned to: x={new_camera_x}, \t y={new_camera_y}, \t z={new_camera_z}")
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
