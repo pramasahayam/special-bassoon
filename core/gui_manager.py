@@ -15,6 +15,9 @@ class GuiManager:
         self.show_date_input = False
         self.date_input = {'day': '', 'month': '', 'year': ''}
         self.show_labels = False
+        self.show_celestial_body_selector = False
+        self.is_hovering_imgui = False
+        self.is_using_imgui = False
 
     def setup_imgui(self):
         imgui.create_context()
@@ -30,8 +33,12 @@ class GuiManager:
         return renderer
             
     def start_frame(self):
-        """Start a new ImGui frame."""
+        """Start a new ImGui frame and update interaction flags."""
         imgui.new_frame()
+
+        # Reset flags at the start of each frame
+        self.is_hovering_imgui = False
+        self.is_using_imgui = False
 
     def end_frame(self):
         """End the current ImGui frame and render it."""
@@ -41,15 +48,85 @@ class GuiManager:
     def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
         self.render_infobox(solar_system)
+        self.render_celestial_body_selector(solar_system, user_interactions, date_manager)
         self.render_center_button(user_interactions)
         self.render_label_toggle_button()
 
     def process_event(self, event):
         """
         Process a single Pygame event and pass it to ImGui.
+        Also update ImGui interaction flags based on the event.
         """
         if self.renderer is not None:
             self.renderer.process_event(event)
+
+            # Update flags based on ImGui state after processing the event
+            io = imgui.get_io()
+            self.is_hovering_imgui = io.want_capture_mouse
+            self.is_using_imgui = io.want_capture_keyboard
+
+    def is_imgui_hovered(self):
+        """
+        Check if ImGui is currently being hovered by the mouse.
+        """
+        return self.is_hovering_imgui
+    
+    def is_imgui_used(self):
+        """
+        Check if ImGui is currently capturing keyboard or mouse input.
+        """
+        return self.is_using_imgui
+
+    def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
+        # Initialize Window
+        imgui.set_next_window_position(366, 0)
+        self.set_common_style()
+        imgui.begin("Celestial Body Selector", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
+
+        # Prepare ComboBox
+        current_selection_label = solar_system.selected_planet.name if solar_system.selected_planet else "Select Object"
+        desired_width = 125
+        imgui.push_item_width(desired_width)
+
+        # Populate Categories and Handle Selection
+        if imgui.begin_combo("##celestial_body_combo", current_selection_label):
+            self.populate_categories_and_handle_selection(solar_system, user_interactions, date_manager)
+            imgui.end_combo()
+        
+        # Reset item width after the combo box
+        imgui.pop_item_width()
+        imgui.pop_style_color(1)
+        self.render_separator()
+        imgui.end()
+
+    def populate_categories_and_handle_selection(self, solar_system, user_interactions, date_manager):
+        categories = self.categorize_celestial_bodies(solar_system)
+        for category, bodies in categories.items():
+            if imgui.tree_node(category):
+                for body_name in bodies:
+                    _, selected = imgui.selectable(body_name, solar_system.selected_planet and solar_system.selected_planet.name == body_name)
+                    if selected:
+                        self.handle_body_selection(solar_system, body_name, user_interactions, date_manager)
+                imgui.tree_pop()
+
+    def categorize_celestial_bodies(self, solar_system):
+        categories = {}
+        for body in solar_system.space_bodies:
+            category = body.category
+            if category not in categories:
+                categories[category] = []
+            categories[category].append(body.name)
+        return categories
+
+    def handle_body_selection(self, solar_system, body_name, user_interactions, date_manager):
+        for body in solar_system.space_bodies:
+            if body.name == body_name:
+                body_position = body.compute_position(date_manager.get_current_date())
+                body_radius = body.radius
+                user_interactions.focus_on_body(solar_system, body_position, body_radius)
+                solar_system.selected_planet = None
+                break
 
     def render_infobox(self, solar_system):
         if solar_system.is_infobox_visible() and solar_system.get_selected_planet() and solar_system.get_clicked_mouse_position():
@@ -60,6 +137,7 @@ class GuiManager:
             imgui.set_next_window_size(300, total_height)
             
             flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
+            self.set_common_style()
             imgui.begin("Info Box", solar_system.is_infobox_visible(), flags)
             
             self.render_infobox_content(attributes)
@@ -102,7 +180,7 @@ class GuiManager:
 
         x, y, z = body.compute_position(t)
 
-        screen_coords = gluProject(x*1500, y*1500, z*1500, modelview, projection, viewport)
+        screen_coords = gluProject(x, y, z, modelview, projection, viewport)
         if screen_coords is None:
             return None, None
 
@@ -117,6 +195,7 @@ class GuiManager:
         flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_ALWAYS_AUTO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_SCROLLBAR
 
         # Begin the window and give it a unique name based on the celestial body's name
+        self.set_common_style()
         imgui.begin(f"Label {body.name}", flags=flags)
 
         # Render the celestial body's name inside the window
@@ -127,7 +206,7 @@ class GuiManager:
 
     def render_label_toggle_button(self):
         imgui.set_next_window_position(65, 0)
-        self.set_date_selector_style()
+        self.set_common_style()
         imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -143,7 +222,7 @@ class GuiManager:
 
     def render_date_selector(self, date_manager):
         self.set_date_selector_window_position()
-        self.set_date_selector_style()
+        self.set_common_style()
         self.begin_date_selector_window()
         self.render_input_date_toggle_button()
         self.render_separator()
@@ -155,7 +234,7 @@ class GuiManager:
     def set_date_selector_window_position(self):
         imgui.set_next_window_position(175, 0) 
 
-    def set_date_selector_style(self):
+    def set_common_style(self):
         style = imgui.get_style()
         style.window_border_size = 1.0
         style.window_rounding = 5.0
@@ -246,7 +325,7 @@ class GuiManager:
         imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         
     def render_center_button(self, user_interactions):
-        self.set_date_selector_style()
+        self.set_common_style()
         self.set_center_button_window_position()
         self.begin_center_button()
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)

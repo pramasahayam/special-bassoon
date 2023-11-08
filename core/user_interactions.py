@@ -8,22 +8,22 @@ class UserInteractions:
         self.gui_manager = gui_manager
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
-        self.skybox_eigth_size = 300000/10 # Same size as in solar_system.py
-        self.LINEAR_ZOOM_AMOUNT = 450.0
+        self.skybox_tenth_size = 300000/10 # Same size as in solar_system.py
+        self.LINEAR_ZOOM_AMOUNT = 50.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -15000
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
 
-        self.MIN_ZOOM_IN = 400
+        self.MIN_ZOOM_IN = 10000
         self.MAX_ZOOM_OUT = -50000
 
         # Camera position limits
         self.camera_limits = {
-            'left': -self.skybox_eigth_size,
-            'right': self.skybox_eigth_size,
-            'up': self.skybox_eigth_size,
-            'down': -self.skybox_eigth_size,
+            'left': -self.skybox_tenth_size,
+            'right': self.skybox_tenth_size,
+            'up': self.skybox_tenth_size,
+            'down': -self.skybox_tenth_size,
             'forward': self.MIN_ZOOM_IN,
             'backward': self.MAX_ZOOM_OUT
         }
@@ -74,6 +74,27 @@ class UserInteractions:
                 width, height = event.size
                 resize(width, height)
                 self.gui_manager.handle_resize(width, height)
+
+    def focus_on_body(self, solar_system, body_position, body_radius):
+        # Calculate the ring radius and the desired distance based on the celestial body's size and a FOV factor
+        ring_radius = solar_system.get_ring_radius(body_radius)
+        desired_distance = -(ring_radius * 2)
+
+        # Calculate camera position to center on the celestial body
+        new_camera_x = -body_position[0]
+        new_camera_y = -body_position[1]
+        new_camera_z = desired_distance if body_position[2] == 0 else -body_position[2]
+
+        glLoadIdentity()
+        glTranslatef(new_camera_x, new_camera_y, new_camera_z-ring_radius)
+        self.camera_position = [new_camera_x, new_camera_y, new_camera_z-ring_radius]
+
+        # Update the last known mouse position to prevent jumping when starting to pan again
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
+
+        print(f"Camera repositioned to: x={new_camera_x}, \t y={new_camera_y}, \t z={new_camera_z}")
+
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)

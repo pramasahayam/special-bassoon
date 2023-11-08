@@ -1,5 +1,4 @@
 import pygame
-import imgui
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -30,13 +29,13 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+
             gui_manager.process_event(event)
 
-            # Handle zooming, panning, and other user interactions
-            user_interactions.handle_event(event, window_manager.resize)
-            
-            # Handle picking a planet and displaying its info box
-            solar_system.handle_event(event, t)
+            # Only process other interactions if ImGui is not being used
+            if not gui_manager.is_imgui_hovered() and not gui_manager.is_imgui_used():
+                user_interactions.handle_event(event, window_manager.resize)
+                solar_system.handle_event(event, t)
               
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 

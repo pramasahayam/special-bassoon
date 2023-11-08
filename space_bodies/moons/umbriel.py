@@ -13,5 +13,6 @@ class Umbriel(SpaceBody):
             gravity="0.238 m/s²",
             orbit_distance="266,000 km",
             orbital_center=orbital_center,
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )
