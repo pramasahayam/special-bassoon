@@ -89,8 +89,8 @@ class UserInteractions:
         self.CAMERA_DISTANCE = max(min(target_distance, self.camera_limits['forward']), self.camera_limits['backward'])
 
         # Calculate the new camera position, assuming the celestial body's position is relative to the origin
-        new_camera_x = -body_position[0]
-        new_camera_y = -body_position[1]
+        new_camera_x = -body_position[0]*1500
+        new_camera_y = -body_position[1]*1500
         new_camera_z = self.CAMERA_DISTANCE
 
         # Determine the translation needed from the current position
