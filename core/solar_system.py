@@ -43,8 +43,7 @@ class SolarSystem:
                         # First, check for intersections with celestial bodies
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
-                            scaled_body_position = body_position * 1500
-                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "body":
+                            if self.intersects_sphere(ray_origin, ray_direction, body_position, body.radius) == "body":
                                 self.selected_planet = body
                                 self.infobox_visible = True
                                 self.clicked_mouse_position = event.pos
@@ -54,8 +53,7 @@ class SolarSystem:
                         # If no celestial body is intersected, then check for intersections with the rings
                         for body in self.space_bodies:
                             body_position = np.array(body.compute_position(t))
-                            scaled_body_position = body_position * 1500
-                            if self.intersects_sphere(ray_origin, ray_direction, scaled_body_position, body.radius) == "ring":
+                            if self.intersects_sphere(ray_origin, ray_direction, body_position, body.radius) == "ring":
                                 print(f"Ring of {body.name} was clicked!")
 
                                 break
@@ -127,7 +125,7 @@ class SolarSystem:
 
         # Compute the position of the celestial body
         x, y, z = body.compute_position(t)
-        glTranslatef(x * 1500, y * 1500, z * 1500)  # Scaling factor for visualization
+        glTranslatef(x, y, z)
 
         # Draw the ring around the celestial body if it's not selected
         if body != self.selected_planet and not body.orbital_center:

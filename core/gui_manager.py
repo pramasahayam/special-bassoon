@@ -156,7 +156,7 @@ class GuiManager:
 
         x, y, z = body.compute_position(t)
 
-        screen_coords = gluProject(x*1500, y*1500, z*1500, modelview, projection, viewport)
+        screen_coords = gluProject(x, y, z, modelview, projection, viewport)
         if screen_coords is None:
             return None, None
 

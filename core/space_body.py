@@ -5,6 +5,9 @@ import numpy as np
 
 class SpaceBody:
 
+    DISTANCE_SCALE = 1500
+    MOON_DISTANCE_SCALE = 1.005
+
     def __init__(self, radius, skyfield_name, data_url, 
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", category="", 
                  mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="",
@@ -26,6 +29,7 @@ class SpaceBody:
         self.distance_from_sun = distance_from_sun
         self.orbit_distance = orbit_distance
         self.category = category
+        
 
         self.texture_path = texture_path
         self.texture_id = None
@@ -54,16 +58,23 @@ class SpaceBody:
 
     def compute_position(self, t):
         """
-        Compute the position using Skyfield ephemeris data.
-        Returns x, y, z coordinates in astronomical units (au).
+        Compute the position using Skyfield.
+        Returns x, y, z coordinates.
         """
         astrometric = self.body.at(t)
-        x, y, z = astrometric.position.au
-    
+        ra, dec, dist = astrometric.radec()
+
+        # Convert RA, Dec, Distance to Cartesian coordinates
+        x = dist.au * np.cos(dec.radians) * np.cos(ra.radians)
+        y = dist.au * np.cos(dec.radians) * np.sin(ra.radians)
+        z = dist.au * np.sin(dec.radians)
+        
         if self.orbital_center:
-            return -x*1.005, -y*1.005, z*1.005
+            scale_factor = self.DISTANCE_SCALE * self.MOON_DISTANCE_SCALE
         else:
-            return -x, -y, z
+            scale_factor = self.DISTANCE_SCALE
+        
+        return -x*scale_factor, -y*scale_factor, z*scale_factor
 
 
     

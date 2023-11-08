@@ -8,22 +8,22 @@ class UserInteractions:
         self.gui_manager = gui_manager
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
-        self.skybox_eigth_size = 300000/10 # Same size as in solar_system.py
+        self.skybox_tenth_size = 300000/10 # Same size as in solar_system.py
         self.LINEAR_ZOOM_AMOUNT = 450.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -15000
         self.CAMERA_DISTANCE = self.INITIAL_CAMERA_DISTANCE
 
-        self.MIN_ZOOM_IN = 400
+        self.MIN_ZOOM_IN = 10000
         self.MAX_ZOOM_OUT = -50000
 
         # Camera position limits
         self.camera_limits = {
-            'left': -self.skybox_eigth_size,
-            'right': self.skybox_eigth_size,
-            'up': self.skybox_eigth_size,
-            'down': -self.skybox_eigth_size,
+            'left': -self.skybox_tenth_size,
+            'right': self.skybox_tenth_size,
+            'up': self.skybox_tenth_size,
+            'down': -self.skybox_tenth_size,
             'forward': self.MIN_ZOOM_IN,
             'backward': self.MAX_ZOOM_OUT
         }
@@ -76,33 +76,26 @@ class UserInteractions:
                 self.gui_manager.handle_resize(width, height)
 
     def focus_on_body(self, body_position, body_radius):
-        """
-        Adjusts the camera to center on the given celestial body.
-        :param body_position: The position of the celestial body to focus on (x, y, z).
-        :param body_radius: The radius of the celestial body, used to determine the zoom level.
-        """
         # Calculate the desired camera distance based on the body's radius
         view_distance_factor = 10  # Adjust the factor based on the scale of your simulation
         target_distance = -(body_radius * view_distance_factor)
 
-        # Update the internal camera distance with clamping
+        # Clamp the new camera distance within set bounds
         self.CAMERA_DISTANCE = max(min(target_distance, self.camera_limits['forward']), self.camera_limits['backward'])
 
-        # Calculate the new camera position, assuming the celestial body's position is relative to the origin
-        new_camera_x = -body_position[0]*1500
-        new_camera_y = -body_position[1]*1500
+        # Calculate the new camera position
+        new_camera_x = -body_position[0]
+        new_camera_y = -body_position[1]
         new_camera_z = self.CAMERA_DISTANCE
 
-        # Determine the translation needed from the current position
-        dx = new_camera_x - self.camera_position[0]
-        dy = new_camera_y - self.camera_position[1]
-        dz = new_camera_z - self.camera_position[2]
+        # Reset the camera to the origin before applying the new translation
+        glLoadIdentity()
+        glTranslatef(new_camera_x, new_camera_y, new_camera_z)
 
-        # Translate the camera by the determined amount
-        glTranslatef(dx, dy, dz)
-
-        # Update the internal camera position state to the new position
+        # Update the internal camera position state
         self.camera_position = [new_camera_x, new_camera_y, new_camera_z]
+
+        print(f"Camera repositioned to: x={self.camera_position[0]}, \t y={self.camera_position[1]}, \t z={self.camera_position[2]}")
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
