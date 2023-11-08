@@ -5,7 +5,7 @@ class Sun(SpaceBody):
         super().__init__(
             radius=50,
             skyfield_name='sun', 
-            data_url='de421.bsp',
+            data_url='ephemeris_data/de421.bsp',
             name="Sun",
             description="The sun is the center of the solar system and is a dynamic yellow dwarf star, constantly changing and sending energy out into space. It is a hot ball of plasma, inflated and heated by nuclear fusion reactions at its core. Internal energy is emitted as light, ultraviolet, and infrared radiation.",
             mass="1.99E+30 kg",

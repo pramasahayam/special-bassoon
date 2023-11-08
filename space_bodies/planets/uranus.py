@@ -5,7 +5,7 @@ class Uranus(SpaceBody):
         super().__init__(
             radius=3.64, 
             skyfield_name='uranus barycenter', 
-            data_url='de421.bsp',
+            data_url='ephemeris_data/de421.bsp',
             name="Uranus",
             description="Uranus is the seventh planet from the Sun and rotates at nearly a 90-degree angle from the plane of its orbit. This makes it appear that it is spinning on its side. Uranus is considered an ice giant as its mass is mostly made of water, methane, and ammonia.",
             mass="8.68E+25 kg",

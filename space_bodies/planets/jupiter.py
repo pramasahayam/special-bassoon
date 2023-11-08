@@ -5,7 +5,7 @@ class Jupiter(SpaceBody):
         super().__init__(
             radius=10.05, 
             skyfield_name='jupiter barycenter', 
-            data_url='de421.bsp',
+            data_url='ephemeris_data/de421.bsp',
             name="Jupiter",
             description="Jupiter is the fifth planet from the Sun and is more than twice the size of any other planet in our solar system combined. The planet has a Great Red Spot that is a centuries-old storm bigger than the Earth. Jupiter is just a ball of hydrogen and helium.",
             mass="1.90E+27 kg",

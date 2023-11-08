@@ -5,7 +5,7 @@ class Venus(SpaceBody):
         super().__init__(
             radius=0.87, 
             skyfield_name='venus barycenter', 
-            data_url='de421.bsp',
+            data_url='ephemeris_data/de421.bsp',
             name="Venus",
             description="Venus is the second planet from the Sun and is the hottest planet in our solar system. It spins slowly in the opposite direction from most planets and has a thick atmosphere that traps heat.",
             mass="4.87E+24 kg",

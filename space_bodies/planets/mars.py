@@ -5,7 +5,7 @@ class Mars(SpaceBody):
         super().__init__(
             radius=0.49,
             skyfield_name='mars barycenter', 
-            data_url='de421.bsp',
+            data_url='ephemeris_data/de421.bsp',
             name="Mars",
             description="Mars is the fourth planet from the Sun and is a dusty, cold, desert-like world with a thin atmosphere. Mars is one of the most explored bodies and has a very dynamic landscape with polar ice caps, canyons, and extinct volcanoes.",
             mass="6.42E+23 kg",
