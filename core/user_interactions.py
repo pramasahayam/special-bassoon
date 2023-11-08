@@ -85,11 +85,8 @@ class UserInteractions:
         new_camera_y = -body_position[1]
         new_camera_z = desired_distance if body_position[2] == 0 else -body_position[2]
 
-        # You could add a transition effect here to move from the current camera position to the new position smoothly
-        # For now, we set the position directly
         glLoadIdentity()
 
-        
         glTranslatef(new_camera_x, new_camera_y, new_camera_z-ring_radius)
         self.camera_position = [new_camera_x, new_camera_y, new_camera_z-ring_radius]
 

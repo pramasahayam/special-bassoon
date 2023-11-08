@@ -79,54 +79,54 @@ class GuiManager:
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         """
-        Renders a button and dropdown menu to select and deselect a celestial body, with bodies categorized by their 'category' attribute.
+        Renders a dropdown menu to select a celestial body, with bodies categorized by their 'category' attribute.
         :param solar_system: An instance of the SolarSystem class
         """
-        imgui.set_next_window_position(65, 40)  # Adjust the position as needed
+        imgui.set_next_window_position(366, 0)
+        self.set_common_style()
         imgui.begin("Celestial Body Selector", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
+        # Sort celestial bodies into categories
+        categories = {}
+        for body in solar_system.space_bodies:
+            category = body.category  # Access the category attribute of the celestial body
+            if category not in categories:
+                categories[category] = []
+            categories[category].append(body.name)
 
-        # Button to show/hide the dropdown menu
-        if imgui.button("Pick Body"):
-            self.show_celestial_body_selector = not self.show_celestial_body_selector
+        current_selection_label = solar_system.selected_planet.name if solar_system.selected_planet else "Select Object"
 
-        # If the dropdown is to be shown
-        if self.show_celestial_body_selector:
-            # Sort celestial bodies into categories
-            categories = {}
-            for body in solar_system.space_bodies:
-                category = body.category  # Access the category attribute of the celestial body
-                if category not in categories:
-                    categories[category] = []
-                categories[category].append(body.name)
+        desired_width = 125
+        imgui.push_item_width(desired_width)
 
-            # The label of the combo box button should be the name of the currently selected body or "Select a Body" if none is selected
-            current_selection_label = solar_system.selected_planet.name if solar_system.selected_planet else "Select a Body"
+        # Start the combo box
+        if imgui.begin_combo("##celestial_body_combo", current_selection_label):
+            for category, bodies in categories.items():
+                # Create a tree node for each category
+                if imgui.tree_node(category):
+                    for body_name in bodies:
+                        # When a selectable item is clicked, update the selected planet in the solar_system
+                        _, selected = imgui.selectable(body_name, solar_system.selected_planet and solar_system.selected_planet.name == body_name)
+                        if selected:
+                            # When a celestial body is selected...
+                            for body in solar_system.space_bodies:
+                                if body.name == body_name:
+                                    # Get the position and radius of the celestial body
+                                    body_position = body.compute_position(date_manager.get_current_date())
+                                    body_radius = body.radius
+                                    # Focus the camera on the celestial body
+                                    user_interactions.focus_on_body(solar_system, body_position, body_radius)
+                                    # Then set the selected celestial body to None
+                                    solar_system.selected_planet = None
+                                    break
+                    imgui.tree_pop()
+            imgui.end_combo()
 
-            # Start the combo box
-            if imgui.begin_combo("##celestial_body_combo", current_selection_label):
-                for category, bodies in categories.items():
-                    # Create a tree node for each category
-                    if imgui.tree_node(category):
-                        for body_name in bodies:
-                            # When a selectable item is clicked, update the selected planet in the solar_system
-                            _, selected = imgui.selectable(body_name, solar_system.selected_planet and solar_system.selected_planet.name == body_name)
-                            if selected:
-                                # When a celestial body is selected...
-                                for body in solar_system.space_bodies:
-                                    if body.name == body_name:
-                                        # Get the position and radius of the celestial body
-                                        body_position = body.compute_position(date_manager.get_current_date())
-                                        body_radius = body.radius
-                                        # Focus the camera on the celestial body
-                                        user_interactions.focus_on_body(solar_system, body_position, body_radius)
-                                        # Then set the selected celestial body to None
-                                        solar_system.selected_planet = None
-                                        break
-                        imgui.tree_pop()
-                imgui.end_combo()
-
+        # Reset item width after the combo box
+        imgui.pop_item_width()
+        imgui.pop_style_color(1)
+        self.render_separator()
         imgui.end()
-
 
     def render_infobox(self, solar_system):
         if solar_system.is_infobox_visible() and solar_system.get_selected_planet() and solar_system.get_clicked_mouse_position():
@@ -137,7 +137,7 @@ class GuiManager:
             imgui.set_next_window_size(300, total_height)
             
             flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE
-            self.set_date_selector_style()
+            self.set_common_style()
             imgui.begin("Info Box", solar_system.is_infobox_visible(), flags)
             
             self.render_infobox_content(attributes)
@@ -195,7 +195,7 @@ class GuiManager:
         flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_ALWAYS_AUTO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_SCROLLBAR
 
         # Begin the window and give it a unique name based on the celestial body's name
-        self.set_date_selector_style()
+        self.set_common_style()
         imgui.begin(f"Label {body.name}", flags=flags)
 
         # Render the celestial body's name inside the window
@@ -206,7 +206,7 @@ class GuiManager:
 
     def render_label_toggle_button(self):
         imgui.set_next_window_position(65, 0)
-        self.set_date_selector_style()
+        self.set_common_style()
         imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -222,7 +222,7 @@ class GuiManager:
 
     def render_date_selector(self, date_manager):
         self.set_date_selector_window_position()
-        self.set_date_selector_style()
+        self.set_common_style()
         self.begin_date_selector_window()
         self.render_input_date_toggle_button()
         self.render_separator()
@@ -234,7 +234,7 @@ class GuiManager:
     def set_date_selector_window_position(self):
         imgui.set_next_window_position(175, 0) 
 
-    def set_date_selector_style(self):
+    def set_common_style(self):
         style = imgui.get_style()
         style.window_border_size = 1.0
         style.window_rounding = 5.0
@@ -325,7 +325,7 @@ class GuiManager:
         imgui.begin("Center Button", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         
     def render_center_button(self, user_interactions):
-        self.set_date_selector_style()
+        self.set_common_style()
         self.set_center_button_window_position()
         self.begin_center_button()
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
