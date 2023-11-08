@@ -86,11 +86,15 @@ class UserInteractions:
         new_camera_z = desired_distance if body_position[2] == 0 else -body_position[2]
 
         glLoadIdentity()
-
         glTranslatef(new_camera_x, new_camera_y, new_camera_z-ring_radius)
         self.camera_position = [new_camera_x, new_camera_y, new_camera_z-ring_radius]
 
+        # Update the last known mouse position to prevent jumping when starting to pan again
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
+
         print(f"Camera repositioned to: x={new_camera_x}, \t y={new_camera_y}, \t z={new_camera_z}")
+
 
     def get_camera_position(self):
         modelview_matrix = glGetDoublev(GL_MODELVIEW_MATRIX)
