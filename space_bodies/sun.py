@@ -14,5 +14,6 @@ class Sun(SpaceBody):
             avg_temperature="1.57E+07 °C",
             day="27 Earth days",
             year="2.30E+8 Earth years",
+            category="Misc",
             texture_path="textures/misc/sun_texture.png"
         )

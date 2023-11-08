@@ -13,5 +13,6 @@ class Titania(SpaceBody):
             gravity="0.367 m/s²",
             orbit_distance="436,300 km",
             orbital_center=orbital_center,
+            category="Moons",
             texture_path="textures/moons/moon_texture1.png"
         )
