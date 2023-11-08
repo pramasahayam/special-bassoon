@@ -1,0 +1,280 @@
+@startuml
+class SolarSystem {
+    +__init__(window_manager: WindowManager, user_interactions: UserInteractions)
+    +handle_event(event: pygame.event.EventType, t)
+    +compute_ray_from_mouse(mouse_pos: Tuple[int, int]): List[float]
+    +intersects_sphere(ray_origin: numpy.ndarray, ray_direction: numpy.ndarray, sphere_center: numpy.ndarray, sphere_radius: float): String or None
+    +draw_body(body: SpaceBody, t)
+    +draw_ring(body_radius: float)
+    +load_skybox_texture(texture_path: String): int
+    +draw_skybox(texture_id: int)
+    +get_selected_planet(): SpaceBody or None
+    +is_infobox_visible(): boolean
+    +get_clicked_mouse_position(): Tuple[int, int] or None
+    +get_ring_radius(body_radius: float): float
+    +window_manager: WindowManager
+    +interactions: UserInteractions
+    +clicked_mouse_position: Tuple[int, int] or None
+    +skybox_texture_id: int
+    +space_bodies: List[SpaceBody]
+    +selected_planet: SpaceBody or None
+    +infobox_visible: boolean
+}
+
+WindowManager "1 " --o SolarSystem
+UserInteractions "1 " --o SolarSystem
+GuiManager "1   " --o SolarSystem
+DateManager "1   " --o SolarSystem
+
+class UserInteractions {
+    +__init__(window_manager: WindowManager, gui_manager: GuiManager)
+    +handle_event(event: pygame.event.EventType, resize: Function)
+    +focus_on_body(solar_system: SolarSystem, body_position: List[float], body_radius: float)
+    +get_camera_position(): List[float]
+    +get_camera_distance(): float
+    +center_camera()
+    +gui_manager: GuiManager
+    +window_manager: WindowManager
+    +screen: pygame.Surface
+    +skybox_tenth_size: float
+    +LINEAR_ZOOM_AMOUNT: float
+    +dragging: boolean
+    +last_mouse_x: int
+    +last_mouse_y: int
+    +INITIAL_CAMERA_DISTANCE: float
+    +CAMERA_DISTANCE: float
+    +MIN_ZOOM_IN: float
+    +MAX_ZOOM_OUT: float
+    +camera_limits: Dict[String, float]
+    +camera_position: List[float]
+}
+
+class GuiManager {
+    +__init__()
+    +setup_imgui(): PygameRenderer
+    +start_frame()
+    +end_frame()
+    +render_ui(solar_system: SolarSystem, date_manager: DateManager, user_interactions: UserInteractions)
+    +process_event(event: pygame.event.EventType)
+    +is_imgui_hovered(): boolean
+    +is_imgui_used(): boolean
+    +render_celestial_body_selector(solar_system: SolarSystem, user_interactions: UserInteractions, date_manager: DateManager)
+    +populate_categories_and_handle_selection(solar_system: SolarSystem, user_interactions: UserInteractions, date_manager: DateManager)
+    +categorize_celestial_bodies(solar_system: SolarSystem): Dict[String, List[String]]
+    +handle_body_selection(solar_system: SolarSystem, body_name: String, user_interactions: UserInteractions, date_manager: DateManager)
+    +render_infobox(solar_system: SolarSystem)
+    +setup_infobox_position(solar_system: SolarSystem): Tuple[float, float, float]
+    +render_labels(body: SpaceBody, t)
+    +calculate_label_position(body: SpaceBody, t): Tuple[float, float]
+    +render_label_for_body(body: SpaceBody, label_x: float, label_y: float)
+    +render_label_toggle_button()
+    +render_date_selector(date_manager: DateManager)
+    +set_date_selector_window_position()
+    +set_common_style()
+    +begin_date_selector_window()
+    +render_input_date_toggle_button()
+    +render_separator()
+    +render_date_input_fields(date_manager: DateManager)
+    +render_date_inputs()
+    +render_input_field(label: String, value: String, width: float, buffer_size: int, separator: String)
+    +render_confirm_button(date_manager: DateManager)
+    +render_reset_button(date_manager: DateManager)
+    +reset_to_current_date(date_manager: DateManager)
+    +display_error_message()
+    +end_date_selector_window()
+    +reset_style()
+    +set_center_button_window_position()
+    +begin_center_button()
+    +render_center_button(user_interactions: UserInteractions)
+    +handle_date_confirmation(date_manager: DateManager)
+    +is_valid_date(year: int, month: int, day: int): boolean
+    +get_infobox_attributes(solar_system: SolarSystem): List[Tuple[String, Any]]
+    +render_infobox_content(attributes: List[Tuple[String, Any]])
+    +handle_resize(width: int, height: int)
+    +renderer: PygameRenderer
+    +error_message: String
+    +error_display_time: float
+    +show_date_input: boolean
+    +date_input: Dict[String, String]
+    +show_labels: boolean
+    +show_celestial_body_selector: boolean
+    +is_hovering_imgui: boolean
+    +is_using_imgui: boolean  
+}
+
+class WindowManager {
+    +__init__()
+    +resize(width: int, height: int)
+    +get_current_dimensions(): Tuple[int, int]
+    +WIDTH: int
+    +HEIGHT: int
+    +screen: pygame.Surface
+}
+
+class DateManager {
+    +__init__()
+    +set_date(month: int, day: int, year: int)
+    +get_current_date(): Time
+    -ts: Timescale
+    -current_date: Time
+}
+
+class SpaceBody {
+    +__init__(radius: float, skyfield_name: String, data_url: String, 
+          orbital_center: SpaceBody or None, name: String, description: String, orbital_period: String, distance_from_sun: String, category: String, 
+          mass: String, diameter: String, gravity: String, avg_temperature: String, day: String, year: String, AU: String, orbit_distance: String,
+          texture_path: String or None)
+    +load_texture()
+    +compute_position(t: Time): Tuple[float, float, float]
+    -DISTANCE_SCALE: float (Class Variable)
+    -MOON_DISTANCE_SCALE: float (Class Variable)
+    -radius: float
+    -name: String
+    -mass: String
+    -diameter: String
+    -avg_temperature: String
+    -gravity: String
+    -day: String
+    -year: String
+    -description: String
+    -AU: String
+    -skyfield_name: String
+    -data_url: String
+    -orbital_center: SpaceBody or None
+    -orbital_period: String
+    -distance_from_sun: String
+    -orbit_distance: String
+    -category: String
+    -texture_path: String or None
+    -texture_id: int or None
+    -ts: Timescale
+    -ephemeris: Ephemeris
+    -body: Planetary Object
+}
+
+SolarSystem o-- "1" SpaceBody
+
+package Bodies {
+    class Earth {
+        +__init__()
+    }
+
+    class Jupiter {
+        +__init__()
+    }
+
+    class Mars {
+        +__init__()
+    }
+
+    class Mercury {
+        +__init__()
+    }
+
+    class Moon {
+        +__init__()
+    }
+
+    class Neptune {
+        +__init__()
+    }
+
+    class Pluto {
+        +__init__()
+    }
+
+    class Saturn {
+        +__init__()
+    }
+
+    class Sun {
+        +__init__()
+    }
+
+    class Uranus {
+        +__init__()
+    }
+
+    class Venus {
+        +__init__()
+    }
+
+    class Ariel {
+        +__init__()
+    }
+
+    class Callisto {
+        +__init__()
+    }
+
+    class Deimos {
+        +__init__()
+    }
+
+    class Europa {
+        +__init__()
+    }
+
+    class Ganymede {
+        +__init__()
+    }
+
+    class Iapetus {
+        +__init__()
+    }
+
+    class Io {
+        +__init__()
+    }
+
+    class Oberon {
+        +__init__()
+    }
+
+    class Phobos {
+        +__init__()
+    }
+
+    class Rhea {
+        +__init__()
+    }
+
+    class Titan {
+        +__init__()
+    }
+
+    class Titania {
+        +__init__()
+    }
+
+    class Umbriel {
+        +__init__()
+    }
+
+    class Hygiea {
+        +__init__()
+    }
+
+    class Pallas {
+        +__init__()
+    }
+
+    class Vesta {
+        +__init__()
+    }
+
+    class Ceres {
+        +__init__()
+    }
+
+    class Eris {
+        +__init__()
+    }
+
+    class Sedna {
+        +__init__()
+    }
+}
+
+SpaceBody <|-- Bodies
+@enduml
