@@ -16,6 +16,8 @@ class GuiManager:
         self.date_input = {'day': '', 'month': '', 'year': ''}
         self.show_labels = False
         self.show_celestial_body_selector = False
+        self.is_hovering_imgui = False
+        self.is_using_imgui = False
 
     def setup_imgui(self):
         imgui.create_context()
@@ -31,8 +33,12 @@ class GuiManager:
         return renderer
             
     def start_frame(self):
-        """Start a new ImGui frame."""
+        """Start a new ImGui frame and update interaction flags."""
         imgui.new_frame()
+
+        # Reset flags at the start of each frame
+        self.is_hovering_imgui = False
+        self.is_using_imgui = False
 
     def end_frame(self):
         """End the current ImGui frame and render it."""
@@ -49,9 +55,27 @@ class GuiManager:
     def process_event(self, event):
         """
         Process a single Pygame event and pass it to ImGui.
+        Also update ImGui interaction flags based on the event.
         """
         if self.renderer is not None:
             self.renderer.process_event(event)
+
+            # Update flags based on ImGui state after processing the event
+            io = imgui.get_io()
+            self.is_hovering_imgui = io.want_capture_mouse
+            self.is_using_imgui = io.want_capture_keyboard
+
+    def is_imgui_hovered(self):
+        """
+        Check if ImGui is currently being hovered by the mouse.
+        """
+        return self.is_hovering_imgui
+    
+    def is_imgui_used(self):
+        """
+        Check if ImGui is currently capturing keyboard or mouse input.
+        """
+        return self.is_using_imgui
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         """
