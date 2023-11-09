@@ -2,6 +2,7 @@ from skyfield.api import load
 import pygame
 from OpenGL.GL import glGenTextures, glBindTexture, glTexImage2D, GL_TEXTURE_2D, GL_RGBA, GL_UNSIGNED_BYTE, glTexParameterf, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_REPEAT, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR
 import numpy as np
+from core.download_manager import DownloadManager
 
 class SpaceBody:
 
@@ -33,11 +34,16 @@ class SpaceBody:
 
         self.texture_path = texture_path
         self.texture_id = None
-        self.load_texture()
-        
+
+        self.download_manager = DownloadManager()
+        ephemeris_file_path = self.download_manager.load(self.data_url)
         self.ts = load.timescale()
-        self.ephemeris = load(data_url)
+        self.ephemeris = load(ephemeris_file_path)
         self.body = self.ephemeris[skyfield_name]
+
+        self.load_texture()
+
+        self.load_texture()
 
     def load_texture(self):
         if self.texture_path:
