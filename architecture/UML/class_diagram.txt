@@ -150,8 +150,17 @@ class SpaceBody {
     -ts: Timescale
     -ephemeris: Ephemeris
     -body: Planetary Object
+    -download_manager: DownloadManager
 }
 
+class DownloadManager {
+    +__init__(base_folder: String)
+    +load(data_url: String): String
+    -base_folder: String
+    -loader: Loader
+}
+
+DownloadManager "1" --o SpaceBody : downloads >
 SolarSystem o-- "1" SpaceBody
 
 package Bodies {
