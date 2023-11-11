@@ -1,6 +1,7 @@
 import os
 import requests
 import threading
+import time
 from skyfield.api import Loader
 
 class DownloadManager:
@@ -39,9 +40,10 @@ class DownloadManager:
         file_path = os.path.join(self.base_folder, file_name)
 
         if os.path.isfile(file_path):
-            # If the file already exists, mark its download as complete
+            print(f"File already downloaded: {file_name}")
             self.file_progress[data_url] = 1.0
         else:
+            print(f"Downloading file: {file_name}")
             try:
                 self.download_with_progress(data_url, file_path)
             except Exception as e:
@@ -53,10 +55,16 @@ class DownloadManager:
 
     def pre_download_all(self):
         """
-        Method to pre-download all ephemeris data.
+        Method to pre-download all ephemeris data with visual progress.
         """
         for url in self.ephemeris_urls:
-            self.load(url)
+            file_path = os.path.join(self.base_folder, url.split('/')[-1])
+            if os.path.isfile(file_path):
+                # Immediately set progress to 1.0 for existing files
+                self.file_progress[url] = 1.0
+            else:
+                # Download the file if it does not exist
+                self.load(url)
 
     def pre_download_all_async(self):
         """
@@ -66,12 +74,11 @@ class DownloadManager:
         download_thread.start()
 
     def get_download_progress(self):
-        """
-        Method to get the current download progress.
-        """
         total_progress = sum(self.file_progress.values())
-        return total_progress / len(self.ephemeris_urls) if self.ephemeris_urls else 1.0
-
+        overall_progress = total_progress / len(self.ephemeris_urls) if self.ephemeris_urls else 1.0
+        print(f"Overall download progress: {overall_progress}")
+        return overall_progress
+    
     def is_download_complete(self):
         """
         Check if all downloads are complete.

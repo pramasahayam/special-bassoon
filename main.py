@@ -18,15 +18,23 @@ def main():
     # Start asynchronous pre-download
     download_manager.pre_download_all_async()
 
-    # Pre-download ephemeris data with a progress screen
-    while not download_manager.is_download_complete():
-        progress = download_manager.get_download_progress()
+    display_progress = 0.0
+    while not download_manager.is_download_complete() or display_progress < 1.0:
+        actual_progress = download_manager.get_download_progress()
+        
+        # Smooth transition for already downloaded files
+        if actual_progress == 1.0:
+            display_progress += 0.01
+            display_progress = min(display_progress, 1.0)
+        else:
+            display_progress = actual_progress
+
         gui_manager.start_frame()
-        gui_manager.render_download_progress(progress)
+        gui_manager.render_download_progress(display_progress)
         gui_manager.end_frame()
 
         pygame.display.flip()
-        pygame.event.pump()  
+        pygame.event.pump()
         pygame.time.wait(10)
 
     user_interactions = UserInteractions(window_manager, gui_manager)
