@@ -33,7 +33,9 @@ class GuiManager:
         return renderer
             
     def start_frame(self):
-        """Start a new ImGui frame and update interaction flags."""
+        """
+        Start a new ImGui frame and update interaction flags.
+        """
         imgui.new_frame()
 
         # Reset flags at the start of each frame
@@ -76,6 +78,27 @@ class GuiManager:
         Check if ImGui is currently capturing keyboard or mouse input.
         """
         return self.is_using_imgui
+
+    def render_download_progress(self, progress):
+        """
+        Render the download progress screen.
+        """
+        imgui.set_next_window_position(0, 0)
+        imgui.set_next_window_size(pygame.display.Info().current_w, pygame.display.Info().current_h)
+        imgui.begin("Download Progress", 
+                    flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR)
+
+        # Header text
+        imgui.text("Downloading Ephemeris Data...")
+
+        # Progress bar (without width and height parameters)
+        imgui.progress_bar(progress)
+
+        # Optional: Text to show the percentage
+        percentage = int(progress * 100)
+        imgui.text(f"Progress: {percentage}%")
+
+        imgui.end()
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         # Initialize Window

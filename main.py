@@ -10,12 +10,27 @@ from core.date_manager import DateManager
 from core.download_manager import DownloadManager
 
 def main():
-    download_manager = DownloadManager()
-    download_manager.pre_download_all()
-    
+
     window_manager = WindowManager()
+    download_manager = DownloadManager()
     gui_manager = GuiManager()
+
+    # Start asynchronous pre-download
+    download_manager.pre_download_all_async()
+
+    # Pre-download ephemeris data with a progress screen
+    while not download_manager.is_download_complete():
+        progress = download_manager.get_download_progress()
+        gui_manager.start_frame()
+        gui_manager.render_download_progress(progress)
+        gui_manager.end_frame()
+
+        pygame.display.flip()
+        pygame.event.pump()  
+        pygame.time.wait(10)
+
     user_interactions = UserInteractions(window_manager, gui_manager)
+    date_manager = DateManager()
     solar_system = SolarSystem(window_manager, user_interactions)
     
     glEnable(GL_TEXTURE_2D)
