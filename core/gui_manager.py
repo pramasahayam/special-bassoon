@@ -19,7 +19,8 @@ class GuiManager:
         self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
         self.is_using_imgui = False
-        self.background_texture_id = self.load_background_texture("textures/misc/loading_texture.png")
+        self.background_texture_id = self.load_texture("textures/misc/loading_texture.png")
+        self.team_logo_texture_id = self.load_texture("textures/misc/team_logo.png")
 
     def setup_imgui(self):
         imgui.create_context()
@@ -49,7 +50,7 @@ class GuiManager:
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
 
-    def load_background_texture(self, texture_path):
+    def load_texture(self, texture_path):
         # Load the texture using pygame
         texture_surface = pygame.image.load(texture_path)
         texture_data = pygame.image.tostring(texture_surface, "RGBA", True)
@@ -63,20 +64,6 @@ class GuiManager:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
         return texture_id
-
-    def draw_background(self, width, height):
-        glEnable(GL_TEXTURE_2D)
-        glBindTexture(GL_TEXTURE_2D, self.background_texture_id)
-
-        glBegin(GL_QUADS)
-        glTexCoord2f(0, 0); glVertex2f(0, 0)
-        glTexCoord2f(1, 0); glVertex2f(width, 0)
-        glTexCoord2f(1, 1); glVertex2f(width, height)
-        glTexCoord2f(0, 1); glVertex2f(0, height)
-        glEnd()
-
-        glBindTexture(GL_TEXTURE_2D, 0)
-        glDisable(GL_TEXTURE_2D)
 
     def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
@@ -129,8 +116,9 @@ class GuiManager:
             percentage = int(progress * 100)
             imgui.text(f"Progress: {percentage}%")
 
-            # Render the background texture within the ImGui window
+            imgui.image(self.team_logo_texture_id, width, height)
             imgui.image(self.background_texture_id, width, height)
+            
 
             imgui.end()
 

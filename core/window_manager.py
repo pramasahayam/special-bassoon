@@ -6,10 +6,24 @@ from OpenGL.GLU import *
 class WindowManager:
     def __init__(self):
         pygame.init()
-        self.WIDTH, self.HEIGHT = 800, 600
-        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), DOUBLEBUF | OPENGL | pygame.RESIZABLE)
+        self.WIDTH, self.HEIGHT = 960, 480
+        self.resizable = True  # Add a flag to control window resizing
+        self.create_window()
+
+    def create_window(self):
+        """Create or recreate the window based on the current settings."""
+        flags = DOUBLEBUF | OPENGL
+        if self.resizable:
+            flags |= pygame.RESIZABLE
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), flags)
         pygame.display.set_caption('Solar System Simulation')
         self.resize(self.WIDTH, self.HEIGHT)
+
+    def set_resizable(self, resizable):
+        """Enable or disable window resizing."""
+        if self.resizable != resizable:
+            self.resizable = resizable
+            self.create_window()
 
     def resize(self, width, height):
         """Handles the window resize."""
@@ -23,4 +37,3 @@ class WindowManager:
 
     def get_current_dimensions(self):
         return self.WIDTH, self.HEIGHT
-

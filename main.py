@@ -15,41 +15,31 @@ def main():
     download_manager = DownloadManager()
     gui_manager = GuiManager(window_manager)
 
+    # Disable resizing during the loading process
+    window_manager.set_resizable(False)
+
     # Start asynchronous pre-download
     download_manager.pre_download_all_async()
 
     display_progress = 0.0
     while not download_manager.is_download_complete() or display_progress < 1.0:
         actual_progress = download_manager.get_download_progress()
-        
-        # Smooth transition for already downloaded files
+
         if actual_progress == 1.0:
             display_progress += 0.01
             display_progress = min(display_progress, 1.0)
         else:
             display_progress = actual_progress
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return
-            elif event.type == pygame.VIDEORESIZE:
-                # Update the OpenGL viewport and projection
-                window_manager.resize(event.w, event.h)
-                # Update ImGui's display size
-                gui_manager.handle_resize(event.w, event.h)
-
-        width, height = window_manager.get_current_dimensions()
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
         gui_manager.start_frame()
         gui_manager.render_download_progress(display_progress)
         gui_manager.end_frame()
-
         pygame.display.flip()
         pygame.time.wait(10)
 
+    # Re-enable window resizing after the loading is complete
+    window_manager.set_resizable(True)
 
     user_interactions = UserInteractions(window_manager, gui_manager)
     date_manager = DateManager()
@@ -60,8 +50,6 @@ def main():
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     glEnable(GL_DEPTH_TEST)
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
-  
-    date_manager = DateManager()
     
     while True:
         t = date_manager.get_current_date()
