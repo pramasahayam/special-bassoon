@@ -13,7 +13,7 @@ def main():
 
     window_manager = WindowManager()
     download_manager = DownloadManager()
-    gui_manager = GuiManager()
+    gui_manager = GuiManager(window_manager)
 
     # Start asynchronous pre-download
     download_manager.pre_download_all_async()
@@ -29,13 +29,27 @@ def main():
         else:
             display_progress = actual_progress
 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            elif event.type == pygame.VIDEORESIZE:
+                # Update the OpenGL viewport and projection
+                window_manager.resize(event.w, event.h)
+                # Update ImGui's display size
+                gui_manager.handle_resize(event.w, event.h)
+
+        width, height = window_manager.get_current_dimensions()
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
         gui_manager.start_frame()
         gui_manager.render_download_progress(display_progress)
         gui_manager.end_frame()
 
         pygame.display.flip()
-        pygame.event.pump()
         pygame.time.wait(10)
+
 
     user_interactions = UserInteractions(window_manager, gui_manager)
     date_manager = DateManager()

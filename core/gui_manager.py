@@ -8,7 +8,8 @@ import datetime
 from imgui.integrations.pygame import PygameRenderer
 
 class GuiManager:
-    def __init__(self):
+    def __init__(self, window_manager):
+        self.window_manager = window_manager
         self.renderer = self.setup_imgui()
         self.error_message = ""
         self.error_display_time = 0
@@ -18,6 +19,7 @@ class GuiManager:
         self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
         self.is_using_imgui = False
+        self.background_texture_id = self.load_background_texture("textures/misc/loading_texture.png")
 
     def setup_imgui(self):
         imgui.create_context()
@@ -46,6 +48,35 @@ class GuiManager:
         """End the current ImGui frame and render it."""
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
+
+    def load_background_texture(self, texture_path):
+        # Load the texture using pygame
+        texture_surface = pygame.image.load(texture_path)
+        texture_data = pygame.image.tostring(texture_surface, "RGBA", True)
+        width, height = texture_surface.get_size()
+
+        # Create an OpenGL texture
+        texture_id = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, texture_id)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
+        return texture_id
+
+    def draw_background(self, width, height):
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, self.background_texture_id)
+
+        glBegin(GL_QUADS)
+        glTexCoord2f(0, 0); glVertex2f(0, 0)
+        glTexCoord2f(1, 0); glVertex2f(width, 0)
+        glTexCoord2f(1, 1); glVertex2f(width, height)
+        glTexCoord2f(0, 1); glVertex2f(0, height)
+        glEnd()
+
+        glBindTexture(GL_TEXTURE_2D, 0)
+        glDisable(GL_TEXTURE_2D)
 
     def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
@@ -80,25 +111,28 @@ class GuiManager:
         return self.is_using_imgui
 
     def render_download_progress(self, progress):
-        """
-        Render the download progress screen.
-        """
+        width, height = self.window_manager.get_current_dimensions()
+
         imgui.set_next_window_position(0, 0)
-        imgui.set_next_window_size(pygame.display.Info().current_w, pygame.display.Info().current_h)
-        imgui.begin("Download Progress", 
-                    flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR)
+        imgui.set_next_window_size(width, height)
+        self.set_common_style()
 
-        # Header text
-        imgui.text("Downloading Ephemeris Data...")
+        if imgui.begin("Download Progress", 
+                    flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR):
 
-        # Progress bar (without width and height parameters)
-        imgui.progress_bar(progress)
+            # Render the progress bar and other elements
+            imgui.text("Downloading Ephemeris Data...")
+            imgui.push_style_color(imgui.COLOR_PLOT_HISTOGRAM, 0.0, 0.5, 0.8, 1.0)
+            imgui.progress_bar(progress)
+            imgui.pop_style_color(1)
 
-        # Optional: Text to show the percentage
-        percentage = int(progress * 100)
-        imgui.text(f"Progress: {percentage}%")
+            percentage = int(progress * 100)
+            imgui.text(f"Progress: {percentage}%")
 
-        imgui.end()
+            # Render the background texture within the ImGui window
+            imgui.image(self.background_texture_id, width, height)
+
+            imgui.end()
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         # Initialize Window
@@ -441,7 +475,7 @@ class GuiManager:
                     imgui.separator()
 
     def handle_resize(self, width, height):
-        """Update the display size for ImGui."""
+        # Update ImGui's display size
         imgui.get_io().display_size = width, height
 
 
