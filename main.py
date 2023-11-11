@@ -7,8 +7,12 @@ from core.gui_manager import GuiManager
 from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
+from core.download_manager import DownloadManager
 
 def main():
+    download_manager = DownloadManager()
+    download_manager.pre_download_all()
+    
     window_manager = WindowManager()
     gui_manager = GuiManager()
     user_interactions = UserInteractions(window_manager, gui_manager)
