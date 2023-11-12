@@ -60,7 +60,7 @@ class UserInteractions:
 
     def handle_resize(self, event):
         width, height = event.size
-        self.window_manager.mark_resize(width, height)
+        self.window_manager.resize(width, height)
         self.gui_manager.handle_resize(width, height)
 
     def zoom_in(self):
@@ -92,7 +92,7 @@ class UserInteractions:
         self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
 
     def focus_on_body(self, solar_system, body_position, body_radius):
-        # Calculate the ring radius and the desired distance based on the celestial body's size and a FOV factor
+        # Calculate the ring radius and the desired distance based on the celestial body's size
         ring_radius = solar_system.get_ring_radius(body_radius)
         desired_distance = -(ring_radius * 2)
 

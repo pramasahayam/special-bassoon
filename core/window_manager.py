@@ -8,7 +8,6 @@ class WindowManager:
         pygame.init()
         self.WIDTH, self.HEIGHT = 960, 480
         self.resizable = True
-        self.pending_resize = False
         self.create_window()
 
     def create_window(self):
@@ -26,11 +25,6 @@ class WindowManager:
             self.resizable = resizable
             self.create_window()
 
-    def mark_resize(self, width, height):
-        self.WIDTH = width
-        self.HEIGHT = height
-        self.pending_resize = True
-
     def resize(self, width, height):
         """Handles the window resize."""
         self.WIDTH = width
@@ -40,11 +34,6 @@ class WindowManager:
         glLoadIdentity()
         gluPerspective(45, (width / height), 0.1, 600000.0)
         glMatrixMode(GL_MODELVIEW)
-
-    def update_opengl_context(self):
-        if self.pending_resize:
-            self.resize(self.WIDTH, self.HEIGHT)
-            self.pending_resize = False
 
     def get_current_dimensions(self):
         return self.WIDTH, self.HEIGHT
