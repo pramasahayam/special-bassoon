@@ -465,7 +465,3 @@ class GuiManager:
     def handle_resize(self, width, height):
         # Update ImGui's display size
         imgui.get_io().display_size = width, height
-
-
-
-

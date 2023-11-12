@@ -7,7 +7,7 @@ class WindowManager:
     def __init__(self):
         pygame.init()
         self.WIDTH, self.HEIGHT = 960, 480
-        self.resizable = True  # Add a flag to control window resizing
+        self.resizable = True
         self.create_window()
 
     def create_window(self):
