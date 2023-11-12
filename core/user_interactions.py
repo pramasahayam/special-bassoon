@@ -33,47 +33,64 @@ class UserInteractions:
     def handle_event(self, event):
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
-                match event.button:
-                    case 1:
-                        self.dragging = True
-                        self.last_mouse_x, self.last_mouse_y = event.pos
-                    case 4:  # Zooming in
-                        new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
-                        if new_distance <= self.MIN_ZOOM_IN:
-                            self.CAMERA_DISTANCE = new_distance
-                            glTranslatef(0, 0, self.LINEAR_ZOOM_AMOUNT)
-                    case 5:  # Zooming out
-                        new_distance = self.CAMERA_DISTANCE - self.LINEAR_ZOOM_AMOUNT
-                        if new_distance >= self.MAX_ZOOM_OUT:
-                            self.CAMERA_DISTANCE = new_distance
-                            glTranslatef(0, 0, -self.LINEAR_ZOOM_AMOUNT)
+                self.handle_mouse_button_down(event)
             case pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    self.dragging = False
+                self.handle_mouse_button_up(event)
             case pygame.MOUSEMOTION:
-                if self.dragging:
-                    mouse_x, mouse_y = event.pos
-                    dx = mouse_x - self.last_mouse_x
-                    dy = mouse_y - self.last_mouse_y
-
-                    # Calculate the new camera position
-                    new_camera_x = self.camera_position[0] + dx * 15
-                    new_camera_y = self.camera_position[1] - dy * 15
-
-                    # Clamp the camera position to the defined limits
-                    new_camera_x = max(min(new_camera_x, self.camera_limits['right']), self.camera_limits['left'])
-                    new_camera_y = max(min(new_camera_y, self.camera_limits['up']), self.camera_limits['down'])
-
-                    # Update the camera position
-                    glTranslatef(new_camera_x - self.camera_position[0], new_camera_y - self.camera_position[1], 0)
-                    self.camera_position[0] = new_camera_x
-                    self.camera_position[1] = new_camera_y
-
-                    self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
+                self.handle_mouse_motion(event)
             case pygame.VIDEORESIZE:
-                width, height = event.size
-                self.window_manager.mark_resize(event.w, event.h)
-                self.gui_manager.handle_resize(width, height)
+                self.handle_resize(event)
+
+    def handle_mouse_button_down(self, event):
+        match event.button:
+            case 1:
+                self.dragging = True
+                self.last_mouse_x, self.last_mouse_y = event.pos
+            case 4:  # Zooming in
+                self.zoom_in()
+            case 5:  # Zooming out
+                self.zoom_out()
+
+    def handle_mouse_button_up(self, event):
+        if event.button == 1:
+            self.dragging = False
+
+    def handle_mouse_motion(self, event):
+        if self.dragging:
+            self.drag_camera(event)
+
+    def handle_resize(self, event):
+        width, height = event.size
+        self.window_manager.mark_resize(width, height)
+        self.gui_manager.handle_resize(width, height)
+
+    def zoom_in(self):
+        new_distance = self.CAMERA_DISTANCE + self.LINEAR_ZOOM_AMOUNT
+        if new_distance <= self.MIN_ZOOM_IN:
+            self.CAMERA_DISTANCE = new_distance
+            glTranslatef(0, 0, self.LINEAR_ZOOM_AMOUNT)
+
+    def zoom_out(self):
+        new_distance = self.CAMERA_DISTANCE - self.LINEAR_ZOOM_AMOUNT
+        if new_distance >= self.MAX_ZOOM_OUT:
+            self.CAMERA_DISTANCE = new_distance
+            glTranslatef(0, 0, -self.LINEAR_ZOOM_AMOUNT)
+
+    def drag_camera(self, event):
+        mouse_x, mouse_y = event.pos
+        dx = mouse_x - self.last_mouse_x
+        dy = mouse_y - self.last_mouse_y
+
+        new_camera_x = self.camera_position[0] + dx * 15
+        new_camera_y = self.camera_position[1] - dy * 15
+        new_camera_x = max(min(new_camera_x, self.camera_limits['right']), self.camera_limits['left'])
+        new_camera_y = max(min(new_camera_y, self.camera_limits['up']), self.camera_limits['down'])
+
+        glTranslatef(new_camera_x - self.camera_position[0], new_camera_y - self.camera_position[1], 0)
+        self.camera_position[0] = new_camera_x
+        self.camera_position[1] = new_camera_y
+
+        self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
 
     def focus_on_body(self, solar_system, body_position, body_radius):
         # Calculate the ring radius and the desired distance based on the celestial body's size and a FOV factor
