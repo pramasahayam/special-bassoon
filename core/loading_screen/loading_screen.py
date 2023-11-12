@@ -8,7 +8,7 @@ class LoadingScreen:
         self.window_manager = window_manager
         self.gui_manager = gui_manager
         self.skybox_texture_id = self.load_texture("textures/misc/loading_texture.png")
-        self.logo_texture_id = self.load_texture("textures/misc/team_logo.png")
+        self.overlay_texture_id = self.load_texture("textures/misc/team_logo.png")
 
     def load_texture(self, texture_path):
         texture_surface = pygame.image.load(texture_path)
@@ -57,30 +57,37 @@ class LoadingScreen:
         glBindTexture(GL_TEXTURE_2D, 0)
         glDepthMask(GL_TRUE)
 
-    def blit_logo(self):
-        width, height = self.window_manager.get_current_dimensions()
-
-        # Assuming the logo is square and you want it to be 200x200 pixels
-        logo_size = 200
-        logo_x = (width - logo_size) / 2
-        logo_y = (height - logo_size) / 2
-
+    def draw_overlay(self, overlay_texture_id):
         glEnable(GL_TEXTURE_2D)
-        glBindTexture(GL_TEXTURE_2D, self.logo_texture_id)
+        glBindTexture(GL_TEXTURE_2D, overlay_texture_id)
+        glMatrixMode(GL_PROJECTION)
+        glPushMatrix()
+        glLoadIdentity()
+        gluOrtho2D(0, self.window_manager.WIDTH, 0, self.window_manager.HEIGHT)
+        glMatrixMode(GL_MODELVIEW)
+        glPushMatrix()
+        glLoadIdentity()
 
         glBegin(GL_QUADS)
-        glTexCoord2f(0, 0); glVertex2f(logo_x, logo_y)
-        glTexCoord2f(1, 0); glVertex2f(logo_x + logo_size, logo_y)
-        glTexCoord2f(1, 1); glVertex2f(logo_x + logo_size, logo_y + logo_size)
-        glTexCoord2f(0, 1); glVertex2f(logo_x, logo_y + logo_size)
+        # Adjust these texture coordinates if the texture is mirrored
+        glTexCoord2f(0, 0); glVertex2f(0, 0)  # Bottom-left corner
+        glTexCoord2f(1, 0); glVertex2f(self.window_manager.WIDTH, 0)  # Bottom-right corner
+        glTexCoord2f(1, 1); glVertex2f(self.window_manager.WIDTH, self.window_manager.HEIGHT)  # Top-right corner
+        glTexCoord2f(0, 1); glVertex2f(0, self.window_manager.HEIGHT)  # Top-left corner
         glEnd()
+
+        glPopMatrix()
+        glMatrixMode(GL_PROJECTION)
+        glPopMatrix()
+        glMatrixMode(GL_MODELVIEW)
 
         glBindTexture(GL_TEXTURE_2D, 0)
         glDisable(GL_TEXTURE_2D)
-        
+
     def render_progress_bar(self, progress):
         imgui.set_next_window_position(0, 0)
         imgui.set_next_window_size(self.window_manager.WIDTH, self.window_manager.HEIGHT/6)
+        self.gui_manager.set_common_style()
         imgui.begin("Download Progress", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR)
 
         imgui.text("Downloading Ephemeris Data...")
@@ -98,9 +105,25 @@ class LoadingScreen:
         glLoadIdentity()
 
         self.draw_skybox()
-        self.blit_logo()
 
+        # Start the ImGui frame
         self.gui_manager.start_frame()
+
+        # Render the progress bar using ImGui
         self.render_progress_bar(progress)
+
+        # End the ImGui frame
         self.gui_manager.end_frame()
+
+        # Enable blending for transparent texture
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        # Render the overlay image
+        self.draw_overlay(self.overlay_texture_id)
+
+        # Disable blending if it's not needed for the rest of your rendering
+        glDisable(GL_BLEND)
+
+        # Update the display
         pygame.display.flip()
