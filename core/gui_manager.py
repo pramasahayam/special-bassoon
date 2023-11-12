@@ -51,8 +51,8 @@ class GuiManager:
         self.renderer.render(imgui.get_draw_data())
 
     def load_texture(self, texture_path):
-        # Load the texture using pygame
         texture_surface = pygame.image.load(texture_path)
+        texture_surface = pygame.transform.flip(texture_surface, False, True)  # Flip vertically
         texture_data = pygame.image.tostring(texture_surface, "RGBA", True)
         width, height = texture_surface.get_size()
 
@@ -100,12 +100,12 @@ class GuiManager:
     def render_download_progress(self, progress):
         width, height = self.window_manager.get_current_dimensions()
 
-        imgui.set_next_window_position(0, 0)
-        imgui.set_next_window_size(width, height)
+        imgui.set_next_window_position(-4, 0)
+        imgui.set_next_window_size(width+4, height)
         self.set_common_style()
 
         if imgui.begin("Download Progress", 
-                    flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR):
+                    flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_ALWAYS_AUTO_RESIZE):
 
             # Render the progress bar and other elements
             imgui.text("Downloading Ephemeris Data...")
