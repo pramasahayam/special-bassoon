@@ -6,10 +6,12 @@ import imgui
 import time
 import datetime
 from imgui.integrations.pygame import PygameRenderer
+from core.loading_screen.loading_screen import LoadingScreen
 
 class GuiManager:
     def __init__(self, window_manager):
         self.window_manager = window_manager
+        self.loading_screen = LoadingScreen(window_manager, self)
         self.renderer = self.setup_imgui()
         self.error_message = ""
         self.error_display_time = 0
@@ -19,8 +21,6 @@ class GuiManager:
         self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
         self.is_using_imgui = False
-        self.background_texture_id = self.load_texture("textures/misc/loading_texture.png")
-        self.team_logo_texture_id = self.load_texture("textures/misc/team_logo.png")
 
     def setup_imgui(self):
         imgui.create_context()
@@ -49,21 +49,6 @@ class GuiManager:
         """End the current ImGui frame and render it."""
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
-
-    def load_texture(self, texture_path):
-        texture_surface = pygame.image.load(texture_path)
-        texture_surface = pygame.transform.flip(texture_surface, False, True)  # Flip vertically
-        texture_data = pygame.image.tostring(texture_surface, "RGBA", True)
-        width, height = texture_surface.get_size()
-
-        # Create an OpenGL texture
-        texture_id = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, texture_id)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-        return texture_id
 
     def render_ui(self, solar_system, date_manager, user_interactions):
         self.render_date_selector(date_manager)
@@ -97,30 +82,9 @@ class GuiManager:
         """
         return self.is_using_imgui
 
-    def render_download_progress(self, progress):
-        width, height = self.window_manager.get_current_dimensions()
-
-        imgui.set_next_window_position(-4, 0)
-        imgui.set_next_window_size(width+4, height)
-        self.set_common_style()
-
-        if imgui.begin("Download Progress", 
-                    flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_ALWAYS_AUTO_RESIZE):
-
-            # Render the progress bar and other elements
-            imgui.text("Downloading Ephemeris Data...")
-            imgui.push_style_color(imgui.COLOR_PLOT_HISTOGRAM, 0.0, 0.5, 0.8, 1.0)
-            imgui.progress_bar(progress)
-            imgui.pop_style_color(1)
-
-            percentage = int(progress * 100)
-            imgui.text(f"Progress: {percentage}%")
-
-            imgui.image(self.team_logo_texture_id, width, height)
-            imgui.image(self.background_texture_id, width, height)
-            
-
-            imgui.end()
+    def render_loading_screen(self, progress):
+        """Delegate rendering of the loading screen to the LoadingScreen instance."""
+        self.loading_screen.render(progress)
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         # Initialize Window

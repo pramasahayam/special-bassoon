@@ -31,12 +31,7 @@ def main():
         else:
             display_progress = actual_progress
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        gui_manager.start_frame()
-        gui_manager.render_download_progress(display_progress)
-        gui_manager.end_frame()
-        pygame.display.flip()
-        pygame.time.wait(10)
+        gui_manager.render_loading_screen(display_progress)
 
     # Re-enable window resizing after the loading is complete
     window_manager.set_resizable(True)
