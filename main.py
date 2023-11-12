@@ -63,8 +63,10 @@ def main():
 
             # Only process other interactions if ImGui is not being used
             if not gui_manager.is_imgui_hovered() and not gui_manager.is_imgui_used():
-                user_interactions.handle_event(event, window_manager.resize)
+                user_interactions.handle_event(event)
                 solar_system.handle_event(event, t)
+
+        window_manager.update_opengl_context()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 

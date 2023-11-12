@@ -30,7 +30,7 @@ class UserInteractions:
 
         self.camera_position = [0, 0, self.CAMERA_DISTANCE]
         
-    def handle_event(self, event, resize):
+    def handle_event(self, event):
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
                 match event.button:
@@ -72,7 +72,7 @@ class UserInteractions:
                     self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
             case pygame.VIDEORESIZE:
                 width, height = event.size
-                resize(width, height)
+                self.window_manager.mark_resize(event.w, event.h)
                 self.gui_manager.handle_resize(width, height)
 
     def focus_on_body(self, solar_system, body_position, body_radius):
