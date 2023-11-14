@@ -5,7 +5,7 @@ class Pluto(SpaceBody):
         super().__init__(
             radius=0.27, 
             skyfield_name='pluto barycenter', 
-            data_url='ephemeris_data/de421.bsp',
+            data_url='de421.bsp',
             name="Pluto",
             description="Pluto was once considered the ninth planet from the Sun but is now the best-known dwarf planet. It is a world of ice mountains and frozen planes. Pluto is located in the Kuiper Belt, a donut-shaped region beyond the orbit of Neptune.",
             mass="1.31E+22 kg",

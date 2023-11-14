@@ -5,7 +5,7 @@ class Moon(SpaceBody):
         super().__init__(
             radius=0.25,
             skyfield_name='moon', 
-            data_url='ephemeris_data/de421.bsp',
+            data_url='de421.bsp',
             name="Luna",
             description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
             mass="7.30E+22 kg",

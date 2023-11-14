@@ -5,7 +5,7 @@ class Earth(SpaceBody):
         super().__init__(
             radius=0.92,
             skyfield_name='earth barycenter',
-            data_url='ephemeris_data/de421.bsp',
+            data_url='de421.bsp',
             orbital_center=None,
             name="Earth",
             description="Third planet from the Sun and the only known planet to harbor life.",

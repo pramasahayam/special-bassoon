@@ -6,9 +6,12 @@ import imgui
 import time
 import datetime
 from imgui.integrations.pygame import PygameRenderer
+from core.loading_screen.loading_screen import LoadingScreen
 
 class GuiManager:
-    def __init__(self):
+    def __init__(self, window_manager):
+        self.window_manager = window_manager
+        self.loading_screen = LoadingScreen(window_manager, self)
         self.renderer = self.setup_imgui()
         self.error_message = ""
         self.error_display_time = 0
@@ -33,7 +36,9 @@ class GuiManager:
         return renderer
             
     def start_frame(self):
-        """Start a new ImGui frame and update interaction flags."""
+        """
+        Start a new ImGui frame and update interaction flags.
+        """
         imgui.new_frame()
 
         # Reset flags at the start of each frame
@@ -76,6 +81,10 @@ class GuiManager:
         Check if ImGui is currently capturing keyboard or mouse input.
         """
         return self.is_using_imgui
+
+    def render_loading_screen(self, progress):
+        """Delegate rendering of the loading screen to the LoadingScreen instance."""
+        self.loading_screen.render(progress)
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         # Initialize Window
@@ -418,9 +427,5 @@ class GuiManager:
                     imgui.separator()
 
     def handle_resize(self, width, height):
-        """Update the display size for ImGui."""
+        # Update ImGui's display size
         imgui.get_io().display_size = width, height
-
-
-
-
