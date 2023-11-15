@@ -6,9 +6,14 @@ import imgui
 import time
 import datetime
 from imgui.integrations.pygame import PygameRenderer
+from core.gui.loading_screen import LoadingScreen
+from core.gui.trajectory_menu import TrajectoryMenu
 
 class GuiManager:
-    def __init__(self):
+    def __init__(self, window_manager):
+        self.window_manager = window_manager
+        self.loading_screen = LoadingScreen(window_manager, self)
+        self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator)
         self.renderer = self.setup_imgui()
         self.error_message = ""
         self.error_display_time = 0
@@ -18,6 +23,8 @@ class GuiManager:
         self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
         self.is_using_imgui = False
+        self.show_trajectory_menu = False
+        self.selected_celestial_bodies = [None, None]
 
     def setup_imgui(self):
         imgui.create_context()
@@ -33,7 +40,9 @@ class GuiManager:
         return renderer
             
     def start_frame(self):
-        """Start a new ImGui frame and update interaction flags."""
+        """
+        Start a new ImGui frame and update interaction flags.
+        """
         imgui.new_frame()
 
         # Reset flags at the start of each frame
@@ -50,6 +59,7 @@ class GuiManager:
         self.render_infobox(solar_system)
         self.render_celestial_body_selector(solar_system, user_interactions, date_manager)
         self.render_center_button(user_interactions)
+        self.trajectory_menu.render(solar_system)
         self.render_label_toggle_button()
 
     def process_event(self, event):
@@ -77,9 +87,13 @@ class GuiManager:
         """
         return self.is_using_imgui
 
+    def render_loading_screen(self, progress):
+        """Delegate rendering of the loading screen to the LoadingScreen instance."""
+        self.loading_screen.render(progress)
+
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         # Initialize Window
-        imgui.set_next_window_position(366, 0)
+        imgui.set_next_window_position(376, 0)
         self.set_common_style()
         imgui.begin("Celestial Body Selector", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -205,7 +219,7 @@ class GuiManager:
         imgui.end()
 
     def render_label_toggle_button(self):
-        imgui.set_next_window_position(65, 0)
+        imgui.set_next_window_position(75, 0)
         self.set_common_style()
         imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
@@ -232,7 +246,7 @@ class GuiManager:
         self.reset_style()
 
     def set_date_selector_window_position(self):
-        imgui.set_next_window_position(175, 0) 
+        imgui.set_next_window_position(185, 0) 
 
     def set_common_style(self):
         style = imgui.get_style()
@@ -418,9 +432,5 @@ class GuiManager:
                     imgui.separator()
 
     def handle_resize(self, width, height):
-        """Update the display size for ImGui."""
+        # Update ImGui's display size
         imgui.get_io().display_size = width, height
-
-
-
-
