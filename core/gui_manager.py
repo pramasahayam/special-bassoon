@@ -93,7 +93,7 @@ class GuiManager:
 
     def render_celestial_body_selector(self, solar_system, user_interactions, date_manager):
         # Initialize Window
-        imgui.set_next_window_position(366, 0)
+        imgui.set_next_window_position(376, 0)
         self.set_common_style()
         imgui.begin("Celestial Body Selector", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -219,7 +219,7 @@ class GuiManager:
         imgui.end()
 
     def render_label_toggle_button(self):
-        imgui.set_next_window_position(65, 0)
+        imgui.set_next_window_position(75, 0)
         self.set_common_style()
         imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
@@ -246,7 +246,7 @@ class GuiManager:
         self.reset_style()
 
     def set_date_selector_window_position(self):
-        imgui.set_next_window_position(175, 0) 
+        imgui.set_next_window_position(185, 0) 
 
     def set_common_style(self):
         style = imgui.get_style()
