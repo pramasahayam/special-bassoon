@@ -9,7 +9,7 @@ class UserInteractions:
         self.window_manager = window_manager
         self.screen = self.window_manager.screen
         self.skybox_tenth_size = 300000/10 # Same size as in solar_system.py
-        self.LINEAR_ZOOM_AMOUNT = 50.0
+        self.LINEAR_ZOOM_AMOUNT = 400.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -15000

@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+import math
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -120,7 +121,7 @@ class SolarSystem:
 
         return None
 
-    def draw_body(self, body, t):
+    def draw_body(self, body, t): 
         glPushMatrix()  # Save the current OpenGL state
 
         # Compute the position of the celestial body
@@ -129,12 +130,13 @@ class SolarSystem:
 
         # Draw the ring around the celestial body if it's not selected
         if body != self.selected_planet and not body.orbital_center:
+            glColor(1,1,1)
             glDisable(GL_TEXTURE_2D)  
             self.draw_ring(body.radius)
 
         glRotatef(30, 0, 1, 0)  
 
-        quad = gluNewQuadric()
+        quad = gluNewQuadric()  
 
         # If the body has a texture, bind it
         if body.texture_id:
@@ -143,10 +145,34 @@ class SolarSystem:
             gluQuadricTexture(quad, GL_TRUE)
         else:
             glDisable(GL_TEXTURE_2D)
+        
+        if body.name=="Sun":
+            gluSphere(quad, body.radius*2, 100, 100)
+            mat_specular = [1.0, 1.0, 1.0, 1.0]
+            mat_shininess = [50.0]
+            light_position = [1.0, 0.0, 0.0, 0.0]
 
-        gluSphere(quad, body.radius*2, 100, 100)
+            glEnable(GL_LIGHTING)
+            glEnable(GL_LIGHT0)
+            glEnable(GL_LIGHT1)
+            glEnable(GL_DEPTH_TEST)
 
-        glPopMatrix()  # Restore the saved OpenGL state
+            glClearColor(0.0, 0.0, 0.0, 0.0)
+            glShadeModel(GL_SMOOTH)
+
+            glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
+            glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
+            glLightfv(GL_LIGHT0, GL_DIFFUSE, light_position)
+            
+            glPopMatrix() # Restore the saved OpenGL state
+            
+            glDisable(GL_LIGHTING)
+            glDisable(GL_LIGHT0)
+            glDisable(GL_LIGHT1)
+            glDisable(GL_DEPTH_TEST)
+        else:
+            gluSphere(quad, body.radius*2, 100, 100)
+            glPopMatrix() # Restore the saved OpenGL state
 
     def draw_ring(self, body_radius):
         if body_radius <= 3:
