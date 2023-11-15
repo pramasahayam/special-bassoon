@@ -21,6 +21,8 @@ class GuiManager:
         self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
         self.is_using_imgui = False
+        self.show_trajectory_menu = False
+        self.selected_celestial_bodies = [None, None]
 
     def setup_imgui(self):
         imgui.create_context()
@@ -56,6 +58,7 @@ class GuiManager:
         self.render_celestial_body_selector(solar_system, user_interactions, date_manager)
         self.render_center_button(user_interactions)
         self.render_label_toggle_button()
+        self.render_plot_trajectory_menu(solar_system)
 
     def process_event(self, event):
         """
@@ -81,6 +84,37 @@ class GuiManager:
         Check if ImGui is currently capturing keyboard or mouse input.
         """
         return self.is_using_imgui
+    
+    def render_plot_trajectory_menu(self, solar_system):
+
+        imgui.set_next_window_position(0, 100)
+        imgui.set_next_window_size(300, 200)
+        self.set_common_style()
+        imgui.begin("Plot Trajectory", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+
+        if imgui.button("Plot Trajectory"):
+            self.show_trajectory_menu = not self.show_trajectory_menu
+
+        if self.show_trajectory_menu:
+            # Dropdowns for selecting celestial bodies
+            for i in range(2):
+                label = f"Body {i+1}:"
+                imgui.text(label)
+                imgui.same_line()
+                current_selection = self.selected_celestial_bodies[i].name if self.selected_celestial_bodies[i] else "Select Object"
+                if imgui.begin_combo(f"##body_selector_{i}", current_selection):
+                    for body in solar_system.space_bodies:
+                        _, selected = imgui.selectable(body.name, body == self.selected_celestial_bodies[i])
+                        if selected:
+                            self.selected_celestial_bodies[i] = body
+                    imgui.end_combo()
+
+            if imgui.button("Confirm"):
+                body_names = [body.name if body else "None" for body in self.selected_celestial_bodies]
+                print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
+                # Logic to plot trajectory here
+        
+        imgui.end()
 
     def render_loading_screen(self, progress):
         """Delegate rendering of the loading screen to the LoadingScreen instance."""
