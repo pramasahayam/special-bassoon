@@ -24,6 +24,8 @@ class SolarSystem:
         self.selected_planet = None
         self.infobox_visible = False
 
+        self.sun_positionx, self.sun_positiony, self.sun_positionz = 0,0,0
+
     def handle_event(self, event, t):
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
@@ -128,6 +130,10 @@ class SolarSystem:
         x, y, z = body.compute_position(t)
         glTranslatef(x, y, z)
 
+        # Save sun position for lighting
+        if body.name=="Sun":
+            self.sun_positionx,self.sun_positiony,self.sun_positionz = body.compute_position(t)
+
         # Draw the ring around the celestial body if it's not selected
         if body != self.selected_planet and not body.orbital_center:
             glColor(1,1,1)
@@ -146,33 +152,41 @@ class SolarSystem:
         else:
             glDisable(GL_TEXTURE_2D)
         
-        if body.name=="Sun":
+        # Apply lighting to anything thats not the sun and build spheres
+        if body.name!="Sun":
+            self.lighting(x,y)
             gluSphere(quad, body.radius*2, 100, 100)
-            mat_specular = [1.0, 1.0, 1.0, 1.0]
-            mat_shininess = [50.0]
-            light_position = [1.0, 0.0, 0.0, 0.0]
-
-            glEnable(GL_LIGHTING)
-            glEnable(GL_LIGHT0)
-            glEnable(GL_LIGHT1)
-            glEnable(GL_DEPTH_TEST)
-
-            glClearColor(0.0, 0.0, 0.0, 0.0)
-            glShadeModel(GL_SMOOTH)
-
-            glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
-            glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
-            glLightfv(GL_LIGHT0, GL_DIFFUSE, light_position)
-            
-            glPopMatrix() # Restore the saved OpenGL state
-            
             glDisable(GL_LIGHTING)
             glDisable(GL_LIGHT0)
             glDisable(GL_LIGHT1)
             glDisable(GL_DEPTH_TEST)
         else:
             gluSphere(quad, body.radius*2, 100, 100)
-            glPopMatrix() # Restore the saved OpenGL state
+
+        glPopMatrix() # Restore the saved OpenGL state
+
+    def lighting(self,x,y):
+        # Apply lighting to body based on its position relative to the sun
+        posx,posy = ((self.sun_positionx-x)/10000), ((self.sun_positiony-y)/10000)
+        mat_specular = [1.0, 1.0, 1.0, 1.0]
+        mat_shininess = [50.0]
+        light_position = [posx,posy,1.0]
+        spot_direction = [5.0, 5.0, 5.0]
+        spot_exponent = 10.0
+
+        glEnable(GL_LIGHTING)
+        glEnable(GL_LIGHT0)
+        glEnable(GL_LIGHT1)
+        glEnable(GL_DEPTH_TEST)
+
+        glClearColor(0.0, 0.0, 0.0, 0.0)
+        glShadeModel(GL_SMOOTH)
+
+        glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
+        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
+        glLightfv(GL_LIGHT0, GL_POSITION, light_position)
+        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction)
+        glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, spot_exponent)
 
     def draw_ring(self, body_radius):
         if body_radius <= 3:
