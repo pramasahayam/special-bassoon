@@ -7,6 +7,7 @@ class Moon(SpaceBody):
             skyfield_name='moon', 
             data_url='de421.bsp',
             name="Luna",
+            color = "white",
             description="The Moon is Earth's only natural satellite. It is one of the largest natural satellites in the Solar System, and the largest among planetary satellites relative to the size of the planet that it orbits. The Moon is the second-densest satellite, after Io, a satellite of Jupiter.",
             mass="7.30E+22 kg",
             diameter="3,474.8 km",

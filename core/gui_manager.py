@@ -6,6 +6,7 @@ import imgui
 import time
 import datetime
 from imgui.integrations.pygame import PygameRenderer
+import webcolors
 
 class GuiManager:
     def __init__(self):
@@ -140,7 +141,7 @@ class GuiManager:
             self.set_common_style()
             imgui.begin("Info Box", solar_system.is_infobox_visible(), flags)
             
-            self.render_infobox_content(attributes)
+            self.render_infobox_content(attributes,solar_system.get_selected_planet().color)
             
             imgui.end()
 
@@ -398,7 +399,7 @@ class GuiManager:
         ]
         return attributes
 
-    def render_infobox_content(self, attributes):
+    def render_infobox_content(self, attributes, color):
         padding = 10
         imgui.set_cursor_pos((imgui.get_cursor_pos()[0], imgui.get_cursor_pos()[1] + padding))
         for i, (label, value) in enumerate(attributes):
@@ -407,7 +408,7 @@ class GuiManager:
                     text_width = imgui.calc_text_size(value)[0]
                     centered_x = (imgui.get_window_width() - text_width) / 2
                     imgui.set_cursor_pos((centered_x, imgui.get_cursor_pos()[1]))
-                    imgui.push_style_color(imgui.COLOR_TEXT, 1, 1, 0, 1)  
+                    imgui.push_style_color(imgui.COLOR_TEXT, webcolors.name_to_rgb(color)[0], webcolors.name_to_rgb(color)[1], webcolors.name_to_rgb(color)[2], 1)  
                     imgui.text(value)
                     imgui.pop_style_color()
                 elif label == "Description":

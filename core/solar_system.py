@@ -1,6 +1,5 @@
 import pygame
 import numpy as np
-import math
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *

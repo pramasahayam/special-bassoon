@@ -7,6 +7,7 @@ class Phobos(SpaceBody):
             skyfield_name='phobos', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp',
             name="Phobos",
+            color = "white",
             description="Phobos is Mars' moon and orbits Mars three times a day. It has many grooves and craters from thousands of meteorite impacts. It is composed of C-type rock, similar to blackish carbonaceous chondrite asteroids.",
             mass="1.07E+16 kg",
             diameter="22.2 km",

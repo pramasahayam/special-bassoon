@@ -7,6 +7,7 @@ class Rhea(SpaceBody):
             skyfield_name='rhea', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441x1_part-1.bsp',
             name="Rhea",
+            color = "white",
             description="Rhea is the second largest of Saturn's moons but is less than a third of the radius of Saturn's largest moon, Titan. It is a small, cold, airless body and is tidally locked in phase with Saturn, always with one side facing toward it. It is highly reflective, suggesting a surface of water ice.",
             mass="2.31E+21 kg",
             diameter="1,528.6 km",
