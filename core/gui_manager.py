@@ -461,7 +461,7 @@ class GuiManager:
         #-50000 --> 10000 is camera values, using 0 --> 60000 then subtracting by 50000
         #initial is at 35000 which is 58.3 percent
         new_camera_value = (60000 * (self.zoom/100)) - 50000
-        print(new_camera_value)
+        #print(new_camera_value)
         user_interactions.zoom_slider(new_camera_value)
         
 

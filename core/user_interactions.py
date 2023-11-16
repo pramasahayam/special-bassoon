@@ -68,12 +68,14 @@ class UserInteractions:
         if new_distance <= self.MIN_ZOOM_IN:
             self.CAMERA_DISTANCE = new_distance
             glTranslatef(0, 0, self.LINEAR_ZOOM_AMOUNT)
+        self.gui_manager.zoom = ((new_distance + 50000)/60000) * 100
 
     def zoom_out(self):
         new_distance = self.CAMERA_DISTANCE - self.LINEAR_ZOOM_AMOUNT
         if new_distance >= self.MAX_ZOOM_OUT:
             self.CAMERA_DISTANCE = new_distance
             glTranslatef(0, 0, -self.LINEAR_ZOOM_AMOUNT)
+        self.gui_manager.zoom = ((new_distance + 50000)/60000) * 100
 
     def drag_camera(self, event):
         mouse_x, mouse_y = event.pos
@@ -110,6 +112,8 @@ class UserInteractions:
         self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
 
         print(f"Camera repositioned to: x={new_camera_x}, \t y={new_camera_y}, \t z={new_camera_z}")
+        z_value = new_camera_z-ring_radius
+        self.gui_manager.zoom = ((z_value + 50000)/60000) * 100
 
 
     def get_camera_position(self):
@@ -128,6 +132,8 @@ class UserInteractions:
         
     def zoom_slider(self, camera_value):
         glLoadIdentity()
-        glTranslatef(0, 0, camera_value)
+        camera_x = self.camera_position[0]
+        camera_y = self.camera_position[1]
+        glTranslatef(camera_x, camera_y, camera_value)
         # Update the internal camera position state
-        self.camera_position = [0, 0, camera_value]
+        self.camera_position = [camera_x, camera_y, camera_value]
