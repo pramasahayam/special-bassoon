@@ -125,3 +125,9 @@ class UserInteractions:
         glTranslatef(0, 0, self.CAMERA_DISTANCE)
         # Update the internal camera position state
         self.camera_position = [0, 0, self.CAMERA_DISTANCE]
+        
+    def zoom_slider(self, camera_value):
+        glLoadIdentity()
+        glTranslatef(0, 0, camera_value)
+        # Update the internal camera position state
+        self.camera_position = [0, 0, camera_value]

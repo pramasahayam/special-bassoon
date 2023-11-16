@@ -25,6 +25,7 @@ class GuiManager:
         self.is_using_imgui = False
         self.show_trajectory_menu = False
         self.selected_celestial_bodies = [None, None]
+        self.zoom = 58.3
 
     def setup_imgui(self):
         imgui.create_context()
@@ -61,6 +62,7 @@ class GuiManager:
         self.render_center_button(user_interactions)
         self.trajectory_menu.render(solar_system)
         self.render_label_toggle_button()
+        self.render_zoom_slider(user_interactions)
 
     def process_event(self, event):
         """
@@ -434,3 +436,38 @@ class GuiManager:
     def handle_resize(self, width, height):
         # Update ImGui's display size
         imgui.get_io().display_size = width, height
+
+    
+    def set_zoom_slider_window_position(self):
+        imgui.set_next_window_position(743, 0)
+        
+    def begin_zoom_slider(self):
+        #imgui.set_next_window_size(63.5, 0)
+        imgui.begin("Zoom Slider", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
+    
+    def render_zoom_slider(self, user_interactions):
+        self.set_common_style()
+        self.set_zoom_slider_window_position()
+        self.begin_zoom_slider()
+        
+        imgui.push_item_width(imgui.get_window_width() * 0.5)
+        #zoom = 0
+        changed, self.zoom = imgui.slider_float(
+            "Zoom Slider", self.zoom,
+            min_value=0.0, max_value=100.0,
+            format="%.0f"
+        )
+        imgui.text("Value: %s" % (self.zoom))
+        
+        #-50000 --> 10000 is camera values, using 0 --> 60000 then subtracting by 50000
+        #initial is at 35000 which is 58.3 percent
+        new_camera_value = (60000 * (self.zoom/100)) - 50000
+        print(new_camera_value)
+        user_interactions.zoom_slider(new_camera_value)
+        #glTranslatef(0, 0, new_camera_value)
+
+        self.render_separator()
+
+        imgui.end()
+        
+        self.reset_style()
