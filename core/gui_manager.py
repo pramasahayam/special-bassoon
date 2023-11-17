@@ -373,7 +373,7 @@ class GuiManager:
             if year > 2050:
                 raise ValueError("Year must be before 2050.")
             if year < 2000:
-                raise ValueError("Year must be after 1900.")
+                raise ValueError("Year must be after 2000.")
 
             # Validate the date using a helper method
             if not self.is_valid_date(year, month, day):
