@@ -439,7 +439,7 @@ class GuiManager:
 
     
     def set_zoom_slider_window_position(self):
-        imgui.set_next_window_position(743, 0)
+        imgui.set_next_window_position(0, self.window_manager.HEIGHT-60)
         
     def begin_zoom_slider(self):
         imgui.begin("Zoom Slider", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
@@ -463,7 +463,6 @@ class GuiManager:
         new_camera_value = (60000 * (self.zoom/100)) - 50000
         #print(new_camera_value)
         user_interactions.zoom_slider(new_camera_value)
-        
 
         self.render_separator()
 
