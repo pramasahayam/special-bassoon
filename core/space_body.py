@@ -2,7 +2,7 @@ from skyfield.api import load
 import numpy as np
 
 class SpaceBody:
-    def __init__(self, radius, color, skyfield_name, data_url, 
+    def __init__(self, radius, color, skyfield_name, data_url, mu, orbital_center_mu, semimajoraxis,
                  orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", 
                  mass="", diameter="", gravity="", avg_temperature="", age="", orbit_distance=""):
         self.radius = radius
@@ -20,6 +20,9 @@ class SpaceBody:
         self.orbital_period = orbital_period
         self.distance_from_sun = distance_from_sun
         self.orbit_distance = orbit_distance
+        self.mu = mu
+        self.orbital_center_mu = orbital_center_mu
+        self.semimajoraxis = semimajoraxis
         
         self.ts = load.timescale()
         self.ephemeris = load(data_url)

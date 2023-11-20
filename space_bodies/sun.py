@@ -14,4 +14,5 @@ class Sun(SpaceBody):
             diameter="1,400,000 km",
             gravity="274.0 m/s²",
             avg_temperature="1.57E+07 °C",
+            mu=132712440018
         )

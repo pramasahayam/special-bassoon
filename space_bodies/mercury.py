@@ -7,4 +7,7 @@ class Mercury(SpaceBody):
             color=(0.83, 0.68, 0.21),  # Arbitrary color for visualization
             skyfield_name='mercury barycenter', 
             data_url='de421.bsp',
+            mu=22032
+            orbital_center_mu=132712440018
+            semimajoraxis=57909336
         )

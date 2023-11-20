@@ -8,4 +8,7 @@ class Mars(SpaceBody):
             skyfield_name='mars barycenter', 
             data_url='de421.bsp',
             name="Mars"
+            mu=42828.37362
+            orbital_center_mu=132712440018
+            semimajoraxis=228480828.3783
         )

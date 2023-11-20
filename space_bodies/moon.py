@@ -15,4 +15,7 @@ class Moon(SpaceBody):
             gravity="1.6 m/s²",
             avg_temperature="-23 °C",
             orbit_distance="384,400 km"
+            mu=4902.800
+            orbital_center_mu=398600.436
+            semimajoraxis=384748
         )
