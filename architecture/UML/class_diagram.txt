@@ -25,6 +25,7 @@ WindowManager "1 " --o SolarSystem
 UserInteractions "1 " --o SolarSystem
 GuiManager "1   " --o SolarSystem
 DateManager "1   " --o SolarSystem
+DeltaVCalculator "1   " --o SolarSystem
 
 class UserInteractions {
     +__init__(window_manager: WindowManager, gui_manager: GuiManager)
@@ -119,6 +120,12 @@ class DateManager {
     -current_date: Time
 }
 
+class DeltaVCalculator {
+    +hohmannTransfer(body: SpaceBody, r1: float, r2: float): float, List[float]
+    +interplanetaryHohmannTransfer(body1: SpaceBody, body2: SpaceBody): float, List[float]
+    +biEllipticHohmannTransfer(body: SpaceBody, r1: float, r2: float, rb: float): float, List[float]
+}
+
 class SpaceBody {
     +__init__(radius: float, skyfield_name: String, data_url: String, 
           orbital_center: SpaceBody or None, name: String, description: String, orbital_period: String, distance_from_sun: String, category: String, 
@@ -144,6 +151,9 @@ class SpaceBody {
     -orbital_period: String
     -distance_from_sun: String
     -orbit_distance: String
+    -mu: float
+    -orbital_center_mu: float
+    -semimajoraxis: float
     -category: String
     -texture_path: String or None
     -texture_id: int or None
@@ -160,8 +170,8 @@ class DownloadManager {
     -loader: Loader
 }
 
-DownloadManager "1" --o SpaceBody : downloads >
-SolarSystem o-- "1" SpaceBody
+DownloadManager "1   " --o SpaceBody : downloads >
+SolarSystem o-- "1    " SpaceBody
 
 package Bodies {
     class Earth {
