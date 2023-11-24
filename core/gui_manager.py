@@ -12,6 +12,8 @@ from core.gui.celestial_body_selector import CelestialBodySelector
 from core.gui.date_selector import DateSelector
 from core.gui.infobox import Infobox
 from core.gui.label_toggle_button import LabelToggleButton
+from core.gui.center_button import CenterButton
+from core.gui.zoom_slider import ZoomSlider
 
 class GuiManager:
     def __init__(self, window_manager):
@@ -22,10 +24,11 @@ class GuiManager:
         self.date_selector = DateSelector(self.set_common_style, self.render_separator)
         self.infobox = Infobox(self.set_common_style)
         self.label_toggle_button = LabelToggleButton(self.set_common_style, self.render_separator)
+        self.center_button = CenterButton(self.set_common_style, self.render_separator)
+        self.zoom_slider = ZoomSlider(self.set_common_style, self.window_manager.HEIGHT)
         self.renderer = self.setup_imgui()
         self.is_hovering_imgui = False
         self.is_using_imgui = False
-        self.zoom = 58.3
 
     def setup_imgui(self):
         imgui.create_context()
@@ -59,10 +62,10 @@ class GuiManager:
         self.date_selector.render(date_manager)
         self.infobox.render(solar_system)
         self.celestial_body_selector.render(solar_system, user_interactions, date_manager)
-        self.render_center_button(user_interactions)
+        self.center_button.render(user_interactions)
         self.trajectory_menu.render(solar_system)
         self.label_toggle_button.render(solar_system, date_manager)
-        self.render_zoom_slider(user_interactions)
+        self.zoom_slider.render(user_interactions)
 
     def process_event(self, event):
         """
@@ -436,7 +439,6 @@ class GuiManager:
     def handle_resize(self, width, height):
         # Update ImGui's display size
         imgui.get_io().display_size = width, height
-
     
     def set_zoom_slider_window_position(self):
         imgui.set_next_window_position(0, self.window_manager.HEIGHT-60)
