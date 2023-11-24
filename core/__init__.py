@@ -5,3 +5,5 @@ from .solar_system import SolarSystem
 from .gui_manager import GuiManager
 from .download_manager import DownloadManager
 from .gui.loading_screen import LoadingScreen
+from .gui.celestial_body_selector import CelestialBodySelector
+from .gui.date_selector import DateSelector

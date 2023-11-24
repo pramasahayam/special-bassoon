@@ -8,17 +8,17 @@ import datetime
 from imgui.integrations.pygame import PygameRenderer
 from core.gui.loading_screen import LoadingScreen
 from core.gui.trajectory_menu import TrajectoryMenu
+from core.gui.celestial_body_selector import CelestialBodySelector
+from core.gui.date_selector import DateSelector
 
 class GuiManager:
     def __init__(self, window_manager):
         self.window_manager = window_manager
         self.loading_screen = LoadingScreen(window_manager, self)
         self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator)
+        self.celestial_body_selector = CelestialBodySelector(self.set_common_style, self.render_separator)
+        self.date_selector = DateSelector(self.set_common_style, self.render_separator)
         self.renderer = self.setup_imgui()
-        self.error_message = ""
-        self.error_display_time = 0
-        self.show_date_input = False
-        self.date_input = {'day': '', 'month': '', 'year': ''}
         self.show_labels = False
         self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
@@ -56,9 +56,9 @@ class GuiManager:
         self.renderer.render(imgui.get_draw_data())
 
     def render_ui(self, solar_system, date_manager, user_interactions):
-        self.render_date_selector(date_manager)
+        self.date_selector.render(date_manager)
         self.render_infobox(solar_system)
-        self.render_celestial_body_selector(solar_system, user_interactions, date_manager)
+        self.celestial_body_selector.render(solar_system, user_interactions, date_manager)
         self.render_center_button(user_interactions)
         self.trajectory_menu.render(solar_system)
         self.render_label_toggle_button()
