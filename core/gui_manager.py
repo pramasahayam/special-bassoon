@@ -25,7 +25,7 @@ class GuiManager:
         self.infobox = Infobox(self.set_common_style)
         self.label_toggle_button = LabelToggleButton(self.set_common_style, self.render_separator)
         self.center_button = CenterButton(self.set_common_style, self.render_separator)
-        self.zoom_slider = ZoomSlider(self.set_common_style, self.window_manager.HEIGHT)
+        self.zoom_slider = ZoomSlider(self.set_common_style, self.window_manager)
         self.renderer = self.setup_imgui()
         self.is_hovering_imgui = False
         self.is_using_imgui = False
@@ -115,4 +115,3 @@ class GuiManager:
     def handle_resize(self, width, height):
         # Update ImGui's display size
         imgui.get_io().display_size = width, height
-    

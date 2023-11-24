@@ -68,14 +68,12 @@ class UserInteractions:
         if new_distance <= self.MIN_ZOOM_IN:
             self.CAMERA_DISTANCE = new_distance
             glTranslatef(0, 0, self.LINEAR_ZOOM_AMOUNT)
-        self.gui_manager.zoom = ((new_distance + 50000)/60000) * 100
 
     def zoom_out(self):
         new_distance = self.CAMERA_DISTANCE - self.LINEAR_ZOOM_AMOUNT
         if new_distance >= self.MAX_ZOOM_OUT:
             self.CAMERA_DISTANCE = new_distance
             glTranslatef(0, 0, -self.LINEAR_ZOOM_AMOUNT)
-        self.gui_manager.zoom = ((new_distance + 50000)/60000) * 100
 
     def drag_camera(self, event):
         mouse_x, mouse_y = event.pos
