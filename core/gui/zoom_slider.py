@@ -13,7 +13,7 @@ class ZoomSlider:
 
         # Centering the word "Zoom" above the slider
         text_width = imgui.calc_text_size("Zoom")[0]
-        window_width = imgui.get_window_width()
+        window_width = imgui.get_window_width()*1.1
         imgui.set_cursor_pos(((window_width - text_width) / 2, imgui.get_cursor_pos()[1]))
         imgui.text("Zoom")
 
