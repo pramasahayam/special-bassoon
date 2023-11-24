@@ -35,8 +35,8 @@ class GuiManager:
         imgui.get_io().display_size = pygame.display.Info().current_w, pygame.display.Info().current_h
 
         io = imgui.get_io()
-        font_path = "utils/fonts/TimesNewRoman.ttf"
-        io.fonts.add_font_from_file_ttf(font_path, 16)  # 16 is the font size
+        font_path = "utils/fonts/OrbitronRegular400.ttf"
+        io.fonts.add_font_from_file_ttf(font_path, 12)  # 16 is the font size
 
         # Initialize the Pygame renderer for ImGui
         renderer = PygameRenderer()

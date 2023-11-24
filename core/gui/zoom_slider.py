@@ -8,7 +8,7 @@ class ZoomSlider:
 
     def render(self, user_interactions):
         self.set_common_style()
-        imgui.set_next_window_position(0, self.window_manager.HEIGHT - 60)
+        imgui.set_next_window_position(0, self.window_manager.HEIGHT - 50)
         imgui.begin("Zoom Slider", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
         # Centering the word "Zoom" above the slider

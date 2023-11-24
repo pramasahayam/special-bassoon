@@ -23,7 +23,7 @@ class DateSelector:
         self.reset_style()
 
     def set_date_selector_window_position(self):
-        imgui.set_next_window_position(185, 0)
+        imgui.set_next_window_position(195, 0)
 
     def begin_date_selector_window(self):
         window_flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE
