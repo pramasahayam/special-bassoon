@@ -10,6 +10,8 @@ from core.gui.loading_screen import LoadingScreen
 from core.gui.trajectory_menu import TrajectoryMenu
 from core.gui.celestial_body_selector import CelestialBodySelector
 from core.gui.date_selector import DateSelector
+from core.gui.infobox import Infobox
+from core.gui.label_toggle_button import LabelToggleButton
 
 class GuiManager:
     def __init__(self, window_manager):
@@ -18,13 +20,11 @@ class GuiManager:
         self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator)
         self.celestial_body_selector = CelestialBodySelector(self.set_common_style, self.render_separator)
         self.date_selector = DateSelector(self.set_common_style, self.render_separator)
+        self.infobox = Infobox(self.set_common_style)
+        self.label_toggle_button = LabelToggleButton(self.set_common_style, self.render_separator)
         self.renderer = self.setup_imgui()
-        self.show_labels = False
-        self.show_celestial_body_selector = False
         self.is_hovering_imgui = False
         self.is_using_imgui = False
-        self.show_trajectory_menu = False
-        self.selected_celestial_bodies = [None, None]
         self.zoom = 58.3
 
     def setup_imgui(self):
@@ -57,11 +57,11 @@ class GuiManager:
 
     def render_ui(self, solar_system, date_manager, user_interactions):
         self.date_selector.render(date_manager)
-        self.render_infobox(solar_system)
+        self.infobox.render(solar_system)
         self.celestial_body_selector.render(solar_system, user_interactions, date_manager)
         self.render_center_button(user_interactions)
         self.trajectory_menu.render(solar_system)
-        self.render_label_toggle_button()
+        self.label_toggle_button.render(solar_system, date_manager)
         self.render_zoom_slider(user_interactions)
 
     def process_event(self, event):

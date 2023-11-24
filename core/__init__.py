@@ -7,3 +7,5 @@ from .download_manager import DownloadManager
 from .gui.loading_screen import LoadingScreen
 from .gui.celestial_body_selector import CelestialBodySelector
 from .gui.date_selector import DateSelector
+from .gui.infobox import Infobox
+from .gui.label_toggle_button import LabelToggleButton
