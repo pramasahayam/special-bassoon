@@ -2,50 +2,28 @@ from math import sqrt
 from math import pi
 
 class DeltaVCalculator:
-    def hohmannTransfer(body, r1, r2):
+    def hohmann_transfer(body, r1, r2):
         # r1 = initial circular orbit radius, km
         # r2 = target circular orbit radius, km
         
         mu = body.mu # gravitational parameter, km^3/s^2
         
         a_transfer = (r1 + r2) / 2 # semi-major axis of transfer ellipse, km
-        deltaVDeparture = sqrt(mu * (2/r1 - 1/a_transfer)) - sqrt((mu/r1)) # km/s
-        deltaVArrival = (sqrt(mu/r2) - sqrt(mu * (2/r2 - 1/a_transfer))) # km/s
+        deltav_departure = sqrt(mu * (2/r1 - 1/a_transfer)) - sqrt((mu/r1)) # km/s
+        deltav_arrival = (sqrt(mu/r2) - sqrt(mu * (2/r2 - 1/a_transfer))) # km/s
         
-        totalDeltaV = deltaVDeparture + deltaVArrival # km/s
-        transferTime = pi * sqrt(a_transfer**3 / mu) # s
-        transferTimeConversions = [
-            transferTime, # s
-            transferTime/60, # min
-            transferTime/3600, # hrs
-            transferTime/86400, # days
+        total_deltav = deltav_departure + deltav_arrival # km/s
+        transfer_time = pi * sqrt(a_transfer**3 / mu) # s
+        transfer_time_conversions = [
+            transfer_time, # s
+            transfer_time/60, # min
+            transfer_time/3600, # hrs
+            transfer_time/86400, # days
         ]
         
-        return totalDeltaV, transferTimeConversions
+        return total_deltav, transfer_time_conversions
 
-    def interplanetaryHohmannTransfer(body1, body2):
-        if body1.orbital_center_mu == body2.orbital_center_mu: # body1/body2 must orbit same body
-            r1 = body1.semimajoraxis
-            r2 = body2.semimajoraxis
-
-            mu = body1.orbital_center_mu
-            
-            a_transfer = (r1 + r2) / 2 # semi-major axis of transfer ellipse, km
-            deltaVDeparture = sqrt(mu * (2/r1 - 1/a_transfer)) - sqrt((mu/r1)) # km/s
-            deltaVArrival = (sqrt(mu/r2) - sqrt(mu * (2/r2 - 1/a_transfer))) # km/s
-            
-            totalDeltaV = deltaVDeparture + deltaVArrival # km/s
-            transferTime = pi * sqrt(a_transfer**3 / mu) # s
-            transferTimeConversions = [
-                transferTime, # s
-                transferTime/60, # min
-                transferTime/3600, # hrs
-                transferTime/86400, # days
-            ]
-            
-            return totalDeltaV, transferTimeConversions
-
-    def biEllipticHohmannTransfer(body, r1, r2, rb):
+    def bi_elliptic_hohmann_transfer(body, r1, r2, rb):
         # r1 initial circular orbit radius, km
         # r2 target circular orbit radius, km
         # rb transfer ellipses common apoapsis radius, km --> larger means greater delta-v savings relative to Hohmann
@@ -55,13 +33,55 @@ class DeltaVCalculator:
         a1 = (r1 + rb)/2 # semi-major axis of transfer ellipse 1
         a2 = (r2 + rb)/2 # semi-major axis of transfer ellipse 2
         
-        totalDeltaV = sqrt((2*mu/r1) - (mu/a1)) - sqrt(mu/r1) + sqrt((2*mu/rb) - (mu/a2)) - sqrt((2*mu/rb) - (mu/a1)) + sqrt((2*mu/r2) - (mu/a2)) - sqrt(mu/r2) # km/s
-        transferTime = pi * sqrt(a1**3/mu) + pi * sqrt(a2**3/mu) # s
-        transferTimeConversions = [
-            transferTime, # s
-            transferTime/60, # min
-            transferTime/3600, # hrs
-            transferTime/86400, # days
+        total_deltav = sqrt((2*mu/r1) - (mu/a1)) - sqrt(mu/r1) + sqrt((2*mu/rb) - (mu/a2)) - sqrt((2*mu/rb) - (mu/a1)) + sqrt((2*mu/r2) - (mu/a2)) - sqrt(mu/r2) # km/s
+        transfer_time = pi * sqrt(a1**3/mu) + pi * sqrt(a2**3/mu) # s
+        transfer_time_conversions = [
+            transfer_time, # s
+            transfer_time/60, # min
+            transfer_time/3600, # hrs
+            transfer_time/86400, # days
         ]
         
-        return totalDeltaV, transferTimeConversions
+        return total_deltav, transfer_time_conversions
+    
+    def interplanetary_hohmann_transfer(body1, orbit_r1, body2, orbit_r2):
+        # assumptions: orbit same body, coplanar, 0 eccentricity, impulsive burns, ideal angular separation
+        
+        if body1.orbital_center_mu == body2.orbital_center_mu: # body1/body2 must orbit same body
+            
+            v_orbit_r1 = sqrt(body1.mu / orbit_r1) # velocity of inital orbit around body1
+            v_esc_orbit_r1 = sqrt(2 * body1.mu / orbit_r1) # escape velocity at inital orbit of body1
+            body1_escape_deltav = abs(v_esc_orbit_r1 - v_orbit_r1) # delta-v to escape body1
+            # spacecraft velocity now equal to body1's velocity around central body
+            
+            v_body1 = sqrt(body1.orbital_center_mu / body1.semimajoraxis) # velocity of body1 around central body
+            v_body2 = sqrt(body2.orbital_center_mu / body2.semimajoraxis) # velocity of body2 around central body
+            transfer_deltav = v_body2 - v_body1 # delta-v of transfer ellipse from body1 to body2 
+            # spacecraft velocity now equal to body2's velocity around central body
+            
+            v_esc_orbit_r2 = sqrt(2 * body2.mu / orbit_r2) # escape velocity at final orbit of body2
+            v_orbit_r2 = sqrt(body2.mu / orbit_r2) # velocity of final orbit around body2
+            body2_capture_deltav = abs(v_orbit_r2 - v_esc_orbit_r2) # delta-v capture from transfer to final orbit
+            
+            total_deltav = body1_escape_deltav + transfer_deltav + body2_capture_deltav # total delta-v
+            
+            a_transfer = (body1.semimajoraxis + body2.semimajoraxis) / 2
+            transfer_time = pi * sqrt(a_transfer**3 / body1.orbital_center_mu) # s
+            transfer_time_conversions = [
+                transfer_time, # s
+                transfer_time/60, # min
+                transfer_time/3600, # hrs
+                transfer_time/86400, # days
+            ]
+            
+            return total_deltav, transfer_time_conversions
+        
+        def next_transfer_window(body1, body2, current_date):
+            
+            # required angle
+            alpha_req = pi * (1 - sqrt((body1.semimajoraxis/body2.semimajoraxis + 1)**3) / (sqrt(8)))
+            
+            # current angle
+            
+            
+            return next_date
