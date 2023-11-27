@@ -14,5 +14,8 @@ class Umbriel(SpaceBody):
             orbit_distance="266,000 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=85.1,
+            orbital_center_mu=5793951.3,
+            semimajoraxis=266000
         )

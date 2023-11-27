@@ -14,5 +14,8 @@ class Europa(SpaceBody):
             orbit_distance="671,100 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=3202.71210,
+            orbital_center_mu=126686531.9,
+            semimajoraxis=670900
         )
