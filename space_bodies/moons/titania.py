@@ -15,5 +15,8 @@ class Titania(SpaceBody):
             orbit_distance="436,300 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=226.9,
+            orbital_center_mu=5793951.3,
+            semimajoraxis=435910
         )

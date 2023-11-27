@@ -16,5 +16,8 @@ class Jupiter(SpaceBody):
             day="0.414 Earth Days",
             year="11.86 Earth Years",
             category="Planets",
-            texture_path="textures/planets/jupiter_texture.png"
+            texture_path="textures/planets/jupiter_texture.png",
+            mu=126686531.9,
+            orbital_center_mu=132712440018,
+            semimajoraxis=778327803.2388
         )

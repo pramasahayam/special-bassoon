@@ -16,5 +16,8 @@ class Mars(SpaceBody):
             day="1.025 Earth Days",
             year="1.881 Earth Years",
             category="Planets",
-            texture_path="textures/planets/mars_texture.png"
+            texture_path="textures/planets/mars_texture.png",
+            mu=42828.37362,
+            orbital_center_mu=132712440018,
+            semimajoraxis=228480828.3783
         )

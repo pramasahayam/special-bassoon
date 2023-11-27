@@ -8,3 +8,4 @@ skyfield>=0.0.0
 PyOpenGL>=0.0.0
 PyOpenGL_accelerate>=0.0.0
 imgui[pygame]>=0.0.0
+webcolors>=0.0.0

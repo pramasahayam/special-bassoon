@@ -16,5 +16,8 @@ class Saturn(SpaceBody):
             day="0.446 Earth Days",
             year="29 Earth Years",
             category="Planets",
-            texture_path="textures/planets/saturn_texture.png"
+            texture_path="textures/planets/saturn_texture.png",
+            mu=37931206.23,
+            orbital_center_mu=132712440018,
+            semimajoraxis=1426984171.8948
         )

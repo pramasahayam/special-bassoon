@@ -15,5 +15,8 @@ class Oberon(SpaceBody):
             orbit_distance="583,500 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=205.3,
+            orbital_center_mu=5793951.3,
+            semimajoraxis=583520
         )

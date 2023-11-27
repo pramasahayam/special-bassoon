@@ -16,5 +16,8 @@ class Neptune(SpaceBody):
             day="0.667 Earth Days",
             year="165 Earth Years",
             category="Planets",
-            texture_path="textures/planets/neptune_texture.png"
+            texture_path="textures/planets/neptune_texture.png",
+            mu=6835099.97,
+            orbital_center_mu=132712440018,
+            semimajoraxis=4497076559.9181
         )
