@@ -8,10 +8,12 @@ from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 from core.download_manager import DownloadManager
+from core.deltav_calculator import DeltaVCalculator
 
 def main():
 
     window_manager = WindowManager()
+    deltav_calculator = DeltaVCalculator()
     download_manager = DownloadManager()
     gui_manager = GuiManager(window_manager)
 

@@ -11,3 +11,5 @@ from .gui.infobox import Infobox
 from .gui.label_toggle_button import LabelToggleButton
 from .gui.center_button import CenterButton
 from .gui.zoom_slider import ZoomSlider
+from .deltav_calculator import DeltaVCalculator
+

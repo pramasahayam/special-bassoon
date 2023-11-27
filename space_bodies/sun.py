@@ -16,4 +16,7 @@ class Sun(SpaceBody):
             year="2.30E+8 Earth years",
             category="Misc",
             texture_path="textures/misc/sun_texture.png"
+            mu=132712440018,
+            orbital_center_mu=0,
+            semimajoraxis=0
         )

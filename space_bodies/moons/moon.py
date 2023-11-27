@@ -15,4 +15,8 @@ class Moon(SpaceBody):
             orbital_center=orbital_center,
             category="Moons",
             texture_path="textures/moons/moon_texture1.png"
+            avg_temperature="-23 °C",
+            mu=4902.800,
+            orbital_center_mu=398600.436,
+            semimajoraxis=384748
         )
