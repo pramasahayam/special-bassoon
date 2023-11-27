@@ -7,7 +7,7 @@ class Jupiter(SpaceBody):
             color=(0.93, 0.57, 0.13),
             skyfield_name='jupiter barycenter', 
             data_url='de421.bsp',
-            mu=126686531.9
-            orbital_center_mu=132712440018
+            mu=126686531.9,
+            orbital_center_mu=132712440018,
             semimajoraxis=778327803.2388
         )

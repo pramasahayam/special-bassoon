@@ -7,8 +7,8 @@ class Mars(SpaceBody):
             color=(0.8, 0.49, 0.19),
             skyfield_name='mars barycenter', 
             data_url='de421.bsp',
-            name="Mars"
-            mu=42828.37362
-            orbital_center_mu=132712440018
+            name="Mars",
+            mu=42828.37362,
+            orbital_center_mu=132712440018,
             semimajoraxis=228480828.3783
         )

@@ -7,7 +7,7 @@ class Saturn(SpaceBody):
             color=(0.93, 0.89, 0.67),
             skyfield_name='saturn barycenter', 
             data_url='de421.bsp',
-            mu=37931206.23
-            orbital_center_mu=132712440018
+            mu=37931206.23,
+            orbital_center_mu=132712440018,
             semimajoraxis=1426984171.8948
         )

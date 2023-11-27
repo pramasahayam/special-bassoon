@@ -4,9 +4,11 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from core.solar_system import SolarSystem
 from core.imgui_manager import ImGuiManager
+from core.deltav_calculator import DeltaVCalculator
 
 def main():
     solar_system = SolarSystem()
+    deltav_calculator = DeltaVCalculator()
     glTranslate(0, 0, solar_system.interactions.CAMERA_DISTANCE)
     imgui_manager = ImGuiManager()
     solar_system.set_imgui_manager(imgui_manager)
