@@ -1,4 +1,5 @@
 import imgui
+import webcolors
 
 class Infobox:
     def __init__(self, set_common_style):
@@ -9,6 +10,7 @@ class Infobox:
             infobox_x, infobox_y, total_height = self.setup_infobox_position(solar_system)
             attributes = self.get_infobox_attributes(solar_system)
             
+            imgui.push_style_color(imgui.COLOR_WINDOW_BACKGROUND, 0.1137, 0.1843, 0.2863, 0.2)
             imgui.set_next_window_position(infobox_x, infobox_y)
             imgui.set_next_window_size(300, total_height)
             
@@ -16,8 +18,9 @@ class Infobox:
             self.set_common_style()
             imgui.begin("Info Box", solar_system.is_infobox_visible(), flags)
             
-            self.render_infobox_content(attributes)
+            self.render_infobox_content(attributes, solar_system.get_selected_planet().color)
             
+            imgui.pop_style_color()
             imgui.end()
 
     def setup_infobox_position(self, solar_system):
@@ -36,8 +39,8 @@ class Infobox:
         total_height = sum(text_height for _, value in attributes if value)
         total_height += separator_height * (len([value for _, value in attributes if value]) - 1)
         if selected_planet.description:
-            description_width = 280
-            total_height += imgui.calc_text_size(f"Description: {selected_planet.description}", wrap_width=description_width)[1] - text_height
+            description_width = 500
+            total_height += imgui.calc_text_size(f"Description: {selected_planet.description}", wrap_width=description_width)[1] #- text_height
         padding = 10
         total_height += 2 * padding
         
@@ -59,7 +62,7 @@ class Infobox:
         ]
         return attributes
 
-    def render_infobox_content(self, attributes):
+    def render_infobox_content(self, attributes, color):
         padding = 10
         imgui.set_cursor_pos((imgui.get_cursor_pos()[0], imgui.get_cursor_pos()[1] + padding))
         for i, (label, value) in enumerate(attributes):
@@ -68,7 +71,7 @@ class Infobox:
                     text_width = imgui.calc_text_size(value)[0]
                     centered_x = (imgui.get_window_width() - text_width) / 2
                     imgui.set_cursor_pos((centered_x, imgui.get_cursor_pos()[1]))
-                    imgui.push_style_color(imgui.COLOR_TEXT, 1, 1, 0, 1)  
+                    imgui.push_style_color(imgui.COLOR_TEXT, webcolors.name_to_rgb(color)[0], webcolors.name_to_rgb(color)[1], webcolors.name_to_rgb(color)[2], 1)
                     imgui.text(value)
                     imgui.pop_style_color()
                 elif label == "Description":
