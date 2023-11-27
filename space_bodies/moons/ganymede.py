@@ -14,5 +14,8 @@ class Ganymede(SpaceBody):
             orbit_distance="1,070,400 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=9887.83275,
+            orbital_center_mu=126686531.9,
+            semimajoraxis=1070400
         )

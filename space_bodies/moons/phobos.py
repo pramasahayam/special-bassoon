@@ -14,5 +14,8 @@ class Phobos(SpaceBody):
             orbit_distance="9,376 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=0.0007087,
+            orbital_center_mu=42828.37362,
+            semimajoraxis=9376
         )

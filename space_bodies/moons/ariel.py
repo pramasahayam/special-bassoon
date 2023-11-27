@@ -14,5 +14,8 @@ class Ariel(SpaceBody):
             orbit_distance="190,900 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=83.5,
+            orbital_center_mu=5793951.3,
+            semimajoraxis=191020
         )
