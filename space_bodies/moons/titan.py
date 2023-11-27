@@ -7,6 +7,7 @@ class Titan(SpaceBody):
             skyfield_name='titan', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441.bsp',
             name="Titan",
+            color = "white",
             description="Titan is Saturn's largest moon and it is the only moon in our solar system with a substantial atmosphere. It is the only place besides Earth known to have liquids in the form of rivers, lakes, and seas on its surface. Titan is also larger than Mercury and the second-largest moon in our solar system.",
             mass="1.35E+23 kg",
             diameter="5,149.4 km",

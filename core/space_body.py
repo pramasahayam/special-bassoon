@@ -10,11 +10,12 @@ class SpaceBody:
     MOON_DISTANCE_SCALE = 1.005
 
     def __init__(self, radius, skyfield_name, data_url, mu="", orbital_center_mu="", semimajoraxis="",
-                 orbital_center=None, name="", description="", orbital_period="", distance_from_sun="", category="", 
+                 orbital_center=None, name="", color="", description="", orbital_period="", distance_from_sun="", category="", 
                  mass="", diameter="", gravity="", avg_temperature="", day="",year="",AU="", orbit_distance="",
                 texture_path=None):
         self.radius = radius
         self.name = name
+        self.color = color
         self.mass = mass
         self.diameter = diameter
         self.avg_temperature = avg_temperature

@@ -7,6 +7,7 @@ class Oberon(SpaceBody):
             skyfield_name='oberon', 
             data_url='https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp',
             name="Oberon",
+            color = "white",
             description="Oberon is the second-largest moon of Uranus and was discovered in 1787. Little was known about it until Voyager 2 passed it in 1986. The surface is heavily cratered and it is composed of roughly half ice and half rock. It has at least one large mountain that is 6 km tall.",
             mass="2.88E+21 kg",
             diameter="1,522.8 km",

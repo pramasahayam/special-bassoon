@@ -7,6 +7,7 @@ class Sedna(SpaceBody):
             skyfield_name='sedna', 
             data_url='de421.bsp',
             name="Sedna",
+            color = "red",
             description="Sedna is a dwarf planet in the outmost reaches of the solar system. It was discovered in 2003 and its surface is composed of a mix of water, methane, and nitrogen ice. It is one of the reddest solar system objects.",
             mass="1.70E+22 kg",
             diameter="995 km",

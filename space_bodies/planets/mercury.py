@@ -7,6 +7,7 @@ class Mercury(SpaceBody):
             skyfield_name='mercury barycenter', 
             data_url='de421.bsp',
             name="Mercury",
+            color = "orange",
             description="Mercury is the smallest planet in our solar system and the closest to the sun. It zips around the sun every 88 Earth days. From the surface of Mercury, the Sun would appear more than 3x larger than when viewed on Earth.",
             mass="3.30E+23 kg",
             diameter="4,878 km",

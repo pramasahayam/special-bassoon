@@ -7,6 +7,7 @@ class Eris(SpaceBody):
             skyfield_name='eris', 
             data_url='de421.bsp',
             name="Eris",
+            color = "white",
             description="Eris is one of the largest known dwarf planets in our solar system, being about the same size as Pluto but it is three times farther from the Sun. Eris was discovered in 2005. The surface is extremely cold and most likely has a surface similar to Pluto.",
             mass="1.67E+22 kg",
             diameter="2,324 km",
