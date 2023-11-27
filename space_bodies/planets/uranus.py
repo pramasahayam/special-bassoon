@@ -15,5 +15,8 @@ class Uranus(SpaceBody):
             day="0.719 Earth Days",
             year="84 Earth Years",
             category="Planets",
-            texture_path="textures/planets/uranus_texture.png"
+            texture_path="textures/planets/uranus_texture.png",
+            mu=5793951.3,
+            orbital_center_mu=132712440018,
+            semimajoraxis=2870992581.5094
         )

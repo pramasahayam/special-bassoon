@@ -14,7 +14,7 @@ class Moon(SpaceBody):
             orbit_distance="384,400 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
             avg_temperature="-23 °C",
             mu=4902.800,
             orbital_center_mu=398600.436,

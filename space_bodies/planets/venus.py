@@ -15,5 +15,8 @@ class Venus(SpaceBody):
             day="243 Earth Days",
             year="0.616 Earth Years",
             category="Planets",
-            texture_path="textures/planets/venus_texture.png"
+            texture_path="textures/planets/venus_texture.png",
+            mu=324859,
+            orbital_center_mu=132712440018,
+            semimajoraxis=108204140.0943
         )
