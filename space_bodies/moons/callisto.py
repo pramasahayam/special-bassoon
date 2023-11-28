@@ -15,5 +15,8 @@ class Callisto(SpaceBody):
             orbit_distance="1,882,700 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=7179.28340,
+            orbital_center_mu=126686531.9,
+            semimajoraxis=1882700
         )

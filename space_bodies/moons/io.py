@@ -15,5 +15,8 @@ class Io(SpaceBody):
             orbit_distance="421,800 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=5959.91547,
+            orbital_center_mu=126686531.9,
+            semimajoraxis=421700
         )

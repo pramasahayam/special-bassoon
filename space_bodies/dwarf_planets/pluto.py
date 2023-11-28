@@ -15,5 +15,9 @@ class Pluto(SpaceBody):
             avg_temperature="-232 °C",
             day="27 Earth Days",
             category="Dwarf Planets",
-            year="2.30E+08 Earth Years"
+            year="2.30E+08 Earth Years",
+            texture_path="textures/misc/pluto_texture.png",
+            mu=869.61,
+            orbital_center_mu=132712440018,
+            semimajoraxis=5913514081.9074
         )
