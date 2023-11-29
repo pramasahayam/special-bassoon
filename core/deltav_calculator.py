@@ -5,34 +5,30 @@ import datetime
 from skyfield.api import load
 
 class DeltaVCalculator:
-    def __init__(self):
-        self.space_bodies = [
-            Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon()
-        ]
+    def __init__(self, space_bodies):
+        self.space_bodies = space_bodies
     
     def hohmann_transfer(self, body_index, r1, r2):
-        # r1 = initial circular orbit radius, km
-        # r2 = target circular orbit radius, km
-        
-        body = self.space_bodies[body_index]
-        
-        mu = body.mu # gravitational parameter, km^3/s^2
-        
-        a_transfer = (r1 + r2) / 2 # semi-major axis of transfer ellipse, km
-        deltav_departure = abs(sqrt(mu * (2/r1 - 1/a_transfer)) - sqrt((mu/r1))) # km/s
-        deltav_arrival = abs((sqrt(mu/r2) - sqrt(mu * (2/r2 - 1/a_transfer)))) # km/s
-        
-        total_deltav = deltav_departure + deltav_arrival # km/s
-        transfer_time = pi * sqrt(a_transfer**3 / mu) # s
-        transfer_time_conversions = [
-            transfer_time, # s
-            transfer_time/60, # min
-            transfer_time/3600, # hrs
-            transfer_time/86400, # days
-        ]
-        
-        return total_deltav, transfer_time_conversions
+        try:
+            body = self.space_bodies[body_index]
+            mu = body.mu
+
+            a_transfer = (r1 + r2) / 2
+            deltav_departure = abs(sqrt(mu * (2/r1 - 1/a_transfer)) - sqrt(mu/r1))
+            deltav_arrival = abs(sqrt(mu/r2) - sqrt(mu * (2/r2 - 1/a_transfer)))
+
+            total_deltav = deltav_departure + deltav_arrival
+            transfer_time = pi * sqrt(a_transfer**3 / mu)
+            transfer_time_conversions = [
+                transfer_time,
+                transfer_time/60,
+                transfer_time/3600,
+                transfer_time/86400,
+            ]
+
+            return total_deltav, transfer_time_conversions
+        except Exception:
+            return 0, [0, 0, 0, 0]
 
     def bi_elliptic_hohmann_transfer(self, body_index, r1, r2, rb):
         # r1 initial circular orbit radius, km

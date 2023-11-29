@@ -19,15 +19,15 @@ from core.trajectory_plotter import TrajectoryPlotter
 class GuiManager:
     def __init__(self, window_manager):
         self.window_manager = window_manager
+        self.trajectory_plotter = None
         self.loading_screen = LoadingScreen(window_manager, self)
-        self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator)
+        self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator, self.trajectory_plotter)
         self.celestial_body_selector = CelestialBodySelector(self.set_common_style, self.render_separator)
         self.date_selector = DateSelector(self.set_common_style, self.render_separator)
         self.infobox = Infobox(self.set_common_style)
         self.label_toggle_button = LabelToggleButton(self.set_common_style, self.render_separator)
         self.center_button = CenterButton(self.set_common_style, self.render_separator)
         self.zoom_slider = ZoomSlider(self.set_common_style, self.window_manager)
-        self.trajectory_plotter = None
         self.renderer = self.setup_imgui()
         self.is_hovering_imgui = False
         self.is_using_imgui = False
@@ -104,12 +104,13 @@ class GuiManager:
         style.window_rounding = 5.0
         style.frame_rounding = 5.0
 
-    def set_solar_system(self, solar_system):
-        """ 
-        Sets the SolarSystem instance and initializes the TrajectoryPlotter.
+    def set_solar_system_and_date_manager(self, solar_system, date_manager):
+        """
+        Sets the SolarSystem and DateManager instances and initializes the TrajectoryPlotter.
         """
         self.solar_system = solar_system
-        self.trajectory_plotter = TrajectoryPlotter(self.solar_system.space_bodies)
+        self.date_manager = date_manager
+        self.trajectory_plotter = TrajectoryPlotter(self.solar_system.space_bodies, self.date_manager)
         self.trajectory_menu.set_trajectory_plotter(self.trajectory_plotter)
         
     def reset_style(self):

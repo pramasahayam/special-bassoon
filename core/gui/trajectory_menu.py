@@ -60,9 +60,23 @@ class TrajectoryMenu:
                 break
 
     def _handle_confirmation(self):
-        body_names = [body.name if body else "None" for body in self.selected_celestial_bodies]
-        print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
-        # Logic to plot trajectory here
+        if self.selected_celestial_bodies[0] is not None and self.selected_celestial_bodies[1] is not None:
+            # Retrieve indices of the selected celestial bodies
+            origin_index = self.solar_system.space_bodies.index(self.selected_celestial_bodies[0])
+            destination_index = self.solar_system.space_bodies.index(self.selected_celestial_bodies[1])
+
+            # Calculate the trajectory
+            trajectory_points, total_deltav, transfer_time = self.trajectory_plotter.calculate_trajectory(
+                origin_index, destination_index
+            )
+
+            # Store these trajectory points for rendering
+            self.trajectory_plotter.set_trajectory_points(trajectory_points)
+
+            # Optionally display or log the total delta-v and transfer time
+            print(f"Total Delta-V: {total_deltav}, Transfer Time: {transfer_time} days")
+        else:
+            print("Please select two celestial bodies.")
 
     def _categorize_celestial_bodies(self):
         categories = {}
