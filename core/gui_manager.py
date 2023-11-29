@@ -14,6 +14,7 @@ from core.gui.infobox import Infobox
 from core.gui.label_toggle_button import LabelToggleButton
 from core.gui.center_button import CenterButton
 from core.gui.zoom_slider import ZoomSlider
+from core.trajectory_plotter import TrajectoryPlotter
 
 class GuiManager:
     def __init__(self, window_manager):
@@ -26,6 +27,7 @@ class GuiManager:
         self.label_toggle_button = LabelToggleButton(self.set_common_style, self.render_separator)
         self.center_button = CenterButton(self.set_common_style, self.render_separator)
         self.zoom_slider = ZoomSlider(self.set_common_style, self.window_manager)
+        self.trajectory_plotter = None
         self.renderer = self.setup_imgui()
         self.is_hovering_imgui = False
         self.is_using_imgui = False
@@ -101,6 +103,14 @@ class GuiManager:
         style.window_border_size = 1.0
         style.window_rounding = 5.0
         style.frame_rounding = 5.0
+
+    def set_solar_system(self, solar_system):
+        """ 
+        Sets the SolarSystem instance and initializes the TrajectoryPlotter.
+        """
+        self.solar_system = solar_system
+        self.trajectory_plotter = TrajectoryPlotter(self.solar_system.space_bodies)
+        self.trajectory_menu.set_trajectory_plotter(self.trajectory_plotter)
         
     def reset_style(self):
         style = imgui.get_style()

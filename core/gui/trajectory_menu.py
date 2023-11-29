@@ -1,7 +1,8 @@
 import imgui
 
 class TrajectoryMenu:
-    def __init__(self, set_common_style, render_separator):
+    def __init__(self, set_common_style, render_separator, trajectory_plotter):
+        self.trajectory_plotter = trajectory_plotter
         self.show_trajectory_menu = False
         self.selected_celestial_bodies = [None, None]
         self.set_common_style = set_common_style
@@ -71,3 +72,9 @@ class TrajectoryMenu:
                 categories[category] = []
             categories[category].append(body.name)
         return categories
+    
+    def set_trajectory_plotter(self, trajectory_plotter):
+        """
+        Sets the trajectory plotter instance for the menu.
+        """
+        self.trajectory_plotter = trajectory_plotter

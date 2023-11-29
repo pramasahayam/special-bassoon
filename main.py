@@ -39,6 +39,8 @@ def main():
     user_interactions = UserInteractions(window_manager, gui_manager)
     date_manager = DateManager()
     solar_system = SolarSystem(window_manager, user_interactions)
+
+    gui_manager.set_solar_system(solar_system)
     
     glEnable(GL_TEXTURE_2D)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
