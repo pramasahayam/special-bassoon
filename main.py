@@ -75,7 +75,7 @@ def main():
             solar_system.draw_body(body, t)
 
         # Render the trajectory if available
-        if gui_manager.trajectory_plotter and hasattr(gui_manager.trajectory_plotter, 'render_trajectory'):
+        if gui_manager.trajectory_plotter:
             gui_manager.trajectory_plotter.render_trajectory()
         
         gui_manager.render_ui(solar_system, date_manager, user_interactions)

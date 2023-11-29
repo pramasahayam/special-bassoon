@@ -61,19 +61,15 @@ class TrajectoryMenu:
 
     def _handle_confirmation(self):
         if self.selected_celestial_bodies[0] is not None and self.selected_celestial_bodies[1] is not None:
-            # Retrieve indices of the selected celestial bodies
-            origin_index = self.solar_system.space_bodies.index(self.selected_celestial_bodies[0])
-            destination_index = self.solar_system.space_bodies.index(self.selected_celestial_bodies[1])
+            origin_name = self.selected_celestial_bodies[0].name
+            destination_name = self.selected_celestial_bodies[1].name
 
-            # Calculate the trajectory
+            # Calculate the trajectory using names
             trajectory_points, total_deltav, transfer_time = self.trajectory_plotter.calculate_trajectory(
-                origin_index, destination_index
+                origin_name, destination_name
             )
 
-            # Store these trajectory points for rendering
             self.trajectory_plotter.set_trajectory_points(trajectory_points)
-
-            # Optionally display or log the total delta-v and transfer time
             print(f"Total Delta-V: {total_deltav}, Transfer Time: {transfer_time} days")
         else:
             print("Please select two celestial bodies.")

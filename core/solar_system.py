@@ -15,7 +15,7 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), Deimos("Mars"), Phobos("Mars"),# Titan("Saturn"), #Iapetus("Saturn")
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), Deimos("Mars"), Phobos("Mars"),
             Callisto("Jupiter"), Io("Jupiter"), Oberon("Uranus"), Titania("Uranus"), Umbriel("Uranus"), Ariel("Uranus"), 
             Ganymede("Jupiter")
         ]

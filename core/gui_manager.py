@@ -110,8 +110,8 @@ class GuiManager:
         """
         self.solar_system = solar_system
         self.date_manager = date_manager
-        self.trajectory_plotter = TrajectoryPlotter(self.solar_system.space_bodies, self.date_manager)
-        self.trajectory_menu.set_trajectory_plotter(self.trajectory_plotter)
+        trajectory_plotter = TrajectoryPlotter(solar_system.space_bodies, date_manager, 1500)
+        self.trajectory_menu.set_trajectory_plotter(trajectory_plotter)
         
     def reset_style(self):
         style = imgui.get_style()
