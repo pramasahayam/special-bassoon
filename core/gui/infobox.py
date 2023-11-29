@@ -10,7 +10,7 @@ class Infobox:
             infobox_x, infobox_y, total_height = self.setup_infobox_position(solar_system)
             attributes = self.get_infobox_attributes(solar_system)
             
-            imgui.push_style_color(imgui.COLOR_WINDOW_BACKGROUND, 0.1137, 0.1843, 0.2863, 0.2)
+            imgui.push_style_color(imgui.COLOR_WINDOW_BACKGROUND, 0.1137, 0.1843, 0.2863, 0.9)
             imgui.set_next_window_position(infobox_x, infobox_y)
             imgui.set_next_window_size(300, total_height)
             
