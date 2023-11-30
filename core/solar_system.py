@@ -3,7 +3,8 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel, Ganymede
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Deimos, Phobos, Callisto, Io, Oberon, Titania, Umbriel, Ariel, Ganymede
+from core.trajectory_renderer import TrajectoryRenderer
 
 class SolarSystem:
     def __init__(self, window_manager, user_interactions):
@@ -11,6 +12,7 @@ class SolarSystem:
         self.interactions = user_interactions
         self.clicked_mouse_position = None
         self.skybox_texture_id = self.load_skybox_texture("textures/misc/skybox_texture1.png")
+        self.trajectory_renderer = TrajectoryRenderer()
         
         # List of space bodies in our solar system
         self.space_bodies = [

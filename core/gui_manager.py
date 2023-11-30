@@ -63,7 +63,7 @@ class GuiManager:
         self.infobox.render(solar_system)
         self.celestial_body_selector.render(solar_system, user_interactions, date_manager)
         self.center_button.render(user_interactions)
-        self.trajectory_menu.render(solar_system)
+        self.trajectory_menu.render(solar_system, date_manager)
         self.label_toggle_button.render(solar_system, date_manager)
         self.zoom_slider.render(user_interactions)
 

@@ -1,11 +1,14 @@
 import imgui
+from core.trajectory_renderer import TrajectoryRenderer
 
 class TrajectoryMenu:
-    def __init__(self, set_common_style, render_separator):
+    def __init__(self, set_common_style, render_separator, date_manager):
+        self.date_manager = date_manager
         self.show_trajectory_menu = False
         self.selected_celestial_bodies = [None, None]
         self.set_common_style = set_common_style
         self.render_separator = render_separator
+        self.trajectory_renderer = TrajectoryRenderer()
 
     def render(self, solar_system):
         self.solar_system = solar_system
@@ -61,7 +64,7 @@ class TrajectoryMenu:
     def _handle_confirmation(self):
         body_names = [body.name if body else "None" for body in self.selected_celestial_bodies]
         print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
-        # Logic to plot trajectory here
+        self.plot_trajectory(self.solar_system, self.date_manager.get_current_date())
 
     def _categorize_celestial_bodies(self):
         categories = {}
@@ -71,3 +74,9 @@ class TrajectoryMenu:
                 categories[category] = []
             categories[category].append(body.name)
         return categories
+
+    def plot_trajectory(self, solar_system):
+        origin_body = self.selected_celestial_bodies[0]
+        destination_body = self.selected_celestial_bodies[1]
+
+        self.trajectory_renderer.calculate_trajectory(origin_body, destination_body)
