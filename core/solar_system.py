@@ -4,15 +4,14 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Deimos, Phobos, Callisto, Io, Oberon, Titania, Umbriel, Ariel, Ganymede
-from core.trajectory_renderer import TrajectoryRenderer
 
 class SolarSystem:
-    def __init__(self, window_manager, user_interactions):
+    def __init__(self, window_manager, user_interactions, trajectory_renderer):
         self.window_manager = window_manager
         self.interactions = user_interactions
+        self.trajectory_renderer = trajectory_renderer
         self.clicked_mouse_position = None
         self.skybox_texture_id = self.load_skybox_texture("textures/misc/skybox_texture1.png")
-        self.trajectory_renderer = TrajectoryRenderer()
         
         # List of space bodies in our solar system
         self.space_bodies = [
@@ -61,6 +60,9 @@ class SolarSystem:
                                 print(f"Ring of {body.name} was clicked!")
 
                                 break
+
+    def render_trajectory(self):
+        self.trajectory_renderer.render()
 
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos

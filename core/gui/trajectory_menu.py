@@ -65,6 +65,8 @@ class TrajectoryMenu:
         body_names = [body.name if body else "None" for body in self.selected_celestial_bodies]
         print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
         self.plot_trajectory(self.solar_system, self.date_manager.get_current_date())
+        # Removed the direct call to self.trajectory_renderer.render()
+
 
     def _categorize_celestial_bodies(self):
         categories = {}
@@ -75,8 +77,13 @@ class TrajectoryMenu:
             categories[category].append(body.name)
         return categories
 
-    def plot_trajectory(self, solar_system):
+    def plot_trajectory(self, solar_system, current_date):
+        print("Plotting trajectory...")  # Debug statement
         origin_body = self.selected_celestial_bodies[0]
         destination_body = self.selected_celestial_bodies[1]
 
-        self.trajectory_renderer.calculate_trajectory(origin_body, destination_body)
+        if origin_body is not None and destination_body is not None:
+            self.trajectory_renderer.calculate_trajectory(origin_body, destination_body, current_date)
+            self.trajectory_renderer.should_render = True
+        else:
+            print("Missing celestial body selection")  # Debug statement

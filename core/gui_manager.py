@@ -16,10 +16,11 @@ from core.gui.center_button import CenterButton
 from core.gui.zoom_slider import ZoomSlider
 
 class GuiManager:
-    def __init__(self, window_manager):
+    def __init__(self, window_manager, date_manager):
         self.window_manager = window_manager
+        self.date_manager = date_manager
         self.loading_screen = LoadingScreen(window_manager, self)
-        self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator)
+        self.trajectory_menu = TrajectoryMenu(self.set_common_style, self.render_separator, self.date_manager)
         self.celestial_body_selector = CelestialBodySelector(self.set_common_style, self.render_separator)
         self.date_selector = DateSelector(self.set_common_style, self.render_separator)
         self.infobox = Infobox(self.set_common_style)
@@ -63,7 +64,7 @@ class GuiManager:
         self.infobox.render(solar_system)
         self.celestial_body_selector.render(solar_system, user_interactions, date_manager)
         self.center_button.render(user_interactions)
-        self.trajectory_menu.render(solar_system, date_manager)
+        self.trajectory_menu.render(solar_system)
         self.label_toggle_button.render(solar_system, date_manager)
         self.zoom_slider.render(user_interactions)
 

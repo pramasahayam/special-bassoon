@@ -4,17 +4,26 @@ from OpenGL.GL import *
 class TrajectoryRenderer:
     def __init__(self):
         self.trajectory_points = []
+        self.should_render = False
 
     def calculate_trajectory(self, origin_body, destination_body, current_time):
-        # Use the compute_position method to get positions
+        print("Calculating trajectory...")  # Debug statement
         origin = origin_body.compute_position(current_time)
         destination = destination_body.compute_position(current_time)
-
-        # Simple approximation of an elliptical orbit
         self.trajectory_points = self.generate_ellipse_points(origin, destination)
+        self.should_render = True
+        print(f"Trajectory points: {self.trajectory_points[:5]}")  # Print first few points for debug
+
+    def render(self):
+        if self.should_render:
+            print("Rendering trajectory...")  # Debug statement
+            glBegin(GL_LINE_STRIP)
+            for point in self.trajectory_points:
+                glVertex3f(*point)
+            glEnd()
 
     def generate_ellipse_points(self, origin, destination):
-        # Generate points on an ellipse
+        # Generate ellipse points
         points = []
         steps = 100
         for i in range(steps):
@@ -25,8 +34,5 @@ class TrajectoryRenderer:
             points.append((x[i], y[i], z[i]))
         return points
 
-    def render(self):
-        glBegin(GL_LINE_STRIP)
-        for point in self.trajectory_points:
-            glVertex3f(*point)
-        glEnd()
+    def reset_render(self):
+        self.should_render = False

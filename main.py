@@ -13,7 +13,8 @@ def main():
 
     window_manager = WindowManager()
     download_manager = DownloadManager()
-    gui_manager = GuiManager(window_manager)
+    date_manager = DateManager()
+    gui_manager = GuiManager(window_manager, date_manager)
 
     # Disable resizing during the loading process
     window_manager.set_resizable(False)
@@ -37,8 +38,7 @@ def main():
     window_manager.set_resizable(True)
 
     user_interactions = UserInteractions(window_manager, gui_manager)
-    date_manager = DateManager()
-    solar_system = SolarSystem(window_manager, user_interactions)
+    solar_system = SolarSystem(window_manager, user_interactions, gui_manager.trajectory_menu.trajectory_renderer)
     
     glEnable(GL_TEXTURE_2D)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
@@ -71,6 +71,8 @@ def main():
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
+
+        solar_system.render_trajectory()
         
         gui_manager.render_ui(solar_system, date_manager, user_interactions)
 
