@@ -5,11 +5,8 @@ import datetime
 from skyfield.api import load
 
 class DeltaVCalculator:
-    def __init__(self):
-        self.space_bodies = [
-            Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon()
-        ]
+    def __init__(self, space_bodies):
+        self.space_bodies = space_bodies
     
     def hohmann_transfer(self, body_index, r1, r2):
         # r1 = initial circular orbit radius, km

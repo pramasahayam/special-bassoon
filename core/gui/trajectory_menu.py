@@ -87,3 +87,6 @@ class TrajectoryMenu:
             self.trajectory_renderer.should_render = True
         else:
             print("Missing celestial body selection")  # Debug statement
+
+    def set_delta_v_calculator(self, delta_v_calculator):
+        self.trajectory_renderer = TrajectoryRenderer(delta_v_calculator)

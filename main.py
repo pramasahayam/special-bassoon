@@ -8,6 +8,7 @@ from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 from core.download_manager import DownloadManager
+from core.deltav_calculator import DeltaVCalculator
 
 def main():
 
@@ -39,6 +40,8 @@ def main():
 
     user_interactions = UserInteractions(window_manager, gui_manager)
     solar_system = SolarSystem(window_manager, user_interactions, gui_manager.trajectory_menu.trajectory_renderer)
+    delta_v_calculator = DeltaVCalculator(solar_system.space_bodies)
+    gui_manager.trajectory_menu.set_delta_v_calculator(delta_v_calculator)
     
     glEnable(GL_TEXTURE_2D)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
@@ -72,7 +75,12 @@ def main():
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
 
-        solar_system.render_trajectory()
+        glColor3f(1.0, 1.0, 1.0)  # Example: Set color to white
+        glLineWidth(2.0)  # Example: Set line width
+
+        glDisable(GL_DEPTH_TEST)  # Disable depth testing for trajectory rendering
+        solar_system.trajectory_renderer.render()
+        glEnable(GL_DEPTH_TEST)  # Re-enable depth testing
         
         gui_manager.render_ui(solar_system, date_manager, user_interactions)
 
