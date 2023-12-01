@@ -6,7 +6,7 @@ class CelestialBodySelector:
         self.render_separator = render_separator
 
     def render(self, solar_system, user_interactions, date_manager):
-        imgui.set_next_window_position(376, 0)
+        imgui.set_next_window_position(388, 0)
         self.set_common_style()
         imgui.begin("Celestial Body Selector", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -28,7 +28,6 @@ class CelestialBodySelector:
         
         imgui.pop_item_width()
         imgui.pop_style_color(1)
-        self.render_separator()
         imgui.end()
 
     def categorize_celestial_bodies(self, solar_system):

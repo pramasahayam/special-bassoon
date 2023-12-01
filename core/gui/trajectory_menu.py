@@ -17,7 +17,7 @@ class TrajectoryMenu:
         self.solar_system = solar_system
         self.set_common_style()
 
-        imgui.set_next_window_position(518, 0)
+        imgui.set_next_window_position(530, 0)
         imgui.begin("Plot Trajectory", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
 
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -25,9 +25,8 @@ class TrajectoryMenu:
             self.show_trajectory_menu = not self.show_trajectory_menu
         imgui.pop_style_color(1)
 
-        self.render_separator()
-
         if self.show_trajectory_menu:
+            self.render_separator()
             self._render_body_selection()
 
         imgui.end()

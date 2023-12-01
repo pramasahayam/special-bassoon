@@ -24,8 +24,8 @@ class GuiManager:
         self.celestial_body_selector = CelestialBodySelector(self.set_common_style, self.render_separator)
         self.date_selector = DateSelector(self.set_common_style, self.render_separator)
         self.infobox = Infobox(self.set_common_style)
-        self.label_toggle_button = LabelToggleButton(self.set_common_style, self.render_separator)
-        self.center_button = CenterButton(self.set_common_style, self.render_separator)
+        self.label_toggle_button = LabelToggleButton(self.set_common_style)
+        self.center_button = CenterButton(self.set_common_style)
         self.zoom_slider = ZoomSlider(self.set_common_style, self.window_manager)
         self.renderer = self.setup_imgui()
         self.is_hovering_imgui = False
