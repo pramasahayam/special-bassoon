@@ -10,6 +10,9 @@ class TrajectoryMenu:
         self.render_separator = render_separator
         self.trajectory_renderer = TrajectoryRenderer()
 
+    def set_delta_v_calculator(self, delta_v_calculator):
+        self.trajectory_renderer.set_delta_v_calculator(delta_v_calculator)
+
     def render(self, solar_system):
         self.solar_system = solar_system
         self.set_common_style()
@@ -28,6 +31,7 @@ class TrajectoryMenu:
             self._render_body_selection()
 
         imgui.end()
+
     def _render_body_selection(self):
         dropdown_width = 150
         for i in range(2):
@@ -65,8 +69,13 @@ class TrajectoryMenu:
         body_names = [body.name if body else "None" for body in self.selected_celestial_bodies]
         print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
         self.plot_trajectory(self.solar_system, self.date_manager.get_current_date())
-        # Removed the direct call to self.trajectory_renderer.render()
 
+    def plot_trajectory(self, solar_system, current_date):
+        origin_body = self.selected_celestial_bodies[0]
+        destination_body = self.selected_celestial_bodies[1]
+
+        if origin_body is not None and destination_body is not None:
+            self.trajectory_renderer.calculate_trajectory(origin_body, destination_body, current_date)
 
     def _categorize_celestial_bodies(self):
         categories = {}
@@ -76,17 +85,3 @@ class TrajectoryMenu:
                 categories[category] = []
             categories[category].append(body.name)
         return categories
-
-    def plot_trajectory(self, solar_system, current_date):
-        print("Plotting trajectory...")  # Debug statement
-        origin_body = self.selected_celestial_bodies[0]
-        destination_body = self.selected_celestial_bodies[1]
-
-        if origin_body is not None and destination_body is not None:
-            self.trajectory_renderer.calculate_trajectory(origin_body, destination_body, current_date)
-            self.trajectory_renderer.should_render = True
-        else:
-            print("Missing celestial body selection")  # Debug statement
-
-    def set_delta_v_calculator(self, delta_v_calculator):
-        self.trajectory_renderer = TrajectoryRenderer(delta_v_calculator)

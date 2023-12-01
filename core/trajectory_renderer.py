@@ -48,8 +48,7 @@ class TrajectoryRenderer:
 
     def render(self):
         if self.should_render:
-            print("Rendering trajectory...")  # Debug statement
-            glBegin(GL_LINE_STRIP)
+            glBegin(GL_POINTS)  # Or GL_LINES
             for point in self.trajectory_points:
                 glVertex3f(*point)
             glEnd()
