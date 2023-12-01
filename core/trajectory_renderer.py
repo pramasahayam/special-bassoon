@@ -31,23 +31,22 @@ class TrajectoryRenderer:
         points = []
         steps = 100
 
-        # Calculate the center and the vector from the origin to the destination
-        vector = np.array(destination_pos) - np.array(origin_pos)
-        center = np.array(origin_pos) + vector / 2
+        # Calculate the midpoint (center) for the x and y coordinates
+        center_x, center_y = (np.array(origin_pos) + np.array(destination_pos))[:2] / 2
 
         # Major axis length is the distance between the origin and destination
-        major_axis_length = np.linalg.norm(vector)
+        major_axis_length = np.linalg.norm(np.array(destination_pos) - np.array(origin_pos))
 
         # Minor axis length (can be adjusted for visualization)
         minor_axis_length = major_axis_length * 0.5
 
         # Normalize the vector for calculating points
+        vector = np.array(destination_pos) - np.array(origin_pos)
         unit_vector = vector / major_axis_length
 
         # Normal vector for the minor axis displacement
         normal_vector = np.cross(unit_vector, [0, 0, 1])
-        if np.linalg.norm(normal_vector) != 0:
-            normal_vector /= np.linalg.norm(normal_vector)
+        normal_vector /= np.linalg.norm(normal_vector)
 
         for i in range(steps):
             angle = 2 * np.pi * i / steps
@@ -59,12 +58,20 @@ class TrajectoryRenderer:
             minor_axis_disp = minor_axis_length * np.sin(angle)
 
             # Combine the displacements to get the 3D point
-            point = center + major_axis_disp * unit_vector
+            point = [center_x + major_axis_disp * unit_vector[0],
+                    center_y + major_axis_disp * unit_vector[1],
+                    origin_pos[2]]  # Start with the z-coordinate of the origin
             point += minor_axis_disp * normal_vector
 
-            # Adjust the z-coordinate to vary linearly from origin to destination
-            z_interp = (1 - np.cos(angle)) / 2  # Ranges from 0 at origin to 1 at destination
-            point[2] = origin_pos[2] * (1 - z_interp) + destination_pos[2] * -z_interp
+            # Invert the z-coordinate interpolation logic
+            if angle <= np.pi:
+                # From 0 to π, interpolate from destination's depth to origin's depth
+                z_interp = angle / np.pi
+            else:
+                # From π to 2π, interpolate back from origin's depth to destination's depth
+                z_interp = (2 * np.pi - angle) / np.pi
+
+            point[2] = destination_pos[2] + (origin_pos[2] - destination_pos[2]) * z_interp
 
             points.append(tuple(point))
 
