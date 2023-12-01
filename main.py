@@ -75,8 +75,7 @@ def main():
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
 
-        glColor3f(1.0, 1.0, 1.0)  # Example: Set color to white
-        glLineWidth(2.0)  # Example: Set line width
+        # glColor3f(1.0, 1.0, 1.0)  # Example: Set color to white
 
         glDisable(GL_DEPTH_TEST)  # Disable depth testing for trajectory rendering
         solar_system.trajectory_renderer.render()

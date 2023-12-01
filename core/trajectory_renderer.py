@@ -30,19 +30,43 @@ class TrajectoryRenderer:
     def generate_ellipse_points(self, origin_pos, destination_pos, a_transfer):
         points = []
         steps = 100
-        center = (np.array(origin_pos) + np.array(destination_pos)) / 2
-        major_axis = np.array(destination_pos) - np.array(origin_pos)
-        minor_axis_length = np.sqrt(a_transfer**2 - np.linalg.norm(major_axis)**2 / 4)
+
+        # Calculate the center and the vector from the origin to the destination
+        vector = np.array(destination_pos) - np.array(origin_pos)
+        center = np.array(origin_pos) + vector / 2
+
+        # Major axis length is the distance between the origin and destination
+        major_axis_length = np.linalg.norm(vector)
+
+        # Minor axis length (can be adjusted for visualization)
+        minor_axis_length = major_axis_length * 0.5
+
+        # Normalize the vector for calculating points
+        unit_vector = vector / major_axis_length
+
+        # Normal vector for the minor axis displacement
+        normal_vector = np.cross(unit_vector, [0, 0, 1])
+        if np.linalg.norm(normal_vector) != 0:
+            normal_vector /= np.linalg.norm(normal_vector)
 
         for i in range(steps):
             angle = 2 * np.pi * i / steps
-            x = center[0] + a_transfer * np.cos(angle)
-            y = center[1] + minor_axis_length * np.sin(angle)
-            z = center[2]  # Assuming the orbit lies in the plane of the two bodies
 
-            points.append((x, y, z))
+            # Calculate the point on the major axis
+            major_axis_disp = major_axis_length * np.cos(angle) / 2
 
-        print(f"Sample Ellipse Points: {points[:5]}")  # Print the first few points
+            # Calculate the point on the minor axis
+            minor_axis_disp = minor_axis_length * np.sin(angle)
+
+            # Combine the displacements to get the 3D point
+            point = center + major_axis_disp * unit_vector
+            point += minor_axis_disp * normal_vector
+
+            # Adjust the z-coordinate to vary linearly from origin to destination
+            z_interp = (1 - np.cos(angle)) / 2  # Ranges from 0 at origin to 1 at destination
+            point[2] = origin_pos[2] * (1 - z_interp) + destination_pos[2] * -z_interp
+
+            points.append(tuple(point))
 
         return points
 
