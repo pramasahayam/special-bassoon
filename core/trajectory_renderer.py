@@ -14,31 +14,38 @@ class TrajectoryRenderer:
         if not self.delta_v_calculator:
             print("DeltaVCalculator not set. Cannot calculate trajectory.")
             return
+        
+        normalization_factor = 10000
 
         origin_pos = origin_body.compute_position(current_time)
         destination_pos = destination_body.compute_position(current_time)
 
-        print(f"Origin Position: {origin_pos}")
-        print(f"Destination Position: {destination_pos}")
+        # Use the semi-major axis of each body for r1 and r2
+        r1 = origin_body.semimajoraxis
+        r2 = destination_body.semimajoraxis
 
-        r1 = np.linalg.norm(origin_pos)
-        r2 = np.linalg.norm(destination_pos)
-        a_transfer = (r1 + r2) / 2
-        self.trajectory_points = self.generate_ellipse_points(origin_pos, destination_pos, a_transfer)
+        # Get delta-v and transfer time from the calculator
+        # Assuming that the hohmann_transfer method requires the gravitational parameter (mu) and radii (r1, r2)
+        total_deltav, transfer_time = self.delta_v_calculator.hohmann_transfer(origin_body.mu, r1, r2)
+
+        # Adjust the minor axis based on the delta-v
+        minor_axis_factor = total_deltav / normalization_factor  # Adjust this factor as needed
+
+        self.trajectory_points = self.generate_ellipse_points(origin_pos, destination_pos, r1, r2, minor_axis_factor)
         self.should_render = True
 
-    def generate_ellipse_points(self, origin_pos, destination_pos, a_transfer):
+    def generate_ellipse_points(self, origin_pos, destination_pos, r1, r2, minor_axis_factor):
         points = []
         steps = 100
 
         # Calculate the midpoint (center) for the x and y coordinates
         center_x, center_y = (np.array(origin_pos) + np.array(destination_pos))[:2] / 2
 
-        # Major axis length is the distance between the origin and destination
-        major_axis_length = np.linalg.norm(np.array(destination_pos) - np.array(origin_pos))
+        # Major axis length could be based on r1 and r2
+        major_axis_length = (r1 + r2) / 2
 
-        # Minor axis length (can be adjusted for visualization)
-        minor_axis_length = major_axis_length * 0.5
+        # Minor axis length adjusted by minor_axis_factor
+        minor_axis_length = major_axis_length * minor_axis_factor
 
         # Normalize the vector for calculating points
         vector = np.array(destination_pos) - np.array(origin_pos)
