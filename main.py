@@ -9,6 +9,7 @@ from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 from core.download_manager import DownloadManager
 from core.deltav_calculator import DeltaVCalculator
+from core.rocket.rocket import Rocket
 
 def main():
 
@@ -41,6 +42,7 @@ def main():
     user_interactions = UserInteractions(window_manager, gui_manager)
     solar_system = SolarSystem(window_manager, user_interactions, gui_manager.trajectory_menu.trajectory_renderer)
     delta_v_calculator = DeltaVCalculator(solar_system.space_bodies)
+    # rocket = Rocket("utils/rocket/RocketThing.obj")
     gui_manager.trajectory_menu.set_delta_v_calculator(delta_v_calculator)
     
     glEnable(GL_TEXTURE_2D)
