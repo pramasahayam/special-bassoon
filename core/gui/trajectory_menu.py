@@ -48,6 +48,10 @@ class TrajectoryMenu:
         if imgui.button("Confirm"):
             self._handle_confirmation()
 
+        if self.trajectory_renderer.should_render:
+            if imgui.button("Launch"):
+                self._handle_launch()
+
     def _populate_categories_and_handle_selection(self, index):
         categories = self._categorize_celestial_bodies()
         for category, bodies in categories.items():
@@ -69,6 +73,11 @@ class TrajectoryMenu:
         print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
         self.plot_trajectory(self.solar_system, self.date_manager.get_current_date())
 
+    def _handle_launch(self):
+        # Logic to start the rocket's journey
+        # This might involve setting a flag to start the animation, initializing the rocket position, etc.
+        pass
+
     def plot_trajectory(self, solar_system, current_date):
         origin_body = self.selected_celestial_bodies[0]
         destination_body = self.selected_celestial_bodies[1]
@@ -79,6 +88,8 @@ class TrajectoryMenu:
     def _categorize_celestial_bodies(self):
         categories = {}
         for body in self.solar_system.space_bodies:
+            if body.name=="Sun":
+                continue
             category = body.category
             if category not in categories:
                 categories[category] = []
