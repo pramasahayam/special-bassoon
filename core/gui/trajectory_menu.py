@@ -1,14 +1,18 @@
 import imgui
+import datetime
 from core.trajectory_renderer import TrajectoryRenderer
 
 class TrajectoryMenu:
     def __init__(self, set_common_style, render_separator, date_manager):
+        self.trajectory_renderer = TrajectoryRenderer()
         self.date_manager = date_manager
         self.show_trajectory_menu = False
         self.selected_celestial_bodies = [None, None]
         self.set_common_style = set_common_style
         self.render_separator = render_separator
-        self.trajectory_renderer = TrajectoryRenderer()
+        self.trajectory_confirmed = False
+        self.is_launching = False
+        
 
     def set_delta_v_calculator(self, delta_v_calculator):
         self.trajectory_renderer.set_delta_v_calculator(delta_v_calculator)
@@ -49,8 +53,9 @@ class TrajectoryMenu:
             self._handle_confirmation()
 
         if self.trajectory_renderer.should_render:
-            if imgui.button("Launch"):
-                self._handle_launch()
+            if self.trajectory_confirmed and not self.is_launching:
+                if imgui.button("Launch"):
+                    self._handle_launch()
 
     def _populate_categories_and_handle_selection(self, index):
         categories = self._categorize_celestial_bodies()
@@ -72,11 +77,28 @@ class TrajectoryMenu:
         body_names = [body.name if body else "None" for body in self.selected_celestial_bodies]
         print(f"Selected Bodies: {body_names[0]}, {body_names[1]}")
         self.plot_trajectory(self.solar_system, self.date_manager.get_current_date())
+        self.trajectory_confirmed = True
 
     def _handle_launch(self):
-        # Logic to start the rocket's journey
-        # This might involve setting a flag to start the animation, initializing the rocket position, etc.
-        pass
+        origin_body = self.selected_celestial_bodies[0]
+        destination_body = self.selected_celestial_bodies[1]
+
+        if origin_body is not None and destination_body is not None:
+            # Find the indices of the origin and destination bodies
+            origin_index = self.solar_system.space_bodies.index(origin_body)
+            destination_index = self.solar_system.space_bodies.index(destination_body)
+
+            # Use the interplanetary_hohmann_transfer method to calculate transfer time
+            _, transfer_time_conversions = self.trajectory_renderer.delta_v_calculator.interplanetary_hohmann_transfer(
+                origin_index, origin_body.semimajoraxis, destination_index, destination_body.semimajoraxis)
+
+            # Assuming transfer_time_conversions returns time in seconds as the first element
+            transfer_time_seconds = transfer_time_conversions[0]
+
+            # Store launch and arrival dates
+            self.launch_date = self.date_manager.get_current_date()
+            self.arrival_date = self.launch_date + datetime.timedelta(seconds=transfer_time_seconds)
+            self.is_launching = True
 
     def plot_trajectory(self, solar_system, current_date):
         origin_body = self.selected_celestial_bodies[0]

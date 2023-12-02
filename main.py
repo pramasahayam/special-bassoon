@@ -9,6 +9,7 @@ from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 from core.download_manager import DownloadManager
 from core.deltav_calculator import DeltaVCalculator
+from core.rocket import Rocket
 
 def main():
 
@@ -43,6 +44,8 @@ def main():
     delta_v_calculator = DeltaVCalculator(solar_system.space_bodies)
     # rocket = Rocket("utils/rocket/RocketThing.obj")
     gui_manager.trajectory_menu.set_delta_v_calculator(delta_v_calculator)
+
+    rocket = Rocket()
     
     glEnable(GL_TEXTURE_2D)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
@@ -69,18 +72,23 @@ def main():
 
         gui_manager.start_frame()
         
-        # Drawing the skybox
         solar_system.draw_skybox(solar_system.skybox_texture_id)
 
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
 
-        # glColor3f(1.0, 1.0, 1.0)  # Example: Set color to white
-
-        glDisable(GL_DEPTH_TEST)  # Disable depth testing for trajectory rendering
+        glDisable(GL_DEPTH_TEST)
         solar_system.trajectory_renderer.render()
-        glEnable(GL_DEPTH_TEST)  # Re-enable depth testing
+        glEnable(GL_DEPTH_TEST)
+
+        if gui_manager.trajectory_menu.is_launching:
+            date_manager.progress_time()
+            current_trajectory_points = solar_system.trajectory_renderer.trajectory_points
+            start_date = gui_manager.trajectory_menu.launch_date
+            end_date = gui_manager.trajectory_menu.arrival_date
+            rocket.update_position(current_trajectory_points, start_date, t, end_date)
+            rocket.render()
         
         gui_manager.render_ui(solar_system, date_manager, user_interactions)
 
