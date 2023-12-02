@@ -9,7 +9,6 @@ from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 from core.download_manager import DownloadManager
 from core.deltav_calculator import DeltaVCalculator
-from core.rocket.rocket import Rocket
 
 def main():
 
