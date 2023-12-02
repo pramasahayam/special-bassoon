@@ -48,6 +48,11 @@ class TrajectoryMenu:
         if imgui.button("Confirm"):
             self._handle_confirmation()
 
+        if imgui.button("Reset"):
+            self.selected_celestial_bodies[0] = None
+            self.selected_celestial_bodies[1] = None
+            self.trajectory_renderer.should_render = False
+
     def _populate_categories_and_handle_selection(self, index):
         categories = self._categorize_celestial_bodies()
         for category, bodies in categories.items():
