@@ -143,29 +143,29 @@ class SolarSystem:
             glDisable(GL_TEXTURE_2D)  
             self.draw_ring(body.radius)
 
-        glRotatef(30, 0, 1, 0)  
+        glRotatef(0, 0, 0, 0)  
 
         quad = gluNewQuadric()  
 
         # If the body has a texture, bind it
-        if body.texture_id:
-            glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, body.texture_id)
-            gluQuadricTexture(quad, GL_TRUE)
-        else:
+        if not body.texture_id:
             glDisable(GL_TEXTURE_2D)
         
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, body.texture_id)
+        gluQuadricTexture(quad, GL_TRUE)
+        
         # Apply lighting to anything thats not the sun and build spheres
-        if body.name!="Sun":
-            self.lighting(x,y)
-            gluSphere(quad, body.radius*2, 100, 100)
-            glDisable(GL_LIGHTING)
-            glDisable(GL_LIGHT0)
-            glDisable(GL_LIGHT1)
-            glDisable(GL_DEPTH_TEST)
-        else:
+        if body.name=="Sun":
             gluSphere(quad, body.radius*2, 100, 100)
 
+        self.lighting(x,y)
+        gluSphere(quad, body.radius*2, 100, 100)
+        glDisable(GL_LIGHTING)
+        glDisable(GL_LIGHT0)
+        glDisable(GL_LIGHT1)
+        glDisable(GL_DEPTH_TEST)
+       
         glPopMatrix() # Restore the saved OpenGL state
 
     def lighting(self,x,y):

@@ -28,12 +28,12 @@ def main():
     while not download_manager.is_download_complete() or display_progress < 1.0:
         actual_progress = download_manager.get_download_progress()
 
-        if actual_progress == 1.0:
-            display_progress += 0.01
-            display_progress = min(display_progress, 1.0)
-        else:
+        if actual_progress != 1.0:
             display_progress = actual_progress
 
+        display_progress += 0.01
+        display_progress = min(display_progress, 1.0)
+        
         gui_manager.render_loading_screen(display_progress)
 
     # Re-enable window resizing after the loading is complete
