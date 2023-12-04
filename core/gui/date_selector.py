@@ -16,14 +16,14 @@ class DateSelector:
         self.set_common_style()
         self.begin_date_selector_window()
         self.render_input_date_toggle_button()
-        self.render_separator()
         if self.show_date_input:
+            self.render_separator()
             self.render_date_input_fields(date_manager)
         self.end_date_selector_window()
         self.reset_style()
 
     def set_date_selector_window_position(self):
-        imgui.set_next_window_position(195, 0)
+        imgui.set_next_window_position(191, 0)
 
     def begin_date_selector_window(self):
         window_flags = imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE

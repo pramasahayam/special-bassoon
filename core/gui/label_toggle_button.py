@@ -3,9 +3,8 @@ from OpenGL.GL import glGetDoublev, glGetIntegerv, GL_MODELVIEW_MATRIX, GL_PROJE
 from OpenGL.GLU import gluProject
 
 class LabelToggleButton:
-    def __init__(self, set_common_style, render_separator):
+    def __init__(self, set_common_style):
         self.set_common_style = set_common_style
-        self.render_separator = render_separator
         self.show_labels = False
 
     def render(self, solar_system, date_manager):
@@ -16,7 +15,7 @@ class LabelToggleButton:
                     self._render_body_label(body, date_manager.get_current_date())
 
     def _render_toggle_button(self):
-        imgui.set_next_window_position(75, 0)
+        imgui.set_next_window_position(71, 0)
         self.set_common_style()
         imgui.begin("Label Toggle", flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_SCROLLBAR | imgui.WINDOW_NO_MOVE | imgui.WINDOW_ALWAYS_AUTO_RESIZE)
         imgui.push_style_color(imgui.COLOR_BUTTON, 0.0, 0.5, 0.8, 1.0)
@@ -25,7 +24,6 @@ class LabelToggleButton:
             self.show_labels = not self.show_labels
 
         imgui.pop_style_color(1)
-        self.render_separator()
         imgui.end()
 
     def _render_body_label(self, body, current_time):

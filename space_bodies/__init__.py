@@ -10,15 +10,9 @@ from .planets.neptune import Neptune
 from .dwarf_planets.pluto import Pluto
 from .moons.moon import Moon
 from .moons.europa import Europa
-from .moons.titan import Titan
 from .moons.deimos import Deimos
 from .moons.phobos import Phobos
 from .moons.callisto import Callisto
 from .moons.ganymede import Ganymede
 from .moons.io import Io
-from .moons.iapetus import Iapetus
-from .moons.rhea import Rhea
-from .moons.oberon import Oberon
-from .moons.titania import Titania
-from .moons.umbriel import Umbriel
-from .moons.ariel import Ariel
+

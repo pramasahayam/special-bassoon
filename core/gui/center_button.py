@@ -1,9 +1,8 @@
 import imgui
 
 class CenterButton:
-    def __init__(self, set_common_style, render_separator):
+    def __init__(self, set_common_style):
         self.set_common_style = set_common_style
-        self.render_separator = render_separator
 
     def render(self, user_interactions):
         self.set_common_style()
@@ -15,5 +14,4 @@ class CenterButton:
             user_interactions.center_camera()
 
         imgui.pop_style_color(1)
-        self.render_separator()
         imgui.end()

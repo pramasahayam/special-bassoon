@@ -5,19 +5,13 @@ import datetime
 from skyfield.api import load
 
 class DeltaVCalculator:
-    def __init__(self):
-        self.space_bodies = [
-            Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon()
-        ]
+    def __init__(self, space_bodies):
+        self.space_bodies = space_bodies
     
-    def hohmann_transfer(self, body_index, r1, r2):
+    def hohmann_transfer(self, mu, r1, r2):
         # r1 = initial circular orbit radius, km
         # r2 = target circular orbit radius, km
-        
-        body = self.space_bodies[body_index]
-        
-        mu = body.mu # gravitational parameter, km^3/s^2
+        # mu = gravitational parameter, km^3/s^2
         
         a_transfer = (r1 + r2) / 2 # semi-major axis of transfer ellipse, km
         deltav_departure = abs(sqrt(mu * (2/r1 - 1/a_transfer)) - sqrt((mu/r1))) # km/s

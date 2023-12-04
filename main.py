@@ -8,12 +8,15 @@ from core.window_manager import WindowManager
 from core.user_interactions import UserInteractions
 from core.date_manager import DateManager
 from core.download_manager import DownloadManager
+from core.deltav_calculator import DeltaVCalculator
+from core.rocket.rocket import Rocket
 
 def main():
 
     window_manager = WindowManager()
     download_manager = DownloadManager()
-    gui_manager = GuiManager(window_manager)
+    date_manager = DateManager()
+    gui_manager = GuiManager(window_manager, date_manager)
 
     # Disable resizing during the loading process
     window_manager.set_resizable(False)
@@ -25,20 +28,22 @@ def main():
     while not download_manager.is_download_complete() or display_progress < 1.0:
         actual_progress = download_manager.get_download_progress()
 
-        if actual_progress == 1.0:
-            display_progress += 0.01
-            display_progress = min(display_progress, 1.0)
-        else:
+        if actual_progress != 1.0:
             display_progress = actual_progress
 
+        display_progress += 0.01
+        display_progress = min(display_progress, 1.0)
+        
         gui_manager.render_loading_screen(display_progress)
 
     # Re-enable window resizing after the loading is complete
     window_manager.set_resizable(True)
 
     user_interactions = UserInteractions(window_manager, gui_manager)
-    date_manager = DateManager()
-    solar_system = SolarSystem(window_manager, user_interactions)
+    solar_system = SolarSystem(window_manager, user_interactions, gui_manager.trajectory_menu.trajectory_renderer)
+    delta_v_calculator = DeltaVCalculator(solar_system.space_bodies)
+    # rocket = Rocket("utils/rocket/RocketThing.obj")
+    gui_manager.trajectory_menu.set_delta_v_calculator(delta_v_calculator)
     
     glEnable(GL_TEXTURE_2D)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
@@ -71,6 +76,10 @@ def main():
         # Drawing each celestial body
         for body in solar_system.space_bodies:
             solar_system.draw_body(body, t)
+
+        glDisable(GL_DEPTH_TEST)  # Disable depth testing for trajectory rendering
+        solar_system.trajectory_renderer.render()
+        glEnable(GL_DEPTH_TEST)  # Re-enable depth testing
         
         gui_manager.render_ui(solar_system, date_manager, user_interactions)
 

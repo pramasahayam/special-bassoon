@@ -3,21 +3,21 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Titan, Deimos, Phobos, Callisto, Io, Iapetus, Oberon, Titania, Umbriel, Ariel, Ganymede
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Deimos, Phobos, Callisto, Io, Ganymede
 
 class SolarSystem:
-    def __init__(self, window_manager, user_interactions):
+    def __init__(self, window_manager, user_interactions, trajectory_renderer):
         self.window_manager = window_manager
         self.interactions = user_interactions
+        self.trajectory_renderer = trajectory_renderer
         self.clicked_mouse_position = None
         self.skybox_texture_id = self.load_skybox_texture("textures/misc/skybox_texture1.png")
         
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), Deimos("Mars"), Phobos("Mars"),# Titan("Saturn"), #Iapetus("Saturn")
-            Callisto("Jupiter"), Io("Jupiter"), Oberon("Uranus"), Titania("Uranus"), Umbriel("Uranus"), Ariel("Uranus"), 
-            Ganymede("Jupiter")
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), Deimos("Mars"), Phobos("Mars"),
+            Callisto("Jupiter"), Io("Jupiter"), Ganymede("Jupiter")
         ]
 
         self.selected_planet = None
@@ -59,6 +59,9 @@ class SolarSystem:
                                 print(f"Ring of {body.name} was clicked!")
 
                                 break
+
+    def render_trajectory(self):
+        self.trajectory_renderer.render()
 
     def compute_ray_from_mouse(self, mouse_pos):
         x, y = mouse_pos
@@ -128,6 +131,7 @@ class SolarSystem:
         # Compute the position of the celestial body
         x, y, z = body.compute_position(t)
         glTranslatef(x, y, z)
+        
 
         # Save sun position for lighting
         if body.name=="Sun":
@@ -138,30 +142,30 @@ class SolarSystem:
             glColor(1,1,1)
             glDisable(GL_TEXTURE_2D)  
             self.draw_ring(body.radius)
-
-        glRotatef(30, 0, 1, 0)  
+ 
 
         quad = gluNewQuadric()  
 
         # If the body has a texture, bind it
-        if body.texture_id:
-            glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, body.texture_id)
-            gluQuadricTexture(quad, GL_TRUE)
-        else:
+        if not body.texture_id:
             glDisable(GL_TEXTURE_2D)
         
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, body.texture_id)
+        gluQuadricTexture(quad, GL_TRUE)
+        
         # Apply lighting to anything thats not the sun and build spheres
-        if body.name!="Sun":
-            self.lighting(x,y)
-            gluSphere(quad, body.radius*2, 100, 100)
-            glDisable(GL_LIGHTING)
-            glDisable(GL_LIGHT0)
-            glDisable(GL_LIGHT1)
-            glDisable(GL_DEPTH_TEST)
-        else:
+        if body.name=="Sun":
             gluSphere(quad, body.radius*2, 100, 100)
 
+        self.lighting(x,y)
+        gluSphere(quad, body.radius*2, 100, 100)
+        glDisable(GL_LIGHTING)
+        glDisable(GL_LIGHT0)
+        glDisable(GL_LIGHT1)
+        glDisable(GL_DEPTH_TEST)
+       
+        glRotatef(180, 1, 0, 0) 
         glPopMatrix() # Restore the saved OpenGL state
 
     def lighting(self,x,y):

@@ -8,7 +8,7 @@ class UserInteractions:
         self.gui_manager = gui_manager
         self.window_manager = window_manager
         self.skybox_tenth_size = 300000/10 # Same size as in solar_system.py
-        self.LINEAR_ZOOM_AMOUNT = 400.0
+        self.LINEAR_ZOOM_AMOUNT = 50.0
         self.dragging = False
         self.last_mouse_x, self.last_mouse_y = 0, 0
         self.INITIAL_CAMERA_DISTANCE = -15000
@@ -80,8 +80,8 @@ class UserInteractions:
         dx = mouse_x - self.last_mouse_x
         dy = mouse_y - self.last_mouse_y
 
-        new_camera_x = self.camera_position[0] + dx * 15
-        new_camera_y = self.camera_position[1] - dy * 15
+        new_camera_x = self.camera_position[0] + dx * 5
+        new_camera_y = self.camera_position[1] - dy * 5
         new_camera_x = max(min(new_camera_x, self.camera_limits['right']), self.camera_limits['left'])
         new_camera_y = max(min(new_camera_y, self.camera_limits['up']), self.camera_limits['down'])
 
