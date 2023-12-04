@@ -7,6 +7,7 @@ class Uranus(SpaceBody):
             skyfield_name='uranus barycenter', 
             data_url='de421.bsp',
             name="Uranus",
+            color = "teal",
             description="Uranus is the seventh planet from the Sun and rotates at nearly a 90-degree angle from the plane of its orbit. This makes it appear that it is spinning on its side. Uranus is considered an ice giant as its mass is mostly made of water, methane, and ammonia.",
             mass="8.68E+25 kg",
             diameter="51,118 km",
@@ -15,5 +16,8 @@ class Uranus(SpaceBody):
             day="0.719 Earth Days",
             year="84 Earth Years",
             category="Planets",
-            texture_path="textures/planets/uranus_texture.png"
+            texture_path="textures/planets/uranus_texture.png",
+            mu=5793951.3,
+            orbital_center_mu=132712440018,
+            semimajoraxis=2870992581.5094
         )

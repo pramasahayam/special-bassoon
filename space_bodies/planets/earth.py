@@ -8,6 +8,7 @@ class Earth(SpaceBody):
             data_url='de421.bsp',
             orbital_center=None,
             name="Earth",
+            color = "teal",
             description="Third planet from the Sun and the only known planet to harbor life.",
             mass="5.97E+24 kg",
             diameter="12,756 km",
@@ -16,5 +17,8 @@ class Earth(SpaceBody):
             day="1 Earth Day",
             year="1 Earth Year",
             category="Planets",
-            texture_path="textures/planets/earth_texture.png"
+            texture_path="textures/planets/earth_texture.png",
+            mu=398600.436,
+            orbital_center_mu=132712440018,
+            semimajoraxis=149597871
         )

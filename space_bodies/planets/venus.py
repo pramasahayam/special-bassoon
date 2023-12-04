@@ -7,6 +7,7 @@ class Venus(SpaceBody):
             skyfield_name='venus barycenter', 
             data_url='de421.bsp',
             name="Venus",
+            color = "orange",
             description="Venus is the second planet from the Sun and is the hottest planet in our solar system. It spins slowly in the opposite direction from most planets and has a thick atmosphere that traps heat.",
             mass="4.87E+24 kg",
             diameter="12,104 km",
@@ -15,5 +16,8 @@ class Venus(SpaceBody):
             day="243 Earth Days",
             year="0.616 Earth Years",
             category="Planets",
-            texture_path="textures/planets/venus_texture.png"
+            texture_path="textures/planets/venus_texture.png",
+            mu=324859,
+            orbital_center_mu=132712440018,
+            semimajoraxis=108204140.0943
         )

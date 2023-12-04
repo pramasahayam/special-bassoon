@@ -7,6 +7,7 @@ class Europa(SpaceBody):
             skyfield_name='europa', 
             data_url='jup365.bsp',
             name="Europa",
+            color = "white",
             description="Europa is one of Jupiter's moons and is the sixth closest moon to the planet. It is one of its largest and most well-known moons. Europa was discovered in 1610 when Galileo Galilei viewed it with his homemade telescope. It is primarily made of silicate rock, a water-ice crust, and a nickel core",
             mass="4.80E+22 kg",
             diameter="3,121.6 km",
@@ -14,5 +15,8 @@ class Europa(SpaceBody):
             orbit_distance="671,100 km",
             orbital_center=orbital_center,
             category="Moons",
-            texture_path="textures/moons/moon_texture1.png"
+            texture_path="textures/moons/moon_texture1.png",
+            mu=3202.71210,
+            orbital_center_mu=126686531.9,
+            semimajoraxis=670900
         )

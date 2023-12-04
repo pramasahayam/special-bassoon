@@ -7,6 +7,7 @@ class Vesta(SpaceBody):
             skyfield_name='vesta', 
             data_url='de421.bsp',
             name="Vesta",
+            color = "white",
             description="Vesta is the second largest body in the asteroid belt, only surpassed by Ceres. It is the brightest asteroid in the sky and is occasionally visible from Earth with the naked eye. It is the first of the four asteroid belt objects to be visited by a spacecraft, NASA's Dawn.",
             mass="2.67E+20 kg",
             diameter="530 km",

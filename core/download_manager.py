@@ -15,8 +15,7 @@ class DownloadManager:
         self.ephemeris_urls = [
             'https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de421.bsp',
             'https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/jup365.bsp',
-            'https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp',
-            'https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura111l.bsp'
+            'https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp'
         ]
 
         self.file_progress = {url: 0 for url in self.ephemeris_urls}

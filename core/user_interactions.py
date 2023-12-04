@@ -80,8 +80,8 @@ class UserInteractions:
         dx = mouse_x - self.last_mouse_x
         dy = mouse_y - self.last_mouse_y
 
-        new_camera_x = self.camera_position[0] + dx * 15
-        new_camera_y = self.camera_position[1] - dy * 15
+        new_camera_x = self.camera_position[0] + dx * 5
+        new_camera_y = self.camera_position[1] - dy * 5
         new_camera_x = max(min(new_camera_x, self.camera_limits['right']), self.camera_limits['left'])
         new_camera_y = max(min(new_camera_y, self.camera_limits['up']), self.camera_limits['down'])
 
@@ -110,6 +110,8 @@ class UserInteractions:
         self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
 
         print(f"Camera repositioned to: x={new_camera_x}, \t y={new_camera_y}, \t z={new_camera_z}")
+        z_value = new_camera_z-ring_radius
+        self.gui_manager.zoom = ((z_value + 50000)/60000) * 100
 
 
     def get_camera_position(self):
@@ -125,3 +127,11 @@ class UserInteractions:
         glTranslatef(0, 0, self.CAMERA_DISTANCE)
         # Update the internal camera position state
         self.camera_position = [0, 0, self.CAMERA_DISTANCE]
+        
+    def zoom_slider(self, camera_value):
+        glLoadIdentity()
+        camera_x = self.camera_position[0]
+        camera_y = self.camera_position[1]
+        glTranslatef(camera_x, camera_y, camera_value)
+        # Update the internal camera position state
+        self.camera_position = [camera_x, camera_y, camera_value]
