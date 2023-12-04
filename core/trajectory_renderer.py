@@ -67,7 +67,7 @@ class TrajectoryRenderer:
             major_axis_disp = major_axis_length * np.cos(angle) / 2
 
             # Calculate the point on the minor axis
-            minor_axis_disp = minor_axis_length * np.sin(angle)
+            minor_axis_disp = adjusted_minor_axis_length * np.sin(angle)
 
             # Combine the displacements to get the 3D point
             point = [center_x + major_axis_disp * unit_vector[0],
@@ -85,10 +85,23 @@ class TrajectoryRenderer:
 
             point[2] = destination_pos[2] + (origin_pos[2] - destination_pos[2]) * z_interp
 
-            point = self.offset_point_from_body(point, origin_pos, destination_pos, origin_radius, destination_radius)
+            point = self.calculate_3d_point(center_x, center_y, major_axis_disp, minor_axis_disp, unit_vector, normal_vector, angle, origin_pos, destination_pos)
             points.append(tuple(point))
 
         return points
+
+    def calculate_3d_point(self, center_x, center_y, major_axis_disp, minor_axis_disp, unit_vector, normal_vector, angle, origin_pos, destination_pos):
+        # Calculate the 3D point and apply z-coordinate interpolation
+        point = [center_x + major_axis_disp * unit_vector[0],
+                 center_y + major_axis_disp * unit_vector[1],
+                 origin_pos[2]]  # Start with the z-coordinate of the origin
+        point += minor_axis_disp * normal_vector
+
+        # Apply z-coordinate interpolation
+        z_interp = (np.cos(angle) + 1) / 2  # Adjusted interpolation logic
+        point[2] = origin_pos[2] * (1 - z_interp) + destination_pos[2] * z_interp
+
+        return point
 
     def offset_point_from_body(self, point, origin_pos, destination_pos, origin_radius, destination_radius):
         # Calculate the distance from the point to each celestial body
@@ -114,13 +127,9 @@ class TrajectoryRenderer:
         return adjusted_point.tolist()
 
     def adjust_minor_axis(self, minor_axis_length, angle, origin_radius, destination_radius):
-        # Logic to adjust minor axis length based on angle and celestial body radii
-        # Increase minor axis length when trajectory is near celestial bodies
         if angle < np.pi / 2 or angle > 3 * np.pi / 2:
-            # Near origin celestial body
             return minor_axis_length + origin_radius
         elif np.pi / 2 <= angle <= 3 * np.pi / 2:
-            # Near destination celestial body
             return minor_axis_length + destination_radius
         else:
             return minor_axis_length
