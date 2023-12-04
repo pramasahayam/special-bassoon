@@ -132,6 +132,7 @@ class SolarSystem:
         # Compute the position of the celestial body
         x, y, z = body.compute_position(t)
         glTranslatef(x, y, z)
+        
 
         # Save sun position for lighting
         if body.name=="Sun":
@@ -142,8 +143,7 @@ class SolarSystem:
             glColor(1,1,1)
             glDisable(GL_TEXTURE_2D)  
             self.draw_ring(body.radius)
-
-        glRotatef(0, 0, 0, 0)  
+ 
 
         quad = gluNewQuadric()  
 
@@ -166,6 +166,7 @@ class SolarSystem:
         glDisable(GL_LIGHT1)
         glDisable(GL_DEPTH_TEST)
        
+        glRotatef(180, 1, 0, 0) 
         glPopMatrix() # Restore the saved OpenGL state
 
     def lighting(self,x,y):
