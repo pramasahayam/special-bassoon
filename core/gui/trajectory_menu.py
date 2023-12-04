@@ -84,6 +84,8 @@ class TrajectoryMenu:
     def _categorize_celestial_bodies(self):
         categories = {}
         for body in self.solar_system.space_bodies:
+            if body.name=="Sun":
+                continue
             category = body.category
             if category not in categories:
                 categories[category] = []

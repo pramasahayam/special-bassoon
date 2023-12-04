@@ -21,12 +21,12 @@ class TrajectoryRenderer:
         destination_pos = destination_body.compute_position(current_time)
 
         # Use the semi-major axis of each body for r1 and r2
-        r1 = origin_body.semimajoraxis
-        r2 = destination_body.semimajoraxis
+        r1 = origin_body
+        r2 = destination_body
 
         # Get delta-v and transfer time from the calculator
         # Assuming that the hohmann_transfer method requires the gravitational parameter (mu) and radii (r1, r2)
-        total_deltav, transfer_time = self.delta_v_calculator.hohmann_transfer(origin_body.mu, r1, r2)
+        total_deltav, transfer_time = self.delta_v_calculator.hohmann_transfer(origin_body.mu, r1.semimajoraxis, r2.semimajoraxis)
 
         # Adjust the minor axis based on the delta-v
         minor_axis_factor = total_deltav / normalization_factor  # Adjust this factor as needed
@@ -42,7 +42,7 @@ class TrajectoryRenderer:
         center_x, center_y = (np.array(origin_pos) + np.array(destination_pos))[:2] / 2
 
         # Major axis length could be based on r1 and r2
-        major_axis_length = (r1 + r2) / 2
+        major_axis_length = (r1.semimajoraxis + r2.semimajoraxis) / 2
 
         # Minor axis length adjusted by minor_axis_factor
         minor_axis_length = major_axis_length * minor_axis_factor
@@ -55,8 +55,13 @@ class TrajectoryRenderer:
         normal_vector = np.cross(unit_vector, [0, 0, 1])
         normal_vector /= np.linalg.norm(normal_vector)
 
+        origin_radius = r1.radius
+        destination_radius = r2.radius
+
         for i in range(steps):
             angle = 2 * np.pi * i / steps
+
+            adjusted_minor_axis_length = self.adjust_minor_axis(minor_axis_length, angle, origin_radius, destination_radius)
 
             # Calculate the point on the major axis
             major_axis_disp = major_axis_length * np.cos(angle) / 2
@@ -80,13 +85,88 @@ class TrajectoryRenderer:
 
             point[2] = destination_pos[2] + (origin_pos[2] - destination_pos[2]) * z_interp
 
+            point = self.offset_point_from_body(point, origin_pos, destination_pos, origin_radius, destination_radius)
             points.append(tuple(point))
 
         return points
 
+    def offset_point_from_body(self, point, origin_pos, destination_pos, origin_radius, destination_radius):
+        # Calculate the distance from the point to each celestial body
+        distance_to_origin = np.linalg.norm(np.array(point) - np.array(origin_pos))
+        distance_to_destination = np.linalg.norm(np.array(point) - np.array(destination_pos))
+
+        # Adjust the point position if it's within the radius of the celestial bodies
+        if distance_to_origin < origin_radius:
+            # Implement logic to adjust the point position
+            point = self.adjust_point_position(point, origin_pos, origin_radius)
+        if distance_to_destination < destination_radius:
+            # Implement logic to adjust the point position
+            point = self.adjust_point_position(point, destination_pos, destination_radius)
+
+        return point
+
+    def adjust_point_position(self, point, body_pos, body_radius):
+        # Calculate a safe position for the point, considering the body's radius
+        direction = np.array(point) - np.array(body_pos)
+        direction /= np.linalg.norm(direction)  # Normalize the direction vector
+        safe_distance = body_radius + 0.1  # Add a small buffer distance
+        adjusted_point = np.array(body_pos) + direction * safe_distance
+        return adjusted_point.tolist()
+
+    def adjust_minor_axis(self, minor_axis_length, angle, origin_radius, destination_radius):
+        # Logic to adjust minor axis length based on angle and celestial body radii
+        # Increase minor axis length when trajectory is near celestial bodies
+        if angle < np.pi / 2 or angle > 3 * np.pi / 2:
+            # Near origin celestial body
+            return minor_axis_length + origin_radius
+        elif np.pi / 2 <= angle <= 3 * np.pi / 2:
+            # Near destination celestial body
+            return minor_axis_length + destination_radius
+        else:
+            return minor_axis_length
+
     def render(self):
         if self.should_render:
-            glBegin(GL_POINTS)  # Or GL_LINES
+            glPushMatrix()  # Save the current OpenGL state
+            glLineWidth(2)
+            glBegin(GL_LINE_STRIP)
             for point in self.trajectory_points:
+                glColor3f(0.0, 1.0, 0.0)  # Green color for trajectory
                 glVertex3f(*point)
             glEnd()
+
+            # Reset color to default (white) after rendering the trajectory
+            glColor3f(1.0, 1.0, 1.0)
+            glLineWidth(1)
+            
+            glPopMatrix()  # Restore the previous OpenGL state
+
+    def render_markers(self):
+        marker_interval = len(self.trajectory_points) // 10  # Place markers at intervals
+        for i in range(0, len(self.trajectory_points), marker_interval):
+            if i + marker_interval < len(self.trajectory_points):
+                self.render_arrow(self.trajectory_points[i], self.trajectory_points[i + marker_interval])
+
+    def render_arrow(self, start_point, end_point):
+        glColor3f(1.0, 0.0, 0.0)  # Red color for arrows
+        glPushMatrix()
+        glTranslatef(*start_point)
+        direction = np.array(end_point) - np.array(start_point)
+        direction /= np.linalg.norm(direction)
+        arrow_length = 0.5  # Set the arrow length
+
+        # Render arrow shaft
+        glBegin(GL_LINES)
+        glVertex3f(0, 0, 0)
+        glVertex3f(*(direction * arrow_length))
+        glEnd()
+
+        # Render arrowhead
+        arrowhead_size = 0.1  # Set arrowhead size
+        glBegin(GL_TRIANGLES)
+        for angle in np.linspace(0, 2 * np.pi, 3, endpoint=False):  # Triangle for arrowhead
+            dx = arrowhead_size * np.cos(angle)
+            dy = arrowhead_size * np.sin(angle)
+            glVertex3f(*(direction * arrow_length + np.array([dx, dy, 0])))
+        glEnd()
+        glPopMatrix()
