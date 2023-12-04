@@ -107,8 +107,8 @@ class DateSelector:
             month = int(self.date_input['month'])
             year = int(self.date_input['year'])
 
-            if year > 2050 or year < 2000:
-                raise ValueError("Year must be between 2000 and 2050.")
+            if year > 2050 or year < 1900:
+                raise ValueError("Year must be between 1900 and 2050.")
 
             if not self.is_valid_date(year, month, day):
                 raise ValueError("Invalid date. Please enter a valid date.")
