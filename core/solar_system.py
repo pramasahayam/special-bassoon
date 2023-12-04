@@ -3,7 +3,7 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Deimos, Phobos, Callisto, Io, Oberon, Titania, Umbriel, Ariel, Ganymede
+from space_bodies import Sun, Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Europa, Deimos, Phobos, Callisto, Io, Ganymede
 
 class SolarSystem:
     def __init__(self, window_manager, user_interactions, trajectory_renderer):
@@ -16,9 +16,8 @@ class SolarSystem:
         # List of space bodies in our solar system
         self.space_bodies = [
             Sun(), Earth(), Mercury(), Venus(), Mars(), Jupiter(),
-            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), Deimos("Mars"), Phobos("Mars"),# Titan("Saturn"), #Iapetus("Saturn")
-            Callisto("Jupiter"), Io("Jupiter"), Oberon("Uranus"), Titania("Uranus"), Umbriel("Uranus"), Ariel("Uranus"), 
-            Ganymede("Jupiter")
+            Saturn(), Uranus(), Neptune(), Pluto(), Moon("Earth"), Europa("Jupiter"), Deimos("Mars"), Phobos("Mars"),
+            Callisto("Jupiter"), Io("Jupiter"), Ganymede("Jupiter")
         ]
 
         self.selected_planet = None
