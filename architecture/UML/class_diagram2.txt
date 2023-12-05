@@ -1,0 +1,365 @@
+@startuml
+left to right direction
+class CelestialBodySelector {
+    + __init__(set_common_style: function, render_separator: function)
+    - set_common_style: function
+    - render_separator: function
+    + render(solar_system: SolarSystem, user_interactions: UserInteractions, date_manager: DateManager): void
+    + categorize_celestial_bodies(solar_system: SolarSystem): map
+    + handle_body_selection(solar_system: SolarSystem, body_name: string, user_interactions: UserInteractions, date_manager: DateManager): void
+}
+
+class CenterButton {
+    + __init__(set_common_style: function)
+    - set_common_style: function
+    + render(user_interactions: UserInteractions): void
+}
+
+class DateSelector {
+    + __init__(set_common_style: function, render_separator: function)
+    - set_common_style: function
+    - render_separator: function
+    + render(date_manager: DateManager): void
+    + set_date_selector_window_position(): void
+    + begin_date_selector_window(): void
+    + render_input_date_toggle_button(): void
+    + render_date_input_fields(date_manager: DateManager): void
+    + render_date_inputs(): void
+    + render_confirm_button(date_manager: DateManager): void
+    + render_reset_button(date_manager: DateManager): void
+    + reset_to_current_date(date_manager: DateManager): void
+    + display_error_message(): void
+    + end_date_selector_window(): void
+    + reset_style(): void
+    + handle_date_confirmation(date_manager: DateManager): void
+    + is_valid_date(year: int, month: int, day: int): boolean
+}
+
+class Infobox {
+    + __init__(set_common_style: function)
+    - set_common_style: function
+    + render(solar_system: SolarSystem): void
+    + setup_infobox_position(solar_system: SolarSystem): tuple
+    + get_infobox_attributes(solar_system: SolarSystem): list
+    + render_infobox_content(attributes: list, color: string): void
+}
+
+class LabelToggleButton {
+    + __init__(set_common_style: function)
+    - set_common_style: function
+    + render(solar_system: SolarSystem, date_manager: DateManager): void
+    + _render_toggle_button(): void
+    + _render_body_label(body: SpaceBody, current_time: datetime): void
+    + _calculate_label_position(body: SpaceBody, t: datetime): tuple
+}
+
+class LoadingScreen {
+    + __init__(window_manager: WindowManager, gui_manager: GuiManager)
+    - window_manager: WindowManager
+    - gui_manager: GuiManager
+    + load_texture(texture_path: string): int
+    + draw_skybox(): void
+    + draw_overlay(overlay_texture_id: int): void
+    + render_progress_bar(progress: float): void
+    + render(progress: float): void
+}
+
+class TrajectoryMenu {
+    + __init__(set_common_style: function, render_separator: function, date_manager: DateManager)
+    - date_manager: DateManager
+    - set_common_style: function
+    - render_separator: function
+    + set_delta_v_calculator(delta_v_calculator: DeltaVCalculator): void
+    + render(solar_system: SolarSystem): void
+    + _render_body_selection(): void
+    + _populate_categories_and_handle_selection(index: int): void
+    + _handle_trajectory_body_selection(index: int, body_name: string): void
+    + _handle_confirmation(): void
+    + plot_trajectory(solar_system: SolarSystem, current_date: datetime): void
+    + _categorize_celestial_bodies(): map
+}
+
+class ZoomSlider {
+    + __init__(set_common_style: function, window_manager: WindowManager)
+    - set_common_style: function
+    - window_manager: WindowManager
+    + render(user_interactions: UserInteractions): void
+}
+
+class DateManager {
+    + __init__()
+    - ts: Timescale
+    - current_date: datetime
+    + set_date(month: int, day: int, year: int): void
+    + get_current_date(): datetime
+}
+
+class DeltaVCalculator {
+    + __init__(space_bodies: list)
+    - space_bodies: list
+    + hohmann_transfer(mu: float, r1: float, r2: float): tuple
+    + bi_elliptic_hohmann_transfer(body_index: int, r1: float, r2: float, rb: float): tuple
+    + interplanetary_hohmann_transfer(body1_index: int, orbit_r1: float, body2_index: int, orbit_r2: float): tuple
+    + next_transfer_window(body1_index: int, body2_index: int): datetime
+}
+
+class DownloadManager {
+    + __init__(base_folder: string)
+    - base_folder: string
+    - loader: Loader
+    - ephemeris_urls: list
+    - file_progress: map
+    + download_with_progress(url: string, file_path: string): void
+    + load(data_url: string): string
+    + pre_download_all(): void
+    + pre_download_all_async(): void
+    + get_download_progress(): float
+    + is_download_complete(): boolean
+}
+
+class GuiManager {
+    + __init__(window_manager: WindowManager, date_manager: DateManager)
+    - window_manager: WindowManager
+    - date_manager: DateManager
+    - loading_screen: LoadingScreen
+    - trajectory_menu: TrajectoryMenu
+    - celestial_body_selector: CelestialBodySelector
+    - date_selector: DateSelector
+    - infobox: Infobox
+    - label_toggle_button: LabelToggleButton
+    - center_button: CenterButton
+    - zoom_slider: ZoomSlider
+    - renderer: Renderer
+    - is_hovering_imgui: boolean
+    - is_using_imgui: boolean
+    + setup_imgui(): Renderer
+    + start_frame(): void
+    + end_frame(): void
+    + render_ui(solar_system: SolarSystem, date_manager: DateManager, user_interactions: UserInteractions): void
+    + process_event(event: Event): void
+    + is_imgui_hovered(): boolean
+    + is_imgui_used(): boolean
+    + render_loading_screen(progress: float): void
+    + set_common_style(): void
+    + reset_style(): void
+    + render_separator(): void
+    + handle_resize(width: int, height: int): void
+}
+
+class SolarSystem {
+    + __init__(window_manager: WindowManager, user_interactions: UserInteractions, trajectory_renderer: TrajectoryRenderer)
+    - window_manager: WindowManager
+    - user_interactions: UserInteractions
+    - trajectory_renderer: TrajectoryRenderer
+    - clicked_mouse_position: tuple
+    - skybox_texture_id: int
+    - space_bodies: list
+    - selected_planet: SpaceBody
+    - infobox_visible: boolean
+    - sun_positionx: float
+    - sun_positiony: float
+    - sun_positionz: float
+    + handle_event(event: Event, t: datetime): void
+    + render_trajectory(): void
+    + compute_ray_from_mouse(mouse_pos: tuple): list
+    + intersects_sphere(ray_origin: list, ray_direction: list, sphere_center: list, sphere_radius: float): string
+    + draw_body(body: SpaceBody, t: datetime): void
+    + lighting(x: float, y: float): void
+    + draw_ring(body_radius: float): void
+    + load_skybox_texture(texture_path: string): int
+    + draw_skybox(texture_id: int): void
+    + get_selected_planet(): SpaceBody
+    + is_infobox_visible(): boolean
+    + get_clicked_mouse_position(): tuple
+    + get_ring_radius(body_radius: float): float
+}
+
+class TrajectoryRenderer {
+    + __init__(delta_v_calculator: DeltaVCalculator)
+    - delta_v_calculator: DeltaVCalculator
+    - trajectory_points: list
+    - should_render: boolean
+    + set_delta_v_calculator(delta_v_calculator: DeltaVCalculator): void
+    + calculate_trajectory(origin_body: SpaceBody, destination_body: SpaceBody, current_time: datetime): void
+    + generate_ellipse_points(origin_pos: tuple, destination_pos: tuple, r1: float, r2: float, minor_axis_factor: float): list
+    + render(): void
+    + render_markers(): void
+    + render_arrow(start_point: tuple, end_point: tuple): void
+}
+
+class UserInteractions {
+    + __init__(window_manager: WindowManager, gui_manager: GuiManager)
+    - window_manager: WindowManager
+    - gui_manager: GuiManager
+    - skybox_tenth_size: float
+    - LINEAR_ZOOM_AMOUNT: float
+    - dragging: boolean
+    - last_mouse_x: int
+    - last_mouse_y: int
+    - INITIAL_CAMERA_DISTANCE: float
+    - CAMERA_DISTANCE: float
+    - MIN_ZOOM_IN: float
+    - MAX_ZOOM_OUT: float
+    - camera_limits: dict
+    - camera_position: list
+    + handle_event(event: Event): void
+    + handle_mouse_button_down(event: Event): void
+    + handle_mouse_button_up(event: Event): void
+    + handle_mouse_motion(event: Event): void
+    + handle_resize(event: Event): void
+    + zoom_in(): void
+    + zoom_out(): void
+    + drag_camera(event: Event): void
+    + focus_on_body(solar_system: SolarSystem, body_position: tuple, body_radius: float): void
+    + get_camera_position(): list
+    + get_camera_distance(): float
+    + center_camera(): void
+    + zoom_slider(camera_value: float): void
+}
+
+class WindowManager {
+    + __init__()
+    - WIDTH: int
+    - HEIGHT: int
+    - resizable: boolean
+    - screen: Surface
+    + create_window(): void
+    + set_resizable(resizable: boolean): void
+    + resize(width: int, height: int): void
+    + get_current_dimensions(): tuple
+}
+
+GuiManager --o "1" WindowManager
+GuiManager --o "1" DateManager
+
+GuiManager *-- "1" LoadingScreen
+GuiManager *-- "1" TrajectoryMenu
+GuiManager *-- "1" CelestialBodySelector
+GuiManager *-- "1" DateSelector
+GuiManager *-- "1" Infobox
+GuiManager *-- "1" LabelToggleButton
+GuiManager *-- "1" CenterButton
+GuiManager *-- "1" ZoomSlider
+
+DeltaVCalculator "1" -- "1" TrajectoryRenderer
+DownloadManager "1" -- "*" SpaceBody
+GuiManager "1" -- "1" SolarSystem
+SolarSystem "1" -- "1" UserInteractions
+SolarSystem --o "17" SpaceBody
+
+class SpaceBody {
+    + __init__(radius: float, skyfield_name: string, data_url: string, mu: float, orbital_center_mu: float, semimajoraxis: float, orbital_center: SpaceBody, name: string, color: string, description: string, mass: string, diameter: string, gravity: string, avg_temperature: string, day: string, year: string, category: string, texture_path: string, download_manager: DownloadManager, ts: Timescale, ephemeris: Ephemeris, body: Body, texture_id: int)
+    - radius: float
+    - skyfield_name: string
+    - data_url: string
+    - mu: float
+    - orbital_center_mu: float
+    - semimajoraxis: float
+    - orbital_center: SpaceBody
+    - name: string
+    - color: string
+    - description: string
+    - mass: string
+    - diameter: string
+    - gravity: string
+    - avg_temperature: string
+    - day: string
+    - year: string
+    - category: string
+    - texture_path: string
+    - download_manager: DownloadManager
+    - ts: Timescale
+    - ephemeris: Ephemeris
+    - body: Body
+    - texture_id: int
+    + load_texture(): void
+    + compute_position(t: datetime): tuple
+}
+
+class Pluto {
+    + __init__()
+}
+
+class Callisto {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Deimos {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Europa {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Ganymede {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Io {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Moon {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Phobos {
+    + __init__(orbital_center: SpaceBody)
+}
+
+class Earth {
+    + __init__()
+}
+
+class Jupiter {
+    + __init__()
+}
+
+class Mars {
+    + __init__()
+}
+
+class Mercury {
+    + __init__()
+}
+
+class Neptune {
+    + __init__()
+}
+
+class Saturn {
+    + __init__()
+}
+
+class Uranus {
+    + __init__()
+}
+
+class Venus {
+    + __init__()
+}
+
+class Sun {
+    + __init__()
+}
+
+Pluto --|> SpaceBody
+Callisto --|> SpaceBody
+Deimos --|> SpaceBody
+Europa --|> SpaceBody
+Ganymede --|> SpaceBody
+Io --|> SpaceBody
+Moon --|> SpaceBody
+Phobos --|> SpaceBody
+Earth --|> SpaceBody
+Jupiter --|> SpaceBody
+Mars --|> SpaceBody
+Mercury --|> SpaceBody
+Neptune --|> SpaceBody
+Saturn --|> SpaceBody
+Uranus --|> SpaceBody
+Venus --|> SpaceBody
+Sun --|> SpaceBody
+
+@enduml
